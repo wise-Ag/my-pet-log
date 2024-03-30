@@ -1,10 +1,10 @@
 "use server";
 
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
-import Invitation from "@/app/settings/_components/Invitation";
 import { getMyInvitations } from "@/app/_api/invitation";
 import { getPet, getCode } from "@/app/_api/pets";
 import { cookies } from "next/headers";
+import PetSubscriberList from "@/app/settings/_components/Pet-Subscriber-List";
 
 const Page = async () => {
   const queryClient = new QueryClient();
@@ -17,7 +17,7 @@ const Page = async () => {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <Invitation petId={petId} />
+      <PetSubscriberList petId={petId} />
     </HydrationBoundary>
   );
 };
