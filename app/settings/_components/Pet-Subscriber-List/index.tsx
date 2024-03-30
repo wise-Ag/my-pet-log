@@ -11,8 +11,7 @@ import { SubscriberListType } from "@/app/_types/subscriptions/types";
 import { getSubscriberList, putBlockedUsers } from "@/app/_api/subscription";
 import { UserType } from "@/app/_types/user/types";
 import { getMe } from "@/app/_api/users";
-import EmptyBlockedUser from "../EmptyBlockedUser";
-import EmptySubscriber from "../EmptySubscriber";
+import EmptySubscriber from "@/app/settings/_components/EmptySubscriber";
 
 const PetSubscriberList = ({ petId }: { petId: number }) => {
   const queryClient = useQueryClient();

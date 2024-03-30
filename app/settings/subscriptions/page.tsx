@@ -3,11 +3,10 @@
 import SubscriptionList from "../_components/SubscriptionList";
 import TitleHeader from "@/app/_components/TitleHeader";
 import { getSubscribedPet } from "@/app/_api/subscription";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { SubscribedPetType } from "@/app/_types/subscriptions/types";
 
 const Page = () => {
-  const queryClient = useQueryClient();
   const { data: accountsData } = useQuery<SubscribedPetType[]>({
     queryKey: ["subscribedPet"],
     queryFn: () => getSubscribedPet(),
