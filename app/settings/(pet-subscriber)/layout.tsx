@@ -20,7 +20,7 @@ export default function PetSubscriberLayout({ children }: { children: React.Reac
           </li>
           <li className={`${pathname === "/settings/blocked-user" ? styles.active : styles.noActive}`}>
             <Link href="/settings/blocked-user" replace>
-              차단한 유저 (5)
+              차단한 유저 목록 (5)
             </Link>
           </li>
         </ul>
