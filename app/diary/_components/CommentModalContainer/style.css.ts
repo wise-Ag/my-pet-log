@@ -6,12 +6,12 @@ const fadeIn = keyframes({
   to: { opacity: 1 },
 });
 
-const slideUp = keyframes({
+export const slideUp = keyframes({
   "0%": { transform: "translateX(-50%) translateY(100%)" },
   "100%": { transform: "translateX(-50%) translateY(0)" },
 });
 
-export const wrapper = style({
+export const overlay = style({
   animation: `${fadeIn} 0.2s ease-out forwards`,
   width: "100%",
   height: "100%",
@@ -21,7 +21,13 @@ export const wrapper = style({
   left: "0",
 
   backgroundColor: "rgba(0, 0, 0, 0.5)",
+  touchAction: "none",
   zIndex: Z_INDEX.Modal,
+});
+
+export const wrapper = style({
+  width: "100%",
+  height: "100%",
 });
 
 export const container = style({
@@ -31,8 +37,4 @@ export const container = style({
   position: "fixed",
   left: "50%",
   bottom: "0",
-
-  transform: "translateX(-50%) translateY(100%)",
-  transition: "transform 0.3s ease-out",
-  animation: `${slideUp} 0.3s ease-out forwards`,
 });

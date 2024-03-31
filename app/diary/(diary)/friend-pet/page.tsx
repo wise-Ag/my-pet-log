@@ -109,7 +109,7 @@ const FriendPetDiaryPage = () => {
         <div className={styles.date}>{mock.date}</div>
       </section>
       {isModalOpen && (
-        <CommentModalContainer>
+        <CommentModalContainer onClose={closeModalFunc}>
           <div className={styles.commentContainer}>댓글창임</div>
         </CommentModalContainer>
       )}
