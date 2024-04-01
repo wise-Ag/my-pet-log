@@ -33,10 +33,12 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const queryClient = useQueryClient();
 
   //대댓글 조회
-  const { data: reComments } = useQuery({
+  const { data: reCommentsData } = useQuery({
     queryKey: ["reComments", commentId],
     queryFn: () => getReComments({ ancestorId: commentId }),
   });
+
+  const reComments = reCommentsData ?? [];
 
   console.log(reComments);
 
@@ -206,7 +208,11 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
         </div>
       </div>
 
-      <div>{reComments?.content?.map((reComment) => <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} />)}</div>
+      <div>
+        {reComments.map((reComment) => (
+          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} />
+        ))}
+      </div>
 
       <div>
         {isModalOpen && <Modal text="정말 댓글을 삭제하시겠습니까?" buttonText="삭제" onClick={() => deleteCommentMutation.mutate(comment.commentId)} onClose={closeModalFunc} />}
