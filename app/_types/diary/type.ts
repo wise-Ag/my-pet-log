@@ -148,36 +148,38 @@ export interface GetCommentsResponse {
   empty: boolean;
 }
 
-export interface GetReCommentsResponse {
-  content: [
-    {
-      commentId: number;
-      content: string;
-      createdAt: string;
-      isCurrentUserLiked: boolean;
-      likeCount: number;
-      writer: {
-        id: string;
-        nickname: string;
-        profilePath: string;
-        isCurrentUser: boolean;
-      };
-      receiver: {
-        id: string;
-        nickname: string;
-        profilePath: string;
-        isCurrentUser: boolean;
-      };
-      taggedUsers: [
-        {
-          id: string;
-          nickname: string;
-          isCurrentUser: boolean;
-        },
-      ];
-    },
-  ];
-}
+// export interface GetReCommentsResponse {
+//   content: [
+//     {
+//       commentId: number;
+//       content: string;
+//       createdAt: string;
+//       isCurrentUserLiked: boolean;
+//       likeCount: number;
+//       writer: {
+//         id: string;
+//         nickname: string;
+//         profilePath: string;
+//         isCurrentUser: boolean;
+//       };
+//       receiver: {
+//         id: string;
+//         nickname: string;
+//         profilePath: string;
+//         isCurrentUser: boolean;
+//       };
+//       taggedUsers: [
+//         {
+//           id: string;
+//           nickname: string;
+//           isCurrentUser: boolean;
+//         },
+//       ];
+//     },
+//   ];
+// }
+
+export type GetReCommentsResponse = CommentType[];
 
 export interface PostDiaryRequest {
   petId: number;
