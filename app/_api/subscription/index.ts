@@ -25,6 +25,18 @@ export const postPetSubscriptions = async (petId: number) => {
   }
 };
 
+//구독자 차단
+export const putBlockedUsers = async (petId: number, userId: string) => {
+  try {
+    const response = await instance.put(`/pets/${petId}/subscriptions`, userId);
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error: any) {
+    console.error(error.response.data);
+  }
+};
+
 //구독중인 펫계정 조회
 export const getSubscribedPet = async () => {
   try {

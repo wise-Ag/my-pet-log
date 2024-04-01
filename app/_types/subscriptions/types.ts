@@ -3,6 +3,7 @@ export interface SubscriberListType {
   id: string;
   nickname: string;
   profilePath: string;
+  isBlocked: boolean;
 }
 
 //구독중인 펫계정
