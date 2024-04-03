@@ -37,8 +37,10 @@ const CreateForm = ({ petId }: { petId: number }) => {
     mutationFn: (formData: FormData) => postDiary({ formData }),
     onSuccess: () => {
       setDiaryImages([]);
-      setTimeout(() => router.push("/diary/my-pet"), 1000); //썸네일 서버에서 완성되는 동안 기다려줌
-      queryClient.invalidateQueries({ queryKey: ["diaries", petId] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["diaries", petId] });
+        router.push("/diary/my-pet");
+      }, 1000); //썸네일 서버에서 완성되는 동안 기다려줌
     },
     onError: () => {
       showToast("일기 생성에 실패했습니다.", false);

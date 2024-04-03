@@ -9,6 +9,7 @@ export interface Diary {
     isCurrentUser: boolean;
   };
   commentCount: number;
+  isPublic: boolean;
 }
 
 export interface postDiaryRequest {
