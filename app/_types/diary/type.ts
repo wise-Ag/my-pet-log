@@ -113,6 +113,7 @@ export interface GetDiaryResponse {
   writer: Writer;
   commentCount: number;
   likeCount: number;
+  isPublic: boolean;
   pet: {
     id: number;
     breed: string;

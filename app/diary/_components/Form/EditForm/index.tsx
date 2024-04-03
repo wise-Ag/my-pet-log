@@ -9,6 +9,7 @@ import * as styles from "@/app/diary/_components/Form/CreateForm/style.css";
 import DateInput from "@/app/diary/_components/Input/DateInput";
 import { ContentInput, TitleInput } from "@/app/diary/_components/Input/FormInput";
 import ImageInput from "@/app/diary/_components/Input/ImageInput";
+import PublicPrivateToggle from "@/app/diary/_components/Input/PublicPrivateToggle";
 import VideoInput from "@/app/diary/_components/Input/VideoInput";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
@@ -22,6 +23,7 @@ interface Diary {
   date: string;
   deletedMediaIds?: number[];
   uploadedVideoIds?: string[];
+  isPublic: boolean;
 }
 
 export interface FormInput {
@@ -30,6 +32,7 @@ export interface FormInput {
   date: string;
   images?: File[] | null;
   video?: string | null;
+  isPublic: "PUBLIC" | null;
 }
 
 const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
@@ -74,6 +77,7 @@ const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
       setValue("date", diary.date.replaceAll(".", "-"));
       setOldImages([...diary.images]);
       setOldVideo([...diary.videos]);
+      setValue("isPublic", diary.isPublic ? "PUBLIC" : null);
     }
   }, [isSuccess]);
 
@@ -91,6 +95,7 @@ const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
               title: data.title,
               content: data.content,
               date: data.date,
+              isPublic: data.isPublic === "PUBLIC" ? true : false,
             };
             //video가 있다면 백엔드에 등록 후 응답id를 formData에 추가
             if (data.video) {
@@ -114,6 +119,7 @@ const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
           <ImageInput register={register} setValue={setValue} oldMedia={oldImages} />
           <VideoInput register={register} setValue={setValue} oldMedia={oldVideo} />
           <ContentInput register={register} watch={watch} errors={errors} />
+          <PublicPrivateToggle register={register} watch={watch} setValue={setValue} />
 
           <button className={styles.button}>수정하기</button>
         </form>

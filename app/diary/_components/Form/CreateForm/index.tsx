@@ -15,12 +15,14 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as styles from "./style.css";
+import PublicPrivateToggle from "@/app/diary/_components/Input/PublicPrivateToggle";
 
 interface Diary {
   title: string;
   content: string;
   date: string;
   uploadedVideoIds?: string[];
+  isPublic: boolean;
 }
 
 const CreateForm = ({ petId }: { petId: number }) => {
@@ -50,7 +52,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
     getValues,
     watch,
     handleSubmit,
-  } = useForm<FormInput>({ mode: "onChange", defaultValues: { date: getPrettyToday() } });
+  } = useForm<FormInput>({ mode: "onChange", defaultValues: { date: getPrettyToday(), isPublic: "PUBLIC" } });
 
   const [diaryImages, setDiaryImages] = useAtom(diaryImagesAtom);
 
@@ -68,6 +70,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
               title: data.title,
               content: data.content,
               date: data.date,
+              isPublic: data.isPublic === "PUBLIC" ? true : false,
             };
 
             //video가 있다면 백엔드에 등록 후 응답id를 formData에 추가
@@ -90,6 +93,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
           <ImageInput register={register} setValue={setValue} />
           <VideoInput register={register} setValue={setValue} />
           <ContentInput register={register} watch={watch} errors={errors} />
+          <PublicPrivateToggle register={register} watch={watch} setValue={setValue} />
 
           <button className={styles.button}>작성하기</button>
         </form>
