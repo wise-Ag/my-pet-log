@@ -56,7 +56,7 @@ export const type = style({
   color: "var(--MainOrange)",
 });
 
-export const date = style({
+export const createdAt = style({
   gridColumn: "3 / 4",
   gridRow: "1 / 2",
   fontSize: "1.4rem",
@@ -64,7 +64,7 @@ export const date = style({
   color: "var(--GrayA4)",
 });
 
-export const content = style({
+export const message = style({
   gridColumn: "2 / 4",
   gridRow: "2 / 3",
   fontSize: "1.4rem",
