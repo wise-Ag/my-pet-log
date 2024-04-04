@@ -34,13 +34,16 @@ const convertURLtoFile = async (url: string) => {
 const ImageInput = ({ register, setValue, oldMedia }: InputProps) => {
   const [images, setImages] = useAtom(diaryImagesAtom);
 
+  const handleOldMedia = async (oldMedia: DiaryMediaType[]) => {
+    for (const v of oldMedia) {
+      const file = await convertURLtoFile(process.env.NEXT_PUBLIC_IMAGE_PREFIX + v.path);
+      setImages((prev) => [...prev, { name: file.name, file: file, url: URL.createObjectURL(file) }]);
+    }
+  };
   useEffect(() => {
     //edit용 이전 데이터
     setImages([]); //뒤로가기 후 다시 들어오면 atom에 정보가 남아있음 => 삭제
-    oldMedia?.forEach(async (v) => {
-      const file = await convertURLtoFile(process.env.NEXT_PUBLIC_IMAGE_PREFIX + v.path);
-      setImages((prev) => [...prev, { name: file.name, file: file, url: URL.createObjectURL(file) }]);
-    });
+    if (oldMedia) handleOldMedia(oldMedia);
   }, [oldMedia]);
 
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
