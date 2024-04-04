@@ -3,7 +3,7 @@
 import { getDiary, putDiary } from "@/app/_api/diary";
 import Loading from "@/app/_components/Loading";
 import { showToast } from "@/app/_components/Toast";
-import { deletedImagesAtom, diaryImagesAtom } from "@/app/_states/atom";
+import { deletedVideoIdsAtom, diaryImagesAtom } from "@/app/_states/atom";
 import { DiaryMediaType } from "@/app/_types/diary/type";
 import * as styles from "@/app/diary/_components/Form/CreateForm/style.css";
 import DateInput from "@/app/diary/_components/Input/DateInput";
@@ -21,7 +21,7 @@ interface Diary {
   title: string;
   content: string;
   date: string;
-  deletedMediaIds?: number[];
+  deletedVideoIds?: number[];
   uploadedVideoIds?: string[];
   isPublic: boolean;
 }
@@ -47,7 +47,7 @@ const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["diaries", petId] });
       queryClient.invalidateQueries({ queryKey: ["diary", { petId, diaryId }] });
-      setDeletedImages([]);
+      setDeletedVideoIds([]);
       setDiaryImages([]);
       router.back();
     },
@@ -82,7 +82,7 @@ const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
   }, [isSuccess]);
 
   const [diaryImages, setDiaryImages] = useAtom(diaryImagesAtom);
-  const [deletedImages, setDeletedImages] = useAtom(deletedImagesAtom);
+  const [deletedVideoIds, setDeletedVideoIds] = useAtom(deletedVideoIdsAtom);
   return (
     <>
       <div className={styles.container}>
@@ -101,8 +101,8 @@ const EditForm = ({ petId, diaryId }: { petId: number; diaryId: number }) => {
             if (data.video) {
               request.uploadedVideoIds = [data.video];
             }
-            if (deletedImages) {
-              request.deletedMediaIds = deletedImages;
+            if (deletedVideoIds) {
+              request.deletedVideoIds = deletedVideoIds;
             }
             const blob = new Blob([JSON.stringify(request)], { type: "application/json" });
             formData.append("request", blob);

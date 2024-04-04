@@ -1,4 +1,4 @@
-import { deletedImagesAtom } from "@/app/_states/atom";
+import { deletedVideoIdsAtom } from "@/app/_states/atom";
 import { InputProps } from "@/app/diary/_components/Input/ImageInput";
 import * as inputStyles from "@/app/diary/_components/Input/ImageInput/style.css";
 import { useAtom } from "jotai";
@@ -13,7 +13,7 @@ import Loading from "@/app/_components/Loading";
 
 const VideoInput = ({ register, setValue, oldMedia }: InputProps) => {
   const [previewVideo, setPreviewVideo] = useState("");
-  const [, setDeletedVideo] = useAtom(deletedImagesAtom);
+  const [, setDeletedVideo] = useAtom(deletedVideoIdsAtom);
   const [oldData, setOldData] = useState(oldMedia);
 
   const { mutate: postVideoMutation, isPending } = useMutation({
