@@ -9,6 +9,7 @@ export interface Diary {
     isCurrentUser: boolean;
   };
   commentCount: number;
+  isPublic: boolean;
 }
 
 export interface postDiaryRequest {
@@ -113,6 +114,7 @@ export interface GetDiaryResponse {
   writer: Writer;
   commentCount: number;
   likeCount: number;
+  isPublic: boolean;
   pet: {
     id: number;
     breed: string;

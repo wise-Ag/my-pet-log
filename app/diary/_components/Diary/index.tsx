@@ -1,6 +1,7 @@
 "use client";
 import { Diary as DiaryType, GetDiaryListResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPetImagePath";
+import LockIconURL from "@/public/icons/lock.svg?url";
 import CommentIconURL from "@/public/icons/message.svg?url";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +15,8 @@ export const Diary = ({ diary }: { diary: DiaryType }) => {
           <div style={{ display: "flex", alignItems: "center" }}>
             <div className={styles.writer}>{diary.writer.nickname}</div>
             <Image src={CommentIconURL} alt="comment icon" width={14} height={14} />
-            <p style={{ color: "#ACACAC", marginLeft: "0.2rem" }}>{diary.commentCount}</p>
+            <p style={{ color: "#ACACAC", marginLeft: "0.2rem", marginRight: "0.5rem" }}>{diary.commentCount}</p>
+            {diary.isPublic || <Image src={LockIconURL} alt="lock icon" width={14} height={14} />}
           </div>
           <div>
             <h3 className={styles.title}>{diary.title}</h3>
