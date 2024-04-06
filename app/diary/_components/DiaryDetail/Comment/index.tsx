@@ -93,6 +93,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
       queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
       setReCommentValue("");
       showToast("답글이 생성되었습니다.", true);
+      setShowReCommentInput(false);
     },
     onError: () => {
       showToast("답글 생성에 실패했습니다.", false);
@@ -127,6 +128,11 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const handlePostReComment = () => {
     if (!reCommentValue.trim()) return;
     postReCommentMutation.mutate();
+  };
+
+  const handleReCommentButtonClick = (nickname: string) => {
+    setShowReCommentInput(true);
+    setReCommentValue(`@${nickname} `);
   };
 
   const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
@@ -184,7 +190,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
           )}
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className={styles.recommentButton} onClick={toggleReCommentInput}>
+            <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer.nickname)}>
               답글
             </button>
             <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleCommentLike}>

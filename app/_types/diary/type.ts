@@ -31,8 +31,9 @@ export interface CommentType {
   commentId: number;
   content: string;
   createdAt: string;
-  likeCount: number;
   isCurrentUserLiked: boolean;
+  likeCount: number;
+  recommentCount: number;
   writer: Writer;
   taggedUsers: Tag[];
 }
