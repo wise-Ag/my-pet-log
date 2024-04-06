@@ -94,10 +94,10 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
       setReCommentValue("");
-      showToast("대댓글이 생성되었습니다.", true);
+      showToast("답글이 생성되었습니다.", true);
     },
     onError: () => {
-      showToast("대댓글 생성에 실패했습니다.", false);
+      showToast("답글 생성에 실패했습니다.", false);
     },
   });
 

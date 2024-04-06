@@ -38,11 +38,11 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
     mutationFn: () => deleteComment({ commentId: reply.commentId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reComments", { ancestorId }] });
-      showToast("대댓글을 삭제했습니다.", true);
+      showToast("답글을 삭제했습니다.", true);
       closeModalFunc();
     },
     onError: () => {
-      showToast("대댓글 삭제에 실패했습니다.", false);
+      showToast("답글 삭제에 실패했습니다.", false);
     },
   });
 
@@ -50,11 +50,11 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
     mutationFn: () => putComment({ commentId: reply.commentId, content: newCommentValue }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reComments", { ancestorId }] });
-      showToast("대댓글을 수정했습니다.", true);
+      showToast("답글을 수정했습니다.", true);
       setIsEditing(false);
     },
     onError: () => {
-      showToast("대댓글 수정에 실패했습니다.", false);
+      showToast("답글 수정에 실패했습니다.", false);
     },
   });
 
@@ -64,7 +64,7 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
       queryClient.invalidateQueries({ queryKey: ["reComments", { ancestorId }] });
     },
     onError: () => {
-      showToast("대댓글 좋아요 실패", false);
+      showToast("답글 좋아요 실패", false);
     },
   });
 
@@ -135,7 +135,7 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
           </button>
         </div>
       </div>
-      {isModalOpen && <Modal text="정말 대댓글을 삭제하시겠습니까?" buttonText="삭제" onClick={() => deleteReCommentMutation.mutate()} onClose={closeModalFunc} />}
+      {isModalOpen && <Modal text="정말 답글을 삭제하시겠습니까?" buttonText="삭제" onClick={() => deleteReCommentMutation.mutate()} onClose={closeModalFunc} />}
     </div>
   );
 };
