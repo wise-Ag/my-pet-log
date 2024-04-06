@@ -70,17 +70,7 @@ const PetSubscriberList = ({ petId }: { petId: number }) => {
                   openModalFunc();
                 }}
               >
-                삭제
-              </button>
-              <div>|</div>
-              <button
-                className={button}
-                onClick={() => {
-                  setSelectedPetSubscriberId(member.id);
-                  openModalFunc();
-                }}
-              >
-                차단
+                차단하기
               </button>
             </div>
           </section>
