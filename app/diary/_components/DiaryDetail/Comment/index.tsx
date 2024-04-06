@@ -40,8 +40,6 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   const reComments = reCommentsData ?? [];
 
-  console.log(reComments);
-
   //댓글 삭제
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId: number) => deleteComment({ commentId }),
@@ -90,7 +88,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
-    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }), // 필요한 경우 taggedUserIds를 적절히 설정
+    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
       setReCommentValue("");
@@ -127,7 +125,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   };
 
   const handlePostReComment = () => {
-    if (!reCommentValue.trim()) return; // 내용이 없으면 전송하지 않음
+    if (!reCommentValue.trim()) return;
     postReCommentMutation.mutate();
   };
 

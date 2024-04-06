@@ -1,4 +1,5 @@
 import { deleteComment, postCommentLike, putComment } from "@/app/_api/diary";
+import { GetReCommentsResponse } from "@/app/_types/diary/type";
 import Modal from "@/app/_components/Modal";
 import { showToast } from "@/app/_components/Toast";
 import { useModal } from "@/app/_hooks/useModal";
@@ -37,7 +38,9 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
   const deleteReCommentMutation = useMutation({
     mutationFn: () => deleteComment({ commentId: reply.commentId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reComments", { ancestorId }] });
+      queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId], (oldData) => {
+        return oldData!.filter((comment) => comment.commentId !== reply.commentId);
+      });
       showToast("답글을 삭제했습니다.", true);
       closeModalFunc();
     },
@@ -49,7 +52,10 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
   const putReCommentMutation = useMutation({
     mutationFn: () => putComment({ commentId: reply.commentId, content: newCommentValue }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reComments", { ancestorId }] });
+      queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId], (oldData) => {
+        const newData = oldData!.map((comment) => (comment.commentId === reply.commentId ? { ...comment, content: newCommentValue } : comment));
+        return newData;
+      });
       showToast("답글을 수정했습니다.", true);
       setIsEditing(false);
     },
@@ -60,13 +66,40 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
 
   const postReCommentLikeMutation = useMutation({
     mutationFn: () => postCommentLike({ commentId: reply.commentId }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reComments", { ancestorId }] });
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["reComments", ancestorId],
+      });
+      const previousReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", ancestorId]);
+      queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId.toString()], (oldReComments) => {
+        return (
+          oldReComments?.map((reComment) =>
+            reComment.commentId === reply.commentId
+              ? { ...reComment, likeCount: reComment.isCurrentUserLiked ? reComment.likeCount - 1 : reComment.likeCount + 1, isCurrentUserLiked: !reComment.isCurrentUserLiked }
+              : reComment,
+          ) ?? []
+        );
+      });
+
+      return { previousReComments: previousReComments ?? [] };
     },
-    onError: () => {
-      showToast("답글 좋아요 실패", false);
+    onError: (err, variables, context) => {
+      if (context?.previousReComments) {
+        queryClient.setQueryData(["reComments", ancestorId.toString()], context.previousReComments);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["reComments", ancestorId],
+      });
     },
   });
+
+  // ...
+
+  const handleLikeClick = () => {
+    postReCommentLikeMutation.mutate();
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -129,7 +162,7 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
         )}
 
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button className={`${styles.commentLikeButton} ${reply.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={() => postReCommentLikeMutation.mutate()}>
+          <button className={`${styles.commentLikeButton} ${reply.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleLikeClick}>
             <LikeIcon color={reply.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
             {reply.likeCount}
           </button>
