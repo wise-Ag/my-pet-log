@@ -6,12 +6,37 @@ import scrollUpIcon from "@/public/icons/arrow-up.svg?url";
 import Modal from "@/app/_components/Modal";
 import { useModal } from "@/app/_hooks/useModal";
 import Notification from "../Notification/Notification";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteNotifications, postNotifications } from "@/app/_api/notifications";
+import { useEffect } from "react";
+import { NotificationContentType } from "@/app/_types/notifications/types";
 
-const HasNotification = ({ list }: { list: any[] }) => {
+const HasNotification = ({ list }: { list: NotificationContentType[] }) => {
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
 
   const newList = list?.filter((item) => !item.checked) ?? [];
   const pastList = list?.filter((item) => item.checked) ?? [];
+
+  const queryClient = useQueryClient();
+
+  const postNotificationsMutation = useMutation({
+    mutationFn: () => postNotifications(),
+  });
+
+  const deleteNotificationsMutation = useMutation({
+    // mutationKey: ["deleteNotificationsMutationKey"],
+    mutationFn: () => deleteNotifications(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      closeModalFunc();
+    },
+  });
+
+  useEffect(() => {
+    postNotificationsMutation.mutate();
+  }, []);
 
   return (
     <section className={styles.notificationPageContainer}>
@@ -57,7 +82,16 @@ const HasNotification = ({ list }: { list: any[] }) => {
       >
         <Image src={scrollUpIcon} alt="스크롤 버튼 화살표 아이콘" width={19} height={19} />
       </button>
-      {isModalOpen && <Modal text="이전 알림을 모두 삭제하시겠습니까?" buttonText="확인" onClick={() => {}} onClose={closeModalFunc} />}
+      {isModalOpen && (
+        <Modal
+          text="이전 알림을 모두 삭제하시겠습니까?"
+          buttonText="확인"
+          onClick={() => {
+            deleteNotificationsMutation.mutate();
+          }}
+          onClose={closeModalFunc}
+        />
+      )}
     </section>
   );
 };

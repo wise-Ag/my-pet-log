@@ -1,6 +1,5 @@
 import Image from "next/image";
 import * as styles from "./Notification.css";
-import SampleImageSrc from "@/public/icons/user-profile-default-no-camera.svg?url";
 
 const Notification = ({ type, item }: { type: "new" | "past"; item: any }) => {
   return (

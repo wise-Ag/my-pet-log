@@ -1,5 +1,11 @@
 import { style } from "@vanilla-extract/css";
 
+export const notificationListBase = style({
+  display: "flex",
+  flexDirection: "column",
+  gap: "0.8rem",
+});
+
 export const notificationPageContainer = style({
   display: "grid",
   gap: "3.2rem",
@@ -12,11 +18,7 @@ export const notificationContainer = style({
   gap: "1.6rem",
 });
 
-export const newNotificationList = style({
-  display: "flex",
-  flexDirection: "column",
-  gap: "0.8rem",
-});
+export const newNotificationList = style([notificationListBase]);
 
 export const noNewNotification = style({
   fontSize: "1.4rem",
@@ -43,11 +45,14 @@ export const deleteButton = style({
   color: "var(--Gray81)",
 });
 
-export const pastNotificationList = style({
-  fontSize: "1.4rem",
-  fontWeight: "500",
-  color: "var(--Gray81)",
-});
+export const pastNotificationList = style([
+  notificationListBase,
+  {
+    fontSize: "1.4rem",
+    fontWeight: "500",
+    color: "var(--Gray81)",
+  },
+]);
 
 export const days = style({
   fontSize: "1.2rem",
