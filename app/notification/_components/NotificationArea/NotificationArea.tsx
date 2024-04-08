@@ -2,11 +2,12 @@
 
 import { getNotifications } from "@/app/_api/notifications";
 
-import { NOTIFICATION_PAGE_SIZE } from "../../page";
 import HasNotification from "../HasNotification/HasNotification";
 import NoNotification from "../NoNotification/NoNotification";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/app/_hooks/useInfiniteScroll";
+
+export const NOTIFICATION_PAGE_SIZE = 20;
 
 const NotificationArea = () => {
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
