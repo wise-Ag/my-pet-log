@@ -31,7 +31,7 @@ export const title = style({
   color: "var(--Gray81)",
 });
 
-export const pastNotificationTitleArea = style({
+export const newNotificationTitleArea = style({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",

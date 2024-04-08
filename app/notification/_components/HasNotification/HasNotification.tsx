@@ -7,17 +7,22 @@ import Modal from "@/app/_components/Modal";
 import { useModal } from "@/app/_hooks/useModal";
 import Notification from "../Notification/Notification";
 
-const HasNotification = ({ list }: { list: any[] | null }) => {
+const HasNotification = ({ list }: { list: any[] }) => {
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
 
-  const newList = list?.filter((item) => !item.checked) ?? null;
-  const pastList = list?.filter((item) => item.checked) ?? null;
+  const newList = list?.filter((item) => !item.checked) ?? [];
+  const pastList = list?.filter((item) => item.checked) ?? [];
 
   return (
     <section className={styles.notificationPageContainer}>
       <div className={styles.notificationContainer}>
-        <h2 className={styles.title}>새 알림</h2>
-        {newList ? (
+        <div className={styles.newNotificationTitleArea}>
+          <h2 className={styles.title}>새 알림</h2>
+          <button className={styles.deleteButton} onClick={openModalFunc}>
+            전체 삭제
+          </button>
+        </div>
+        {newList.length > 0 ? (
           <ul className={styles.newNotificationList}>
             {newList.map((item) => (
               <Notification key={item.id} type={"new"} item={item} />
@@ -28,14 +33,9 @@ const HasNotification = ({ list }: { list: any[] | null }) => {
         )}
       </div>
 
-      {pastList && (
+      {pastList.length > 0 && (
         <div className={styles.notificationContainer}>
-          <div className={styles.pastNotificationTitleArea}>
-            <h2 className={styles.title}>이전 알림</h2>
-            <button className={styles.deleteButton} onClick={openModalFunc}>
-              삭제
-            </button>
-          </div>
+          <h2 className={styles.title}>이전 알림</h2>
           <ul className={styles.pastNotificationList}>
             {pastList.map((item) => (
               <Notification key={item.id} type={"past"} item={item} />
