@@ -18,7 +18,11 @@ const NotificationArea = () => {
   });
 
   // const { targetRef, setTargetActive } = useInfiniteScroll({ callbackFunc: fetchNextPage });
-  return data ? <HasNotification list={data.pages?.[0]?.content ?? []} /> : <NoNotification />;
+
+  const notificationList = data?.pages?.[0]?.content ?? [];
+  return notificationList.length > 0 ? <HasNotification list={notificationList} /> : <NoNotification />;
 };
 
 export default NotificationArea;
+
+NoNotification;

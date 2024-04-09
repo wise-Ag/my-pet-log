@@ -1,8 +1,10 @@
 import { style } from "@vanilla-extract/css";
 
 export const container = style({
-  paddingTop: "50%",
-  textAlign: "center",
+  display: "grid",
+  justifyItems: "center",
+  alignContent: "center",
+  height: "calc(100vh - 5.6rem)",
 });
 
 export const image = style({

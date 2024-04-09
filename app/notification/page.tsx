@@ -1,7 +1,9 @@
 import { NextPage } from "next";
-import { HydrationBoundary, QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
-import { getNotifications } from "../_api/notifications";
-import NotificationArea, { NOTIFICATION_PAGE_SIZE } from "./_components/NotificationArea/NotificationArea";
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { getNotifications } from "@/app/_api/notifications";
+import NotificationArea from "./_components/NotificationArea/NotificationArea";
+
+export const NOTIFICATION_PAGE_SIZE = 20;
 
 const NotificationPage: NextPage = async () => {
   const queryClient = new QueryClient();
