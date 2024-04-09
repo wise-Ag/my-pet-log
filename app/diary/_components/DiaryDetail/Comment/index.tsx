@@ -40,8 +40,6 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   const reComments = reCommentsData ?? [];
 
-  console.log(reComments);
-
   //댓글 삭제
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId: number) => deleteComment({ commentId }),
@@ -90,14 +88,15 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
-    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }), // 필요한 경우 taggedUserIds를 적절히 설정
+    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
       setReCommentValue("");
-      showToast("대댓글이 생성되었습니다.", true);
+      showToast("답글이 생성되었습니다.", true);
+      setShowReCommentInput(false);
     },
     onError: () => {
-      showToast("대댓글 생성에 실패했습니다.", false);
+      showToast("답글 생성에 실패했습니다.", false);
     },
   });
 
@@ -127,8 +126,13 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   };
 
   const handlePostReComment = () => {
-    if (!reCommentValue.trim()) return; // 내용이 없으면 전송하지 않음
+    if (!reCommentValue.trim()) return;
     postReCommentMutation.mutate();
+  };
+
+  const handleReCommentButtonClick = (nickname: string) => {
+    setShowReCommentInput(true);
+    setReCommentValue(`@${nickname} `);
   };
 
   const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
@@ -186,7 +190,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
           )}
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className={styles.recommentButton} onClick={toggleReCommentInput}>
+            <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer.nickname)}>
               답글
             </button>
             <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleCommentLike}>
