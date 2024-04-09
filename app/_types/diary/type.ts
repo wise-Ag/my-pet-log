@@ -82,6 +82,26 @@ export interface GetDiaryListResponse {
   empty: boolean;
 }
 
+export interface getFeedResponse {
+  pet: {
+    name: string;
+    id: number;
+    profilePath: string | null;
+    isSubscribed: boolean;
+  };
+  diaryId: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  medias: {
+    mediaId: number;
+    path: string;
+  }[];
+  commentCount: number;
+  likeCount: number;
+  isCurrentUserLiked: boolean;
+}
+
 export interface GetDiaryListRequest {
   page: number | unknown;
   size: number;
@@ -216,4 +236,9 @@ export interface getSearchDiaryRequest {
   page: number | unknown;
   size: number;
   keyword: string | null;
+}
+
+export interface getFeedRequest {
+  page: number | unknown;
+  size: number | unknown;
 }

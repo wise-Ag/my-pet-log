@@ -7,3 +7,5 @@ export const DIARY_SEARCH_PAGE_SIZE = 8;
 export const DIARY_TITLE_MAX_LENGTH = 15;
 
 export const DIARY_CONTENT_MAX_LENGTH = 500;
+
+export const FEED_PAGE_SIZE = 5;

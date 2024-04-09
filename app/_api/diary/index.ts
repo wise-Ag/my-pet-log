@@ -15,6 +15,7 @@ import {
   PostDiaryVideoResponse,
   PutCommentRequest,
   getSearchDiaryRequest,
+  getFeedRequest,
 } from "@/app/_types/diary/type";
 import { cookies } from "next/headers";
 
@@ -69,6 +70,16 @@ export const getReComments = async ({ ancestorId }: GetReCommentsRequest): Promi
   const petId = cookies().get("petId")?.value;
   try {
     const res = await instance.get(`pets/${petId}/diaries/comments/${ancestorId}/recomment`);
+    return res.data;
+  } catch (error: any) {
+    console.error(error.response);
+    return null;
+  }
+};
+
+export const getFeed = async ({ page, size }: getFeedRequest) => {
+  try {
+    const res = await instance.get(`diaries/feed`, { params: { page, size } });
     return res.data;
   } catch (error: any) {
     console.error(error.response);

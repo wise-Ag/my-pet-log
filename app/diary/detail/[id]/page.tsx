@@ -1,7 +1,7 @@
 import { getComments, getDiary } from "@/app/_api/diary";
 import { getMe } from "@/app/_api/users";
 import DiaryDetail from "@/app/diary/_components/DiaryDetail";
-import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/my-pet/constant";
+import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { container, root } from "@/app/diary/(diary)/my-pet/style.css";
