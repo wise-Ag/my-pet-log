@@ -35,7 +35,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   //대댓글 조회
   const { data: reCommentsData } = useQuery({
     queryKey: ["reComments", commentId],
-    queryFn: () => getReComments({ ancestorId: commentId }),
+    queryFn: () => getReComments({ diaryId, ancestorId: commentId }),
   });
 
   const reComments = reCommentsData ?? [];
@@ -45,11 +45,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     mutationFn: (commentId: number) => deleteComment({ commentId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", { petId, diaryId }] });
-      // const newComments = { ...queryClient.getQueryData<InfiniteData<GetCommentsResponse>>(["comments", { petId, diaryId }]) };
-      // if (newComments.pages) {
-      //   newComments.pages[pageNum].content.splice(contentNum, 1);
-      //   queryClient.setQueryData(["comments", { petId, diaryId }], newComments);
-      // }
+
       showToast("댓글을 삭제했습니다.", true);
       closeModalFunc();
 
@@ -140,13 +136,13 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   return (
     <>
       <div className={styles.commentContainer}>
-        <Image className={styles.profileImage} src={getImagePath(comment.writer.profilePath)} alt="유저 프로필 사진" width={30} height={30} />
+        <Image className={styles.profileImage} src={getImagePath(comment.writer?.profilePath)} alt="유저 프로필 사진" width={30} height={30} />
         <div className={styles.commentMain}>
           <div className={styles.commentHeader}>
             <p style={{ fontSize: "1.4rem", fontWeight: "700" }}>
-              {comment.writer.nickname} <span style={{ color: "var(--GrayA4)", fontWeight: "400" }}>{comment.createdAt}</span>
+              {comment.writer?.nickname} <span style={{ color: "var(--GrayA4)", fontWeight: "400" }}>{comment.createdAt}</span>
             </p>
-            {comment.writer.isCurrentUser && (
+            {comment.writer?.isCurrentUser && (
               <div onBlur={() => setIsKebabOpen(false)} tabIndex={1} style={{ position: "relative" }}>
                 <Image src={KebabIcon} alt="kebab icon" width={24} height={24} onClick={() => setIsKebabOpen(!isKebabOpen)} />
                 {isKebabOpen && (
@@ -190,7 +186,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
           )}
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer.nickname)}>
+            <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer?.nickname)}>
               답글
             </button>
             <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleCommentLike}>

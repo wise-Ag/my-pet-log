@@ -29,11 +29,12 @@ export interface Writer {
 
 export interface CommentType {
   commentId: number;
+  isDeleted: boolean;
+  recommentCount: number;
   content: string;
   createdAt: string;
   isCurrentUserLiked: boolean;
   likeCount: number;
-  recommentCount: number;
   writer: Writer;
   taggedUsers: Tag[];
 }
@@ -112,6 +113,7 @@ export interface GetCommentsRequest extends GetDiaryListRequest {
 }
 
 export interface GetReCommentsRequest {
+  diaryId: number;
   ancestorId: number;
 }
 
@@ -170,37 +172,6 @@ export interface GetCommentsResponse {
   last: boolean;
   empty: boolean;
 }
-
-// export interface GetReCommentsResponse {
-//   content: [
-//     {
-//       commentId: number;
-//       content: string;
-//       createdAt: string;
-//       isCurrentUserLiked: boolean;
-//       likeCount: number;
-//       writer: {
-//         id: string;
-//         nickname: string;
-//         profilePath: string;
-//         isCurrentUser: boolean;
-//       };
-//       receiver: {
-//         id: string;
-//         nickname: string;
-//         profilePath: string;
-//         isCurrentUser: boolean;
-//       };
-//       taggedUsers: [
-//         {
-//           id: string;
-//           nickname: string;
-//           isCurrentUser: boolean;
-//         },
-//       ];
-//     },
-//   ];
-// }
 
 export type GetReCommentsResponse = CommentType[];
 

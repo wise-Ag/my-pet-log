@@ -66,10 +66,10 @@ export const getComments = async ({ diaryId, page, size }: GetCommentsRequest): 
   }
 };
 
-export const getReComments = async ({ ancestorId }: GetReCommentsRequest): Promise<GetReCommentsResponse | null> => {
+export const getReComments = async ({ ancestorId, diaryId }: GetReCommentsRequest): Promise<GetReCommentsResponse | null> => {
   const petId = cookies().get("petId")?.value;
   try {
-    const res = await instance.get(`pets/${petId}/diaries/comments/${ancestorId}/recomment`);
+    const res = await instance.get(`pets/${petId}/diaries/${diaryId}/comments/${ancestorId}/recomment`);
     return res.data;
   } catch (error: any) {
     console.error(error.response);
