@@ -30,7 +30,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   return (
     <>
       <section className={styles.profileInfo}>
-        <Image className={styles.profileImage} src={getImagePath(feed.pet.profilePath)} alt="profile image" width={45} height={45} />
+        <Image className={styles.profileImage} src={getImagePath(feed.pet.profilePath)} alt="profile image" width={45} height={45} priority />
         <div className={styles.text}>
           {feed.pet.name} · {feed.isCurrentUserLiked ? "구독 중 🐾" : "구독하기"}
         </div>
@@ -52,7 +52,14 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
                   <source src={`${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${media.path}`} type="video/mp4" />
                 </video>
               ) : (
-                <Image src={getImagePathWithPrefix(media.path)} alt="upload images" layout="fill" objectFit="cover" />
+                <Image
+                  src={getImagePathWithPrefix(media.path)}
+                  alt="upload images"
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                />
               )}
             </div>
           </SwiperSlide>
