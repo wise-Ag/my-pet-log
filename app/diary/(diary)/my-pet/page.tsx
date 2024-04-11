@@ -1,6 +1,6 @@
 import { getDiaryList } from "@/app/_api/diary";
 import DiaryList from "@/app/diary/_components/DiaryList";
-import { DIARY_PAGE_SIZE } from "@/app/diary/(diary)/my-pet/constant";
+import { DIARY_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { container, root } from "./style.css";
