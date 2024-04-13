@@ -15,17 +15,57 @@ import { useModal } from "@/app/_hooks/useModal";
 import CommentModalContainer from "@/app/diary/_components/CommentModalContainer";
 import { getFeedResponse } from "@/app/_types/diary/type";
 import NoPetProfileImage from "@/public/images/pet-profile-default.svg?url";
+import { postDiaryLike } from "@/app/_api/diary";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const lines = feed.content.split("\n");
+  const [isLiked, setIsLiked] = useState(feed.isCurrentUserLiked);
+  const [likeCount, setLikeCount] = useState(feed.likeCount);
   const firstLine = lines[0];
   const additionalLines = lines.slice(1).join("\n");
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
+  const queryClient = useQueryClient();
 
   const getImagePathWithPrefix = (path: string | null) => {
     return path ? `${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${path}` : NoPetProfileImage;
   };
+
+  const handleLikeClick = () => {
+    setIsLiked(!isLiked);
+    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+    postDiaryLikeMutation.mutate();
+  };
+
+  const postDiaryLikeMutation = useMutation({
+    mutationFn: () => postDiaryLike({ diaryId: feed.diaryId }),
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["feed", feed.diaryId],
+      });
+
+      const previousFeed = queryClient.getQueryData<getFeedResponse>(["feed", feed.diaryId]);
+      if (previousFeed) {
+        queryClient.setQueryData(["feed", feed.diaryId], {
+          ...previousFeed,
+          isCurrentUserLiked: !previousFeed.isCurrentUserLiked,
+          likeCount: previousFeed.isCurrentUserLiked ? previousFeed.likeCount - 1 : previousFeed.likeCount + 1,
+        });
+      }
+      return { previousFeed };
+    },
+    onError: (err, newTodo, context) => {
+      if (context?.previousFeed) {
+        queryClient.setQueryData(["feed", feed.diaryId], context.previousFeed);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["feed", feed.diaryId],
+      });
+    },
+  });
 
   return (
     <>
@@ -65,7 +105,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <HeartIcon className={styles.icon} />
+      <HeartIcon onClick={handleLikeClick} className={styles.icon} style={{ cursor: "pointer", fill: isLiked ? "var(--MainOrange)" : "var(--Gray33)" }} />
       <ChatIcon className={styles.icon} />
       <section className={styles.greatChat}>
         {feed.commentCount > 0 && <button className={styles.greatText}>좋아요 {feed.commentCount}개</button>}
