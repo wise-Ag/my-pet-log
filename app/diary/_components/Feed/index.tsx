@@ -108,7 +108,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
       <HeartIcon onClick={handleLikeClick} className={styles.icon} style={{ cursor: "pointer", fill: isLiked ? "var(--MainOrange)" : "var(--Gray33)" }} />
       <ChatIcon className={styles.icon} />
       <section className={styles.greatChat}>
-        {feed.commentCount > 0 && <button className={styles.greatText}>좋아요 {feed.commentCount}개</button>}
+        {likeCount > 0 && <span className={styles.greatText}>좋아요 {likeCount}개</span>}
         <div className={styles.nameTitle}>
           {feed.pet.name} <span className={styles.title}>{feed.title}</span>
         </div>
