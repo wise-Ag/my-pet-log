@@ -30,6 +30,16 @@ export const commentContent = style({
   whiteSpace: "pre-wrap",
 });
 
+export const taggedNicknames = style({
+  marginBottom: "1rem",
+});
+
+export const tag = style({
+  fontSize: "1.4rem",
+  fontWeight: "bold",
+  color: "var(--MainOrange)",
+});
+
 export const commentTextarea = style([
   commentContent,
   {
@@ -52,7 +62,7 @@ export const commentEditButton = style({
   fontSize: " 1.3rem",
   textDecorationLine: "underline",
 
-  marginRight: "0.8rem",
+  margin: "1rem 0.8rem 1rem 0",
 });
 
 export const profileImage = style({

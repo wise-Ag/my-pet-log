@@ -10,7 +10,7 @@ import KebabIcon from "@/public/icons/kebab.svg?url";
 import LikeIcon from "@/public/icons/like.svg";
 import { InfiniteData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { useRef, ChangeEvent, useState } from "react";
 import ReComment from "../ReComment";
 import * as styles from "./style.css";
 
@@ -29,7 +29,9 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const [newCommentValue, setNewCommentValue] = useState("");
   const [reCommentValue, setReCommentValue] = useState("");
   const [showReCommentInput, setShowReCommentInput] = useState(false);
+  const [taggedNicknames, setTaggedNicknames] = useState<string[]>([]);
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
 
   //대댓글 조회
@@ -117,10 +119,6 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     setNewCommentValue(comment.content.replaceAll("<br>", "\n"));
   };
 
-  const handleReCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setReCommentValue(e.target.value);
-  };
-
   const handlePostReComment = () => {
     if (!reCommentValue.trim()) return;
     postReCommentMutation.mutate();
@@ -128,7 +126,8 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   const handleReCommentButtonClick = (nickname: string) => {
     setShowReCommentInput(true);
-    setReCommentValue(`@${nickname} `);
+    setTaggedNicknames([nickname]);
+    textAreaRef.current?.focus();
   };
 
   const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
@@ -217,7 +216,22 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
           </div>
           {showReCommentInput && (
             <div>
-              <textarea placeholder="답글을 작성하세요" value={reCommentValue} onChange={handleReCommentChange} className={styles.commentTextarea} />
+              {/* 태그된 닉네임을 별도로 표시 */}
+              <div className={styles.taggedNicknames}>
+                {taggedNicknames.map((nickname) => (
+                  <span key={nickname} className={styles.tag}>
+                    @{nickname}
+                  </span>
+                ))}
+              </div>
+              {/* 답글 입력란 */}
+              <textarea
+                className={styles.commentTextarea}
+                ref={textAreaRef}
+                value={reCommentValue}
+                onChange={(e) => setReCommentValue(e.target.value)}
+                placeholder="답글을 작성하세요"
+              />
               <button className={styles.commentEditButton} onClick={handlePostReComment}>
                 등록
               </button>
