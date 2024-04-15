@@ -18,6 +18,7 @@ import { getFeedResponse } from "@/app/_types/diary/type";
 import NoPetProfileImage from "@/public/images/pet-profile-default.svg?url";
 import { postDiaryLike } from "@/app/_api/diary";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { NoMedia } from "./NoMedia";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -76,67 +77,73 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
           {feed.pet.name} · {feed.isCurrentUserLiked ? "구독 중 🐾" : "구독하기"}
         </div>
       </section>
-      <Swiper
-        className="friend"
-        centeredSlides={true}
-        pagination={{
-          dynamicBullets: true,
-          dynamicMainBullets: 3,
-        }}
-        modules={[Pagination]}
-      >
-        {feed.medias.map((media) => (
-          <SwiperSlide key={media.mediaId}>
-            <div className={styles.image}>
-              {media.path.endsWith(".mp4") ? (
-                <video controls className={styles.videoImage}>
-                  <source src={`${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${media.path}`} type="video/mp4" />
-                </video>
-              ) : (
-                <Image
-                  src={getImagePathWithPrefix(media.path)}
-                  alt="upload images"
-                  fill
-                  style={{ objectFit: "cover" }}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority
-                />
-              )}
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
-        {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
-      </span>
-      <ChatIcon className={styles.icon} />
-      <section className={styles.greatChat}>
-        {likeCount > 0 && <span className={styles.greatText}>좋아요 {likeCount}개</span>}
-        <div className={styles.nameTitle}>
-          {feed.pet.name} <span className={styles.title}>{feed.title}</span>
-        </div>
-        <section className={styles.description}>
-          <span>
-            {firstLine}
-            {lines.length > 1 && !isExpanded && (
-              <span onClick={() => setIsExpanded(true)}>
-                ... <button className={styles.seeMore}>더 보기</button>
-              </span>
-            )}
-          </span>
-          <div className={`${styles.additionalContent} ${isExpanded ? styles.showAdditionalContent : ""}`}>
-            {additionalLines.split("\n").map((line, index) => (
-              <p key={index}>{line}</p>
+      {feed.medias && feed.medias.length > 0 ? (
+        <>
+          <Swiper
+            className="friend"
+            centeredSlides={true}
+            pagination={{
+              dynamicBullets: true,
+              dynamicMainBullets: 3,
+            }}
+            modules={[Pagination]}
+          >
+            {feed.medias.map((media) => (
+              <SwiperSlide key={media.mediaId}>
+                <div className={styles.image}>
+                  {media.path.endsWith(".mp4") ? (
+                    <video controls className={styles.videoImage}>
+                      <source src={`${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${media.path}`} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={getImagePathWithPrefix(media.path)}
+                      alt="upload images"
+                      fill
+                      style={{ objectFit: "cover" }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority
+                    />
+                  )}
+                </div>
+              </SwiperSlide>
             ))}
-          </div>
-        </section>
-        {feed.commentCount > 0 && (
-          <div className={styles.comment} onClick={openModalFunc}>
-            댓글 {feed.commentCount}개 모두 보기
-          </div>
-        )}
-        <div className={styles.date}>{feed.createdAt}</div>
-      </section>
+          </Swiper>
+          <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+            {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
+          </span>
+          <ChatIcon className={styles.icon} />
+          <section className={styles.greatChat}>
+            {likeCount > 0 && <div className={styles.greatText}>좋아요 {likeCount}개</div>}
+            <div className={styles.nameTitle}>
+              {feed.pet.name} <span className={styles.title}>{feed.title}</span>
+            </div>
+            <section className={styles.description}>
+              <span>
+                {firstLine}
+                {lines.length > 1 && !isExpanded && (
+                  <span onClick={() => setIsExpanded(true)}>
+                    ... <button className={styles.seeMore}>더 보기</button>
+                  </span>
+                )}
+              </span>
+              <div className={`${styles.additionalContent} ${isExpanded ? styles.showAdditionalContent : ""}`}>
+                {additionalLines.split("\n").map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))}
+              </div>
+            </section>
+            {feed.commentCount > 0 && (
+              <div className={styles.comment} onClick={openModalFunc}>
+                댓글 {feed.commentCount}개 모두 보기
+              </div>
+            )}
+            <div className={styles.date}>{feed.createdAt}</div>
+          </section>
+        </>
+      ) : (
+        <NoMedia feed={feed} />
+      )}
       {isModalOpen && (
         <CommentModalContainer onClose={closeModalFunc}>
           <div className={styles.commentContainer}>댓글창임</div>
