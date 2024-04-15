@@ -138,6 +138,12 @@ const bounce = keyframes({
   "100%": { transform: "scale(0.9)", transformOrigin: "center center" },
 });
 
-export const LikeIcon = style({
+export const likeIcon = style({
   animation: `${bounce} 0.4s linear 1`,
+});
+
+export const deletedCommentText = style({
+  color: "var(--Gray81)",
+  fontSize: "1.3rem",
+  fontStyle: "italic",
 });

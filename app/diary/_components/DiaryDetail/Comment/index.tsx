@@ -133,6 +133,27 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
 
+  const renderRecomments = () => {
+    return (
+      <div>
+        {reComments.map((reComment) => (
+          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} />
+        ))}
+      </div>
+    );
+  };
+
+  if (comment.isDeleted) {
+    return (
+      <>
+        <div className={styles.commentContainer}>
+          <p className={styles.deletedCommentText}>삭제된 댓글입니다</p>
+        </div>
+        {renderRecomments()}
+      </>
+    );
+  }
+
   return (
     <>
       <div className={styles.commentContainer}>
@@ -189,7 +210,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
             <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer?.nickname)}>
               답글
             </button>
-            <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleCommentLike}>
+            <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.likeIcon : ""}`} onClick={handleCommentLike}>
               <LikeIcon color={comment.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
               {comment.likeCount}
             </button>
@@ -208,11 +229,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
         </div>
       </div>
 
-      <div>
-        {reComments.map((reComment) => (
-          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} />
-        ))}
-      </div>
+      <div>{renderRecomments()}</div>
 
       <div>
         {isModalOpen && <Modal text="정말 댓글을 삭제하시겠습니까?" buttonText="삭제" onClick={() => deleteCommentMutation.mutate(comment.commentId)} onClose={closeModalFunc} />}
