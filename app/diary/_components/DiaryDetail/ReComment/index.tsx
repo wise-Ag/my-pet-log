@@ -95,8 +95,6 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
     },
   });
 
-  // ...
-
   const handleLikeClick = () => {
     postReCommentLikeMutation.mutate();
   };

@@ -119,6 +119,8 @@ export const commonKebab = style({
   boxShadow: "0px 4px 6px 5px rgba(105, 105, 105, 0.07)",
 
   zIndex: 111,
+
+  cursor: "pointer",
 });
 
 export const commentKebab = style([

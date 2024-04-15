@@ -34,7 +34,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   //대댓글 조회
   const { data: reCommentsData } = useQuery({
-    queryKey: ["reComments", commentId],
+    queryKey: ["reComments", diaryId, commentId],
     queryFn: () => getReComments({ diaryId, ancestorId: commentId }),
   });
 
