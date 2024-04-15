@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import "./swiper.css";
 import HeartIcon from "@/public/icons/heart-icon.svg";
+import HeartFillIcon from "@/public/icons/heart-fill.svg";
 import ChatIcon from "@/public/icons/chat-icon.svg";
 import { useState } from "react";
 import { useModal } from "@/app/_hooks/useModal";
@@ -105,7 +106,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <HeartIcon onClick={handleLikeClick} className={styles.icon} style={{ cursor: "pointer", fill: isLiked ? "var(--MainOrange)" : "var(--Gray33)" }} />
+      <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+        {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
+      </span>
       <ChatIcon className={styles.icon} />
       <section className={styles.greatChat}>
         {likeCount > 0 && <span className={styles.greatText}>좋아요 {likeCount}개</span>}

@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import { style, keyframes } from "@vanilla-extract/css";
 
 export const profileInfo = style({
   margin: "2rem 1rem 1rem",
@@ -34,6 +34,18 @@ export const videoImage = style({
       height: "41.8rem",
     },
   },
+});
+
+const bounce = keyframes({
+  "0%": { transform: "scale(0.6)", transformOrigin: "center center" },
+  "25%": { transform: "scale(0.9)" },
+  "50%": { transform: "scale(1.1)" },
+  "75%": { transform: "scale(1)" },
+  "100%": { transform: "scale(0.9)", transformOrigin: "center center" },
+});
+
+export const LikeIcon = style({
+  animation: `${bounce} 0.4s linear 1`,
 });
 
 export const icon = style({
