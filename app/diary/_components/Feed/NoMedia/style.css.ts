@@ -93,3 +93,12 @@ export const commentContainer = style({
 export const likeComment = style({
   marginTop: "0.5rem",
 });
+
+export const commentTitle = style({
+  padding: "1.8rem",
+
+  fontSize: "1.6rem",
+  fontWeight: "500",
+
+  borderBottom: "1px solid var(--GrayE8)",
+});

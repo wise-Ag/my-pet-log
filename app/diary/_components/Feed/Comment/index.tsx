@@ -7,12 +7,12 @@ import { useModal } from "@/app/_hooks/useModal";
 import { CommentType, GetCommentsResponse, GetDiaryResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
-import LikeIcon from "@/public/icons/like.svg";
-import { InfiniteData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
-import ReComment from "../ReComment";
 import * as styles from "./style.css";
+import HeartIcon from "@/public/icons/small-heart.svg";
+import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
 
 interface CommentProps {
   comment: CommentType;
@@ -23,7 +23,7 @@ interface CommentProps {
   commentId: number;
 }
 
-const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: CommentProps) => {
+export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: CommentProps) => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [newCommentValue, setNewCommentValue] = useState("");
@@ -31,14 +31,6 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const [showReCommentInput, setShowReCommentInput] = useState(false);
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const queryClient = useQueryClient();
-
-  //대댓글 조회
-  const { data: reCommentsData } = useQuery({
-    queryKey: ["reComments", commentId],
-    queryFn: () => getReComments({ diaryId, ancestorId: commentId }),
-  });
-
-  const reComments = reCommentsData ?? [];
 
   //댓글 삭제
   const deleteCommentMutation = useMutation({
@@ -185,12 +177,12 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
             <pre className={styles.commentContent}>{comment.content}</pre>
           )}
 
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.2rem" }}>
             <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer?.nickname)}>
               답글
             </button>
-            <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleCommentLike}>
-              <LikeIcon color={comment.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
+            <button className={styles.commentLikeButton} onClick={handleCommentLike}>
+              {comment.isCurrentUserLiked ? <HeartFillIcon className={`${styles.LikeIcon}`} /> : <HeartIcon style={{ fill: "var(--Gray33)" }} />}
               {comment.likeCount}
             </button>
           </div>
@@ -209,16 +201,8 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
       </div>
 
       <div>
-        {reComments.map((reComment) => (
-          <ReComment key={reComment.commentId} petId={petId} ancestorId={comment.commentId} reply={reComment} />
-        ))}
-      </div>
-
-      <div>
         {isModalOpen && <Modal text="정말 댓글을 삭제하시겠습니까?" buttonText="삭제" onClick={() => deleteCommentMutation.mutate(comment.commentId)} onClose={closeModalFunc} />}
       </div>
     </>
   );
 };
-
-export default Comment;

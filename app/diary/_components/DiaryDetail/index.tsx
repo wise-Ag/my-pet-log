@@ -57,7 +57,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
     isLoading,
   } = useInfiniteQuery({
     queryKey: ["comments", { petId, diaryId }],
-    queryFn: ({ pageParam }) => getComments({ diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
+    queryFn: ({ pageParam }) => getComments({ petId, diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => (lastPage?.last ? undefined : lastPageParam + 1),
   });

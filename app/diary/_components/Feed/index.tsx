@@ -16,9 +16,12 @@ import { useModal } from "@/app/_hooks/useModal";
 import CommentModalContainer from "@/app/diary/_components/CommentModalContainer";
 import { getFeedResponse } from "@/app/_types/diary/type";
 import NoPetProfileImage from "@/public/images/pet-profile-default.svg?url";
-import { postDiaryLike } from "@/app/_api/diary";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postDiaryLike, getComments } from "@/app/_api/diary";
+import { useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { NoMedia } from "./NoMedia";
+import { Comment } from "@/app/diary/_components/Feed/Comment";
+import { useInfiniteScroll } from "@/app/_hooks/useInfiniteScroll";
+import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -29,6 +32,21 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const additionalLines = lines.slice(1).join("\n");
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const queryClient = useQueryClient();
+
+  //댓글 조회
+  const {
+    data: comments,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ["comments", { petId: feed.pet.id, diaryId: feed.diaryId }],
+    queryFn: ({ pageParam }) => getComments({ petId: feed.pet.id, diaryId: feed.diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => (lastPage?.last ? undefined : lastPageParam + 1),
+  });
+
+  const { targetRef, setTargetActive } = useInfiniteScroll({ callbackFunc: fetchNextPage });
 
   const getImagePathWithPrefix = (path: string | null) => {
     return path ? `${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${path}` : NoPetProfileImage;
@@ -109,10 +127,10 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
               </SwiperSlide>
             ))}
           </Swiper>
-          <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+          <button onClick={handleLikeClick}>
             {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
-          </span>
-          <ChatIcon className={styles.icon} />
+          </button>
+          <ChatIcon className={styles.icon} onClick={openModalFunc} />
           <section className={styles.greatChat}>
             {likeCount > 0 && <div className={styles.greatText}>좋아요 {likeCount}개</div>}
             <div className={styles.nameTitle}>
@@ -134,9 +152,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
               </div>
             </section>
             {feed.commentCount > 0 && (
-              <div className={styles.comment} onClick={openModalFunc}>
+              <button className={styles.comment} onClick={openModalFunc}>
                 댓글 {feed.commentCount}개 모두 보기
-              </div>
+              </button>
             )}
             <div className={styles.date}>{feed.createdAt}</div>
           </section>
@@ -146,7 +164,23 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
       )}
       {isModalOpen && (
         <CommentModalContainer onClose={closeModalFunc}>
-          <div className={styles.commentContainer}>댓글창임</div>
+          <div className={styles.commentContainer}>
+            <div className={styles.commentTitle}>댓글</div>
+            {comments?.pages.map((page, pageNum) =>
+              page?.content.map((comment, contentNum) => (
+                <Comment
+                  comment={comment}
+                  diaryId={feed.diaryId}
+                  pageNum={pageNum}
+                  contentNum={contentNum}
+                  petId={feed.pet.id}
+                  commentId={comment.commentId}
+                  key={comment.commentId}
+                />
+              )),
+            )}
+            {!isLoading && hasNextPage && <div ref={targetRef} />}
+          </div>
         </CommentModalContainer>
       )}
     </>

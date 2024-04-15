@@ -8,8 +8,11 @@ import { useState } from "react";
 import { useModal } from "@/app/_hooks/useModal";
 import CommentModalContainer from "@/app/diary/_components/CommentModalContainer";
 import { getFeedResponse } from "@/app/_types/diary/type";
-import { postDiaryLike } from "@/app/_api/diary";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postDiaryLike, getComments } from "@/app/_api/diary";
+import { useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteScroll } from "@/app/_hooks/useInfiniteScroll";
+import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/constant";
+import { Comment } from "@/app/diary/_components/Feed/Comment";
 
 export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -20,6 +23,21 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
   const additionalLines = lines.slice(1).join("\n");
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const queryClient = useQueryClient();
+
+  //댓글 조회
+  const {
+    data: comments,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ["comments", { petId: feed.pet.id, diaryId: feed.diaryId }],
+    queryFn: ({ pageParam }) => getComments({ petId: feed.pet.id, diaryId: feed.diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => (lastPage?.last ? undefined : lastPageParam + 1),
+  });
+
+  const { targetRef, setTargetActive } = useInfiniteScroll({ callbackFunc: fetchNextPage });
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);
@@ -81,7 +99,7 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
       <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
         {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
       </span>
-      <ChatIcon className={styles.icon} />
+      <ChatIcon className={styles.icon} onClick={openModalFunc} />
       <div className={styles.likeComment}>
         {likeCount > 0 && <div className={styles.greatText}>좋아요 {likeCount}개</div>}
         {feed.commentCount > 0 && (
@@ -93,7 +111,23 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
       <div className={styles.date}>{feed.createdAt}</div>
       {isModalOpen && (
         <CommentModalContainer onClose={closeModalFunc}>
-          <div className={styles.commentContainer}>댓글창임</div>
+          <div className={styles.commentContainer}>
+            <div className={styles.commentTitle}>댓글</div>
+            {comments?.pages.map((page, pageNum) =>
+              page?.content.map((comment, contentNum) => (
+                <Comment
+                  comment={comment}
+                  diaryId={feed.diaryId}
+                  pageNum={pageNum}
+                  contentNum={contentNum}
+                  petId={feed.pet.id}
+                  commentId={comment.commentId}
+                  key={comment.commentId}
+                />
+              )),
+            )}
+            {!isLoading && hasNextPage && <div ref={targetRef} />}
+          </div>
         </CommentModalContainer>
       )}
     </>
