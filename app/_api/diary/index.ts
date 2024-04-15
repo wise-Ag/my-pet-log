@@ -159,3 +159,14 @@ export const getSearchTerms = async () => {
     console.error(error.response.data);
   }
 };
+
+export const getDiaryDraftCheck = async () => {
+  try {
+    const petId = cookies().get("petId")?.value;
+    const res = await instance.get(`pets/${petId}/diaries/drafts/check`);
+
+    return res.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+  }
+};

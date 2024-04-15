@@ -24,7 +24,7 @@ export const postCheckNickname = async (nickname: string) => {
       return true;
     }
   } catch (error: any) {
-    console.log(error.response);
+    console.error(error.response);
     if (error.response?.status === 409) {
       throw new Error("이미 사용 중인 닉네임입니다.");
     }
