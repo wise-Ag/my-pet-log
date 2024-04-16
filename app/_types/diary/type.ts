@@ -109,6 +109,7 @@ export interface GetDiaryListRequest {
 }
 
 export interface GetCommentsRequest extends GetDiaryListRequest {
+  petId: number;
   diaryId: number;
 }
 
