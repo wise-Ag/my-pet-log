@@ -12,6 +12,7 @@ import { ChangeEvent, useState } from "react";
 import * as styles from "./style.css";
 
 interface ReCommentProps {
+  petId: number;
   reply: {
     commentId: number;
     content: string;
@@ -28,7 +29,7 @@ interface ReCommentProps {
   ancestorId: number;
 }
 
-const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
+const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -65,7 +66,7 @@ const ReComment = ({ reply, ancestorId }: ReCommentProps) => {
   });
 
   const postReCommentLikeMutation = useMutation({
-    mutationFn: () => postCommentLike({ commentId: reply.commentId }),
+    mutationFn: () => postCommentLike({ petId, commentId: reply.commentId }),
     onMutate: async () => {
       await queryClient.cancelQueries({
         queryKey: ["reComments", ancestorId],
