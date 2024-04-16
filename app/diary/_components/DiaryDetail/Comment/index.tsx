@@ -10,7 +10,7 @@ import KebabIcon from "@/public/icons/kebab.svg?url";
 import LikeIcon from "@/public/icons/like.svg";
 import { InfiniteData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { ChangeEvent, useState } from "react";
+import { useRef, ChangeEvent, useState } from "react";
 import ReComment from "../ReComment";
 import * as styles from "./style.css";
 
@@ -29,12 +29,14 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const [newCommentValue, setNewCommentValue] = useState("");
   const [reCommentValue, setReCommentValue] = useState("");
   const [showReCommentInput, setShowReCommentInput] = useState(false);
+  const [taggedNicknames, setTaggedNicknames] = useState<string[]>([]);
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
 
   //대댓글 조회
   const { data: reCommentsData } = useQuery({
-    queryKey: ["reComments", commentId],
+    queryKey: ["reComments", diaryId, commentId],
     queryFn: () => getReComments({ diaryId, ancestorId: commentId }),
   });
 
@@ -117,10 +119,6 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     setNewCommentValue(comment.content.replaceAll("<br>", "\n"));
   };
 
-  const handleReCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setReCommentValue(e.target.value);
-  };
-
   const handlePostReComment = () => {
     if (!reCommentValue.trim()) return;
     postReCommentMutation.mutate();
@@ -128,10 +126,32 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   const handleReCommentButtonClick = (nickname: string) => {
     setShowReCommentInput(true);
-    setReCommentValue(`@${nickname} `);
+    setTaggedNicknames([nickname]);
+    textAreaRef.current?.focus();
   };
 
   const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
+
+  const renderRecomments = () => {
+    return (
+      <div>
+        {reComments.map((reComment) => (
+          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} />
+        ))}
+      </div>
+    );
+  };
+
+  if (comment.isDeleted) {
+    return (
+      <>
+        <div className={styles.commentContainer}>
+          <p className={styles.deletedCommentText}>삭제된 댓글입니다</p>
+        </div>
+        {renderRecomments()}
+      </>
+    );
+  }
 
   return (
     <>
@@ -189,14 +209,29 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
             <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer?.nickname)}>
               답글
             </button>
-            <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleCommentLike}>
+            <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.likeIcon : ""}`} onClick={handleCommentLike}>
               <LikeIcon color={comment.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
               {comment.likeCount}
             </button>
           </div>
           {showReCommentInput && (
             <div>
-              <textarea placeholder="답글을 작성하세요" value={reCommentValue} onChange={handleReCommentChange} className={styles.commentTextarea} />
+              {/* 태그된 닉네임을 별도로 표시 */}
+              <div className={styles.taggedNicknames}>
+                {taggedNicknames.map((nickname) => (
+                  <span key={nickname} className={styles.tag}>
+                    @{nickname}
+                  </span>
+                ))}
+              </div>
+              {/* 답글 입력란 */}
+              <textarea
+                className={styles.commentTextarea}
+                ref={textAreaRef}
+                value={reCommentValue}
+                onChange={(e) => setReCommentValue(e.target.value)}
+                placeholder="답글을 작성하세요"
+              />
               <button className={styles.commentEditButton} onClick={handlePostReComment}>
                 등록
               </button>
@@ -208,11 +243,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
         </div>
       </div>
 
-      <div>
-        {reComments.map((reComment) => (
-          <ReComment key={reComment.commentId} petId={petId} ancestorId={comment.commentId} reply={reComment} />
-        ))}
-      </div>
+      <div>{renderRecomments()}</div>
 
       <div>
         {isModalOpen && <Modal text="정말 댓글을 삭제하시겠습니까?" buttonText="삭제" onClick={() => deleteCommentMutation.mutate(comment.commentId)} onClose={closeModalFunc} />}

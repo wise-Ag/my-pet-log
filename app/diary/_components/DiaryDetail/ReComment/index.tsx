@@ -96,8 +96,6 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
     },
   });
 
-  // ...
-
   const handleLikeClick = () => {
     postReCommentLikeMutation.mutate();
   };
