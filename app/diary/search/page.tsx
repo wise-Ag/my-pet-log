@@ -2,7 +2,7 @@
 import { getSearchDiary, getSearchTerms } from "@/app/_api/diary";
 import Spinner from "@/app/_components/Spinner";
 import { useInfiniteScroll } from "@/app/_hooks/useInfiniteScroll";
-import { DIARY_SEARCH_PAGE_SIZE } from "@/app/diary/(diary)/my-pet/constant";
+import { DIARY_SEARCH_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 import { Diaries } from "@/app/diary/_components/Diary";
 import BackIcon from "@/public/icons/chevron-left.svg?url";
 import SearchIconURL from "@/public/icons/search.svg?url";

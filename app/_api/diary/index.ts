@@ -15,6 +15,7 @@ import {
   PostDiaryVideoResponse,
   PutCommentRequest,
   getSearchDiaryRequest,
+  getFeedRequest,
 } from "@/app/_types/diary/type";
 import { cookies } from "next/headers";
 
@@ -53,8 +54,7 @@ export const getDiary = async ({ diaryId }: { diaryId: number }): Promise<GetDia
   }
 };
 
-export const getComments = async ({ diaryId, page, size }: GetCommentsRequest): Promise<GetCommentsResponse | null> => {
-  const petId = cookies().get("petId")?.value;
+export const getComments = async ({ petId, diaryId, page, size }: GetCommentsRequest): Promise<GetCommentsResponse | null> => {
   try {
     const res = await instance.get(`pets/${petId}/diaries/${diaryId}/comments`, { params: { page, size } });
 
@@ -65,10 +65,20 @@ export const getComments = async ({ diaryId, page, size }: GetCommentsRequest): 
   }
 };
 
-export const getReComments = async ({ ancestorId }: GetReCommentsRequest): Promise<GetReCommentsResponse | null> => {
+export const getReComments = async ({ ancestorId, diaryId }: GetReCommentsRequest): Promise<GetReCommentsResponse | null> => {
   const petId = cookies().get("petId")?.value;
   try {
-    const res = await instance.get(`pets/${petId}/diaries/comments/${ancestorId}/recomment`);
+    const res = await instance.get(`pets/${petId}/diaries/${diaryId}/comments/${ancestorId}/recomment`);
+    return res.data;
+  } catch (error: any) {
+    console.error(error.response);
+    return null;
+  }
+};
+
+export const getFeed = async ({ page, size }: getFeedRequest) => {
+  try {
+    const res = await instance.get(`diaries/feed`, { params: { page, size } });
     return res.data;
   } catch (error: any) {
     console.error(error.response);
@@ -112,8 +122,7 @@ export const putComment = async ({ commentId, content }: PutCommentRequest) => {
   await instance.put(`pets/${petId}/diaries/comments/${commentId}`, { content });
 };
 
-export const postCommentLike = async ({ commentId }: { commentId: number }) => {
-  const petId = cookies().get("petId")?.value;
+export const postCommentLike = async ({ petId, commentId }: { petId: number; commentId: number }) => {
   await instance.post(`pets/${petId}/diaries/comments/${commentId}/like`);
 };
 

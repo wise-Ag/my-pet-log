@@ -29,10 +29,12 @@ export interface Writer {
 
 export interface CommentType {
   commentId: number;
+  isDeleted: boolean;
+  recommentCount: number;
   content: string;
   createdAt: string;
-  likeCount: number;
   isCurrentUserLiked: boolean;
+  likeCount: number;
   writer: Writer;
   taggedUsers: Tag[];
 }
@@ -81,16 +83,38 @@ export interface GetDiaryListResponse {
   empty: boolean;
 }
 
+export interface getFeedResponse {
+  pet: {
+    name: string;
+    id: number;
+    profilePath: string | null;
+    isSubscribed: boolean;
+  };
+  diaryId: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  medias: {
+    mediaId: number;
+    path: string;
+  }[];
+  commentCount: number;
+  likeCount: number;
+  isCurrentUserLiked: boolean;
+}
+
 export interface GetDiaryListRequest {
   page: number | unknown;
   size: number;
 }
 
 export interface GetCommentsRequest extends GetDiaryListRequest {
+  petId: number;
   diaryId: number;
 }
 
 export interface GetReCommentsRequest {
+  diaryId: number;
   ancestorId: number;
 }
 
@@ -150,37 +174,6 @@ export interface GetCommentsResponse {
   empty: boolean;
 }
 
-// export interface GetReCommentsResponse {
-//   content: [
-//     {
-//       commentId: number;
-//       content: string;
-//       createdAt: string;
-//       isCurrentUserLiked: boolean;
-//       likeCount: number;
-//       writer: {
-//         id: string;
-//         nickname: string;
-//         profilePath: string;
-//         isCurrentUser: boolean;
-//       };
-//       receiver: {
-//         id: string;
-//         nickname: string;
-//         profilePath: string;
-//         isCurrentUser: boolean;
-//       };
-//       taggedUsers: [
-//         {
-//           id: string;
-//           nickname: string;
-//           isCurrentUser: boolean;
-//         },
-//       ];
-//     },
-//   ];
-// }
-
 export type GetReCommentsResponse = CommentType[];
 
 export interface PostDiaryRequest {
@@ -215,4 +208,9 @@ export interface getSearchDiaryRequest {
   page: number | unknown;
   size: number;
   keyword: string | null;
+}
+
+export interface getFeedRequest {
+  page: number | unknown;
+  size: number | unknown;
 }

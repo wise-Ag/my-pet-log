@@ -9,7 +9,7 @@ import { useModal } from "@/app/_hooks/useModal";
 import { CommentType, GetCommentsResponse } from "@/app/_types/diary/type";
 import { UserType } from "@/app/_types/users/types";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
-import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/my-pet/constant";
+import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 import KebabIcon from "@/public/icons/kebab.svg?url";
 import LikeIcon from "@/public/icons/like.svg";
 import SendIcon from "@/public/icons/send.svg?url";
@@ -57,7 +57,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
     isLoading,
   } = useInfiniteQuery({
     queryKey: ["comments", { petId, diaryId }],
-    queryFn: ({ pageParam }) => getComments({ diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
+    queryFn: ({ pageParam }) => getComments({ petId, diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => (lastPage?.last ? undefined : lastPageParam + 1),
   });
