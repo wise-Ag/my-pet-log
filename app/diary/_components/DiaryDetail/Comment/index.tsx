@@ -136,7 +136,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     return (
       <div>
         {reComments.map((reComment) => (
-          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} />
+          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} petId={petId} />
         ))}
       </div>
     );
