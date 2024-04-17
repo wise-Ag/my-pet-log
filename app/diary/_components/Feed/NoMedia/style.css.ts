@@ -1,41 +1,5 @@
 import { style, keyframes } from "@vanilla-extract/css";
 
-export const profileInfo = style({
-  margin: "3rem 1rem 1rem",
-  display: "flex",
-  justifyItems: "center",
-  alignItems: "center",
-  gap: "1.2rem",
-});
-
-export const profileImage = style({
-  borderRadius: "50%",
-});
-
-export const text = style({
-  fontSize: "1.4rem",
-  fontWeight: "600",
-});
-
-export const image = style({
-  position: "relative",
-  height: "35rem",
-});
-
-export const videoImage = style({
-  width: "100%",
-  height: "35rem",
-
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-
-  "@media": {
-    "(min-width: 744px)": {
-      height: "41.8rem",
-    },
-  },
-});
-
 const bounce = keyframes({
   "0%": { transform: "scale(0.6)", transformOrigin: "center center" },
   "25%": { transform: "scale(0.9)" },
@@ -49,7 +13,6 @@ export const LikeIcon = style({
 });
 
 export const icon = style({
-  marginTop: "1rem",
   marginLeft: "1rem",
 });
 
@@ -59,25 +22,27 @@ export const greatChat = style({
 });
 
 export const greatText = style({
-  marginBottom: "0.1rem",
+  marginBottom: "0.5rem",
+  marginLeft: "1rem",
   fontSize: "1.4rem",
   fontWeight: "600",
 });
 
 export const nameTitle = style({
   marginTop: "0.5rem",
+  marginBottom: "1.3rem",
 
   fontSize: "1.4rem",
   fontWeight: "600",
 });
 
 export const title = style({
-  fontSize: "1.4rem",
-  fontWeight: "300",
+  fontSize: "1.7rem",
+  fontWeight: "500",
 });
 
 export const description = style({
-  marginBottom: "0.5rem",
+  marginBottom: "1rem",
   fontSize: "1.4rem",
   fontWeight: "300",
 });
@@ -89,6 +54,7 @@ export const seeMore = style({
 });
 
 export const comment = style({
+  marginLeft: "1rem",
   color: "var(--Gray81)",
   fontSize: "1.4rem",
   fontWeight: "300",
@@ -96,6 +62,7 @@ export const comment = style({
 
 export const date = style({
   marginTop: "0.5rem",
+  marginLeft: "1rem",
   color: "var(--Gray72)",
   fontSize: "1.2rem",
   fontWeight: "300",
@@ -121,6 +88,10 @@ export const commentContainer = style({
   borderTopRightRadius: "20px",
 
   backgroundColor: "var(--White)",
+});
+
+export const likeComment = style({
+  marginTop: "0.5rem",
 });
 
 export const commentTitle = style({

@@ -5,6 +5,7 @@ import { getFeed } from "@/app/_api/diary";
 import { FEED_PAGE_SIZE } from "../../(diary)/constant";
 import { getFeedResponse } from "@/app/_types/diary/type";
 import { Feed } from "../Feed";
+import { useInfiniteScroll } from "@/app/_hooks/useInfiniteScroll";
 
 const FeedList = () => {
   const { data, fetchNextPage, isLoading, hasNextPage } = useInfiniteQuery({
@@ -14,16 +15,20 @@ const FeedList = () => {
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => (lastPage?.last ? undefined : lastPageParam + 1),
   });
 
-  const handleFetchNextPage = () => {
-    fetchNextPage();
+  const fetchMore = () => {
+    if (hasNextPage) fetchNextPage();
   };
+
+  const { targetRef } = useInfiniteScroll({
+    callbackFunc: fetchMore,
+  });
 
   const feedsPages = data?.pages ?? [];
 
   return (
     <>
-      {feedsPages.map((feeds) => feeds.map((feed: getFeedResponse) => <Feed key={feed.diaryId} feed={feed} />))}
-      {!isLoading && hasNextPage && <button onClick={handleFetchNextPage}>더 불러오기</button>}
+      {feedsPages.map((feeds, pageIndex) => feeds.map((feed: getFeedResponse, feedIndex: number) => <Feed key={`${pageIndex}-${feedIndex}`} feed={feed} />))}
+      <div ref={targetRef} />
     </>
   );
 };
