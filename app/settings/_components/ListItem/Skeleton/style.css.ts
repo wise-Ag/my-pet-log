@@ -1,6 +1,6 @@
 import { style } from "@vanilla-extract/css";
 
-export const listcontainer = style({
+export const listContainer = style({
   padding: "2.3rem 0",
   margin: "0 1.6rem",
   display: "flex",
