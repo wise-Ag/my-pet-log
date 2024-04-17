@@ -22,19 +22,40 @@ export const overlay = style({
 
   backgroundColor: "rgba(0, 0, 0, 0.5)",
   touchAction: "none",
+  overflow: "hidden",
   zIndex: Z_INDEX.Modal,
-});
-
-export const wrapper = style({
-  width: "100%",
-  height: "100%",
 });
 
 export const container = style({
   width: "100%",
   height: "90%",
 
+  borderTopLeftRadius: "20px",
+  borderTopRightRadius: "20px",
+
+  backgroundColor: "var(--White)",
+
   position: "fixed",
   left: "50%",
   bottom: "0",
+  overflowY: "auto",
+});
+
+export const commentTitle = style({
+  fontSize: "1.6rem",
+  fontWeight: "500",
+});
+
+export const header = style({
+  padding: "1.8rem",
+
+  display: "flex",
+  justifyContent: "space-between",
+
+  position: "sticky",
+  top: "0",
+
+  backgroundColor: "var(--White)",
+  borderBottom: "1px solid var(--GrayE8)",
+  zIndex: Z_INDEX.CommentModalContainer_header,
 });
