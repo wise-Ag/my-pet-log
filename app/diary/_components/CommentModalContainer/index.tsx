@@ -17,6 +17,8 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
   const [startY, setStartY] = useState(0);
   const [translateY, setTranslateY] = useState(0);
   const [isSliding, setIsSliding] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   //댓글 조회
   const {
@@ -41,12 +43,22 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
     };
   }, []);
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const isTop = e.currentTarget.scrollTop === 0;
+    setIsAtTop(isTop);
+    setIsScrolling(true);
+  };
+
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    setStartY(e.touches[0].clientY);
-    setIsSliding(true);
+    if (isAtTop && !isScrolling) {
+      setStartY(e.touches[0].clientY);
+      setIsSliding(true);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isAtTop || isScrolling) return;
+
     const touchY = e.touches[0].clientY;
     const movement = touchY - startY;
 
@@ -67,11 +79,16 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
 
   const handleTouchEnd = () => {
     setIsSliding(true);
-    if (translateY > window.innerHeight * 0.3) {
+    setIsScrolling(false);
+    if (translateY > window.innerHeight * 0.3 && isAtTop && !isScrolling) {
       closeSmoothly();
     } else {
       setTranslateY(0);
     }
+  };
+
+  const handleTouchCancel = () => {
+    setIsScrolling(false);
   };
 
   useEffect(() => {
@@ -90,7 +107,15 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
 
   return ReactDOM.createPortal(
     <div className={styles.overlay}>
-      <div className={styles.container} style={dynamicStyles} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+      <div
+        className={styles.container}
+        style={dynamicStyles}
+        onScroll={handleScroll}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
+      >
         <header className={styles.header}>
           <div className={styles.commentTitle}>댓글</div>
           <Image src={CloseIcon} alt="close icon" width={24} height={24} onClick={closeSmoothly} style={{ cursor: "pointer" }} />

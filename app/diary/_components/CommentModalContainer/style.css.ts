@@ -22,7 +22,6 @@ export const overlay = style({
 
   backgroundColor: "rgba(0, 0, 0, 0.5)",
   touchAction: "none",
-  overflow: "hidden",
   zIndex: Z_INDEX.Modal,
 });
 
@@ -38,7 +37,7 @@ export const container = style({
   position: "fixed",
   left: "50%",
   bottom: "0",
-  overflowY: "auto",
+  overflowY: "scroll",
 });
 
 export const commentTitle = style({
