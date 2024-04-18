@@ -113,16 +113,6 @@ export const showAdditionalContent = style({
   visibility: "visible",
 });
 
-export const commentContainer = style({
-  width: "100%",
-  height: "100%",
-
-  borderTopLeftRadius: "20px",
-  borderTopRightRadius: "20px",
-
-  backgroundColor: "var(--White)",
-});
-
 export const commentTitle = style({
   padding: "1.8rem",
 

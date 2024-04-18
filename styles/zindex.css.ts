@@ -6,6 +6,7 @@ import { createGlobalTheme } from "@vanilla-extract/css";
 export const Z_INDEX = createGlobalTheme(":root", {
   AppLayout: "2",
   Modal: "10",
+  CommentModalContainer_header: "11",
   SelectMateDropdown_dropdownList: "5",
   SubtypeDetail_optionsList: "1",
   Header: "10",
