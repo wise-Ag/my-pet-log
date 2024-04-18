@@ -14,7 +14,7 @@ const DiaryDetailPage = async ({ params: { id } }: { params: { id: string } }) =
   await queryClient.prefetchQuery({ queryKey: ["diary", { petId, diaryId }], queryFn: () => getDiary({ diaryId }) });
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["comments", { petId, diaryId }],
-    queryFn: ({ pageParam }) => getComments({ diaryId, page: pageParam, size: COMMENT_PAGE_SIZE }),
+    queryFn: ({ pageParam }) => getComments({ diaryId, page: pageParam, size: COMMENT_PAGE_SIZE, petId }),
     initialPageParam: 0,
   });
 
