@@ -16,6 +16,7 @@ import {
   PutCommentRequest,
   getSearchDiaryRequest,
   getFeedRequest,
+  GetLikeListResponse,
 } from "@/app/_types/diary/type";
 import { cookies } from "next/headers";
 
@@ -124,6 +125,16 @@ export const putComment = async ({ commentId, content }: PutCommentRequest) => {
 
 export const postCommentLike = async ({ petId, commentId }: { petId: number; commentId: number }) => {
   await instance.post(`pets/${petId}/diaries/comments/${commentId}/like`);
+};
+
+export const getLikeList = async ({ diaryId }: { diaryId: number }): Promise<GetLikeListResponse[]> => {
+  try {
+    const response = await instance.get<GetLikeListResponse[]>(`pets/diaries/${diaryId}/like`);
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+    return [];
+  }
 };
 
 export const getSearchDiary = async ({ page, size, keyword }: getSearchDiaryRequest): Promise<GetDiaryListResponse | null> => {
