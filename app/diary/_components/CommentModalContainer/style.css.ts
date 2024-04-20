@@ -58,3 +58,55 @@ export const header = style({
   borderBottom: "1px solid var(--GrayE8)",
   zIndex: Z_INDEX.CommentModalContainer_header,
 });
+
+export const commentInputContainer = style({
+  display: "flex",
+  alignItems: "center",
+  gap: "0.9rem",
+  width: "100%",
+
+  position: "fixed",
+  bottom: "0",
+
+  padding: "2rem 1.6rem",
+
+  backgroundColor: "var(--White)",
+  zIndex: "1000",
+});
+
+export const profileImage = style({
+  minWidth: "3rem",
+  minHeight: "3rem",
+
+  border: "1px solid var(--MainOrange)",
+  borderRadius: "50%",
+
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+});
+
+export const commentInput = style({
+  width: "100%",
+  height: "4rem",
+
+  padding: "1.2rem 1.5rem",
+
+  borderRadius: "20px",
+  border: "none",
+
+  backgroundColor: " var(--GrayF4)",
+
+  ":focus": {
+    outline: "none",
+  },
+});
+
+export const sendIcon = style({
+  position: "absolute",
+  right: "0.7rem",
+  top: "50%",
+
+  transform: "translate(-50%,-50%)",
+
+  cursor: "pointer",
+});

@@ -188,6 +188,7 @@ export interface PostDiaryRequest {
 }
 
 export interface PostCommentRequest {
+  petId: number;
   diaryId: number;
   content: string;
   taggedUserIds?: string[];

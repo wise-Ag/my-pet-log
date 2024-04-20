@@ -66,7 +66,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
 
   //댓글 생성
   const postCommentMutation = useMutation({
-    mutationFn: () => postComment({ diaryId, content: commentValue }),
+    mutationFn: () => postComment({ petId, diaryId, content: commentValue }),
     onSuccess: (data: CommentType) => {
       const newComments = queryClient.getQueryData<InfiniteData<GetCommentsResponse>>(["comments", { petId, diaryId }]);
       if (!newComments) return;
