@@ -90,9 +90,9 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     onSuccess: (newReComment) => {
       queryClient.setQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId], (oldReComments) => {
         if (!oldReComments) {
-          return [newReComment]; // 이전 대댓글이 없을 경우 새 대댓글만을 포함하는 배열을 반환
+          return [newReComment];
         }
-        return [...oldReComments, newReComment]; // 이전 대댓글 배열에 새 대댓글을 추가
+        return [newReComment, ...oldReComments];
       });
 
       setReCommentValue("");
