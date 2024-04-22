@@ -4,7 +4,7 @@ import { deleteComment, postCommentLike, putComment, getReComments, postReCommen
 import Modal from "@/app/_components/Modal";
 import { showToast } from "@/app/_components/Toast";
 import { useModal } from "@/app/_hooks/useModal";
-import { CommentType, GetCommentsResponse, GetDiaryResponse } from "@/app/_types/diary/type";
+import { CommentType, GetCommentsResponse, GetDiaryResponse, GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
 import LikeIcon from "@/public/icons/like.svg";
@@ -87,8 +87,14 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
     mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
+    onSuccess: (newReComment) => {
+      queryClient.setQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId], (oldReComments) => {
+        if (!oldReComments) {
+          return [newReComment]; // 이전 대댓글이 없을 경우 새 대댓글만을 포함하는 배열을 반환
+        }
+        return [...oldReComments, newReComment]; // 이전 대댓글 배열에 새 대댓글을 추가
+      });
+
       setReCommentValue("");
       showToast("답글이 생성되었습니다.", true);
       setShowReCommentInput(false);
