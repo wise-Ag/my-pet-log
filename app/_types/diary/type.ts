@@ -103,6 +103,13 @@ export interface getFeedResponse {
   isCurrentUserLiked: boolean;
 }
 
+export interface GetLikeListResponse {
+  id: string;
+  nickname: string;
+  profilePath: string;
+  isCurrentUser: boolean;
+}
+
 export interface GetDiaryListRequest {
   page: number | unknown;
   size: number;

@@ -19,6 +19,7 @@ import NoPetProfileImage from "@/public/images/pet-profile-default.svg?url";
 import { postDiaryLike } from "@/app/_api/diary";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NoMedia } from "./NoMedia";
+import { LikeList } from "./LikeList";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -27,7 +28,8 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [likeCount, setLikeCount] = useState(feed.likeCount);
   const firstLine = lines[0];
   const additionalLines = lines.slice(1).join("\n");
-  const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
+  const { isModalOpen: isCommentModalOpen, openModalFunc: openCommentModal, closeModalFunc: closeCommentModal } = useModal();
+  const { isModalOpen: isLikeModalOpen, openModalFunc: openLikeModal, closeModalFunc: closeLikeModal } = useModal();
   const queryClient = useQueryClient();
 
   const getImagePathWithPrefix = (path: string | null) => {
@@ -70,10 +72,10 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   });
 
   useEffect(() => {
-    if (isModalOpen) {
-      openModalFunc();
+    if (isCommentModalOpen) {
+      openCommentModal();
     }
-  }, [isModalOpen, openModalFunc]);
+  }, [isCommentModalOpen, openCommentModal]);
 
   return (
     <>
@@ -118,9 +120,13 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
           <button onClick={handleLikeClick}>
             {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
           </button>
-          <ChatIcon className={styles.icon} onClick={openModalFunc} />
+          <ChatIcon className={styles.icon} onClick={openCommentModal} />
           <section className={styles.greatChat}>
-            {likeCount > 0 && <div className={styles.greatText}>좋아요 {likeCount}개</div>}
+            {likeCount > 0 && (
+              <button onClick={openLikeModal} className={styles.greatText}>
+                좋아요 {likeCount}개
+              </button>
+            )}
             <div className={styles.nameTitle}>
               {feed.pet.name} <span className={styles.title}>{feed.title}</span>
             </div>
@@ -140,7 +146,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
               </div>
             </section>
             {feed.commentCount > 0 && (
-              <button className={styles.comment} onClick={openModalFunc}>
+              <button className={styles.comment} onClick={openCommentModal}>
                 댓글 {feed.commentCount}개 모두 보기
               </button>
             )}
@@ -150,7 +156,8 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
       ) : (
         <NoMedia feed={feed} />
       )}
-      {isModalOpen && <CommentModalContainer onClose={closeModalFunc} petId={feed.pet.id} diaryId={feed.diaryId} />}
+      {isCommentModalOpen && <CommentModalContainer onClose={closeCommentModal} petId={feed.pet.id} diaryId={feed.diaryId} />}
+      {isLikeModalOpen && <LikeList onClose={closeLikeModal} diaryId={feed.diaryId} />}
     </>
   );
 };
