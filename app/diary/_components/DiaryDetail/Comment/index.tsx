@@ -86,17 +86,18 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
-    mutationFn: () => postReComment({ petId, commentId, content: reCommentValue, taggedUserIds: [] }),
+    mutationFn: async () =>
+      await postReComment({
+        petId,
+        commentId,
+        content: reCommentValue,
+        taggedUserIds: [],
+      }),
     onSuccess: (newReComment) => {
-      queryClient.setQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId], (oldReComments) => {
-        if (!oldReComments) {
-          return [newReComment];
-        }
-        return [newReComment, ...oldReComments];
-      });
-
-      setReCommentValue("");
+      const currentReComments = queryClient.getQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId]) ?? [];
+      queryClient.setQueryData(["reComments", diaryId, commentId], [newReComment, ...currentReComments]);
       showToast("답글이 생성되었습니다.", true);
+      setReCommentValue("");
       setShowReCommentInput(false);
     },
     onError: () => {
@@ -130,13 +131,13 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     postReCommentMutation.mutate();
   };
 
+  const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
+
   const handleReCommentButtonClick = (nickname: string) => {
     setShowReCommentInput(true);
     setTaggedNicknames([nickname]);
     textAreaRef.current?.focus();
   };
-
-  const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
 
   const renderRecomments = () => {
     return (
