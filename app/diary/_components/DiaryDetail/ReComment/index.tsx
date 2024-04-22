@@ -13,6 +13,7 @@ import * as styles from "./style.css";
 
 interface ReCommentProps {
   petId: number;
+  diaryId: number;
   reply: {
     commentId: number;
     content: string;
@@ -33,6 +34,8 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [likeCount, setLikeCount] = useState(reply.likeCount);
+  const [isLiked, setIsLiked] = useState(reply.isCurrentUserLiked);
   const [newCommentValue, setNewCommentValue] = useState("");
   const queryClient = useQueryClient();
 
@@ -40,7 +43,7 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
     mutationFn: () => deleteComment({ commentId: reply.commentId }),
     onSuccess: () => {
       queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId], (oldData) => {
-        return oldData!.filter((comment) => comment.commentId !== reply.commentId);
+        return oldData ? oldData.filter((comment) => comment.commentId !== reply.commentId) : [];
       });
       showToast("답글을 삭제했습니다.", true);
       closeModalFunc();
@@ -54,7 +57,7 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
     mutationFn: () => putComment({ commentId: reply.commentId, content: newCommentValue }),
     onSuccess: () => {
       queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId], (oldData) => {
-        const newData = oldData!.map((comment) => (comment.commentId === reply.commentId ? { ...comment, content: newCommentValue } : comment));
+        const newData = oldData?.map((comment) => (comment.commentId === reply.commentId ? { ...comment, content: newCommentValue } : comment)) ?? [];
         return newData;
       });
       showToast("답글을 수정했습니다.", true);
@@ -68,26 +71,15 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
   const postReCommentLikeMutation = useMutation({
     mutationFn: () => postCommentLike({ petId, commentId: reply.commentId }),
     onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["reComments", ancestorId],
-      });
-      const previousReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", ancestorId]);
-      queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId.toString()], (oldReComments) => {
-        return (
-          oldReComments?.map((reComment) =>
-            reComment.commentId === reply.commentId
-              ? { ...reComment, likeCount: reComment.isCurrentUserLiked ? reComment.likeCount - 1 : reComment.likeCount + 1, isCurrentUserLiked: !reComment.isCurrentUserLiked }
-              : reComment,
-          ) ?? []
-        );
-      });
+      setIsLiked(!isLiked);
+      setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
 
-      return { previousReComments: previousReComments ?? [] };
+      const previousReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", ancestorId]);
+      return { previousReComments };
     },
     onError: (err, variables, context) => {
-      if (context?.previousReComments) {
-        queryClient.setQueryData(["reComments", ancestorId.toString()], context.previousReComments);
-      }
+      setIsLiked(isLiked);
+      setLikeCount(likeCount);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -161,9 +153,9 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
         )}
 
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button className={`${styles.commentLikeButton} ${reply.isCurrentUserLiked ? styles.LikeIcon : ""}`} onClick={handleLikeClick}>
-            <LikeIcon color={reply.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
-            {reply.likeCount}
+          <button className={`${styles.commentLikeButton} ${isLiked ? styles.LikeIcon : ""}`} onClick={handleLikeClick}>
+            <LikeIcon color={isLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
+            {likeCount}
           </button>
         </div>
       </div>

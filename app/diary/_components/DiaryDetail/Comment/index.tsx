@@ -37,7 +37,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   //대댓글 조회
   const { data: reCommentsData } = useQuery({
     queryKey: ["reComments", diaryId, commentId],
-    queryFn: () => getReComments({ diaryId, ancestorId: commentId }),
+    queryFn: () => getReComments({ petId, diaryId, ancestorId: commentId }),
   });
 
   const reComments = reCommentsData ?? [];
@@ -86,7 +86,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
-    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }),
+    mutationFn: () => postReComment({ petId, commentId, content: reCommentValue, taggedUserIds: [] }),
     onSuccess: (newReComment) => {
       queryClient.setQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId], (oldReComments) => {
         if (!oldReComments) {
@@ -142,7 +142,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     return (
       <div>
         {reComments.map((reComment) => (
-          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} petId={petId} />
+          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} petId={petId} diaryId={diaryId} />
         ))}
       </div>
     );
