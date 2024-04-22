@@ -1,8 +1,8 @@
 import { deleteComment, postCommentLike, putComment } from "@/app/_api/diary";
-import { GetReCommentsResponse } from "@/app/_types/diary/type";
 import Modal from "@/app/_components/Modal";
 import { showToast } from "@/app/_components/Toast";
 import { useModal } from "@/app/_hooks/useModal";
+import { GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
 import LikeIcon from "@/public/icons/like.svg";
@@ -30,7 +30,7 @@ interface ReCommentProps {
   ancestorId: number;
 }
 
-const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
+const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -42,9 +42,10 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
   const deleteReCommentMutation = useMutation({
     mutationFn: () => deleteComment({ commentId: reply.commentId }),
     onSuccess: () => {
-      queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId], (oldData) => {
-        return oldData ? oldData.filter((comment) => comment.commentId !== reply.commentId) : [];
-      });
+      const currentReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", diaryId, ancestorId]);
+      const updatedReComments = currentReComments?.filter((c) => c.commentId !== reply.commentId);
+      queryClient.setQueryData(["reComments", diaryId, ancestorId], updatedReComments);
+
       showToast("답글을 삭제했습니다.", true);
       closeModalFunc();
     },
@@ -56,10 +57,15 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
   const putReCommentMutation = useMutation({
     mutationFn: () => putComment({ commentId: reply.commentId, content: newCommentValue }),
     onSuccess: () => {
-      queryClient.setQueryData<GetReCommentsResponse>(["reComments", ancestorId], (oldData) => {
-        const newData = oldData?.map((comment) => (comment.commentId === reply.commentId ? { ...comment, content: newCommentValue } : comment)) ?? [];
-        return newData;
+      const currentReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", diaryId, ancestorId]);
+      const updatedReComments = currentReComments?.map((c) => {
+        if (c.commentId === reply.commentId) {
+          return { ...c, content: newCommentValue };
+        }
+        return c;
       });
+      queryClient.setQueryData(["reComments", diaryId, ancestorId], updatedReComments);
+
       showToast("답글을 수정했습니다.", true);
       setIsEditing(false);
     },
@@ -73,17 +79,14 @@ const ReComment = ({ petId, reply, ancestorId }: ReCommentProps) => {
     onMutate: async () => {
       setIsLiked(!isLiked);
       setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
-
-      const previousReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", ancestorId]);
-      return { previousReComments };
     },
-    onError: (err, variables, context) => {
+    onError: () => {
       setIsLiked(isLiked);
       setLikeCount(likeCount);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["reComments", ancestorId],
+        queryKey: ["reComments", diaryId, reply.commentId],
       });
     },
   });
