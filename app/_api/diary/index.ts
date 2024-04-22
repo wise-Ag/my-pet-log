@@ -100,8 +100,7 @@ export const postDiaryLike = async ({ diaryId }: { diaryId: number }) => {
   await instance.post(`pets/${petId}/diaries/${diaryId}/like`);
 };
 
-export const postComment = async ({ diaryId, content }: PostCommentRequest): Promise<CommentType> => {
-  const petId = cookies().get("petId")?.value;
+export const postComment = async ({ petId, diaryId, content }: PostCommentRequest): Promise<CommentType> => {
   const res = await instance.post(`pets/${petId}/diaries/${diaryId}/comments`, { content });
   return res.data;
 };
