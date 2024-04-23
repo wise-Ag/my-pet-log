@@ -11,6 +11,7 @@ export const root = style({
 
 export const container = style({
   width: "100%",
+  marginBottom: "3rem",
 
   "@media": {
     "(min-width: 744px)": {
