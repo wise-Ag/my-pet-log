@@ -28,6 +28,7 @@ export const overlay = style({
 export const container = style({
   width: "100%",
   height: "90%",
+  maxWidth: "74.4rem",
 
   borderTopLeftRadius: "20px",
   borderTopRightRadius: "20px",
@@ -60,6 +61,7 @@ export const header = style({
 });
 
 export const commentInputContainer = style({
+  maxWidth: "74.4rem",
   display: "flex",
   alignItems: "center",
   gap: "0.9rem",
@@ -67,6 +69,8 @@ export const commentInputContainer = style({
 
   position: "fixed",
   bottom: "0",
+  left: "50%",
+  transform: "translateX(-50%)",
 
   padding: "2rem 1.6rem",
 
