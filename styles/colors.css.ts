@@ -28,6 +28,7 @@ globalStyle(":root", {
     "--Gray41": "#414141",
     "--GrayA4": "#A4A4A4",
     "--Gray33": "#333333",
+    "--Gray66": "#666",
     "--Gray55": "#555",
 
     "--White": "#FFFFFF",

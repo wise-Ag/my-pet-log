@@ -14,6 +14,7 @@ import { showToast } from "@/app/_components/Toast";
 import { CommentType, GetCommentsResponse } from "@/app/_types/diary/type";
 import { UserType } from "@/app/_types/user/types";
 import { getMe } from "@/app/_api/users";
+import { NoComments } from "@/app/diary/_components/CommentModalContainer/EmptyComment";
 interface CommentModalContainerProps {
   petId: number;
   diaryId: number;
@@ -152,6 +153,7 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
         animation: `${styles.slideUp} 0.2s ease-out forwards`,
       };
 
+  const noComments = comments?.pages.every((page) => page?.content.length === 0);
   if (!user) return;
 
   return ReactDOM.createPortal(
@@ -170,10 +172,14 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
           <Image src={CloseIcon} alt="close icon" width={24} height={24} onClick={closeSmoothly} style={{ cursor: "pointer" }} />
         </header>
         <div style={{ marginBottom: "8.25rem" }}>
-          {comments?.pages.map((page, pageNum) =>
-            page?.content.map((comment, contentNum) => (
-              <Comment comment={comment} diaryId={diaryId} pageNum={pageNum} contentNum={contentNum} petId={petId} commentId={comment.commentId} key={comment.commentId} />
-            )),
+          {noComments ? (
+            <NoComments />
+          ) : (
+            comments?.pages.map((page, pageNum) =>
+              page?.content.map((comment, contentNum) => (
+                <Comment comment={comment} diaryId={diaryId} pageNum={pageNum} contentNum={contentNum} petId={petId} commentId={comment.commentId} key={comment.commentId} />
+              )),
+            )
           )}
           <div ref={targetRef} style={{ height: "1px", opacity: 0, pointerEvents: "none" }}></div>
         </div>
