@@ -121,6 +121,7 @@ export interface GetCommentsRequest extends GetDiaryListRequest {
 }
 
 export interface GetReCommentsRequest {
+  petId: number;
   diaryId: number;
   ancestorId: number;
 }
@@ -202,6 +203,7 @@ export interface PostCommentRequest {
 }
 
 export interface PostReCommentRequest {
+  petId: number;
   commentId: number;
   content: string;
   taggedUserIds?: string[];

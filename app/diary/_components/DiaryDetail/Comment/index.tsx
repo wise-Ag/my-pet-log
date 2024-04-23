@@ -4,7 +4,7 @@ import { deleteComment, postCommentLike, putComment, getReComments, postReCommen
 import Modal from "@/app/_components/Modal";
 import { showToast } from "@/app/_components/Toast";
 import { useModal } from "@/app/_hooks/useModal";
-import { CommentType, GetCommentsResponse, GetDiaryResponse } from "@/app/_types/diary/type";
+import { CommentType, GetCommentsResponse, GetDiaryResponse, GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
 import LikeIcon from "@/public/icons/like.svg";
@@ -37,7 +37,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   //대댓글 조회
   const { data: reCommentsData } = useQuery({
     queryKey: ["reComments", diaryId, commentId],
-    queryFn: () => getReComments({ diaryId, ancestorId: commentId }),
+    queryFn: () => getReComments({ petId, diaryId, ancestorId: commentId }),
   });
 
   const reComments = reCommentsData ?? [];
@@ -86,11 +86,18 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
 
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
-    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
-      setReCommentValue("");
+    mutationFn: async () =>
+      await postReComment({
+        petId,
+        commentId,
+        content: reCommentValue,
+        taggedUserIds: [],
+      }),
+    onSuccess: (newReComment) => {
+      const currentReComments = queryClient.getQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId]) ?? [];
+      queryClient.setQueryData(["reComments", diaryId, commentId], [newReComment, ...currentReComments]);
       showToast("답글이 생성되었습니다.", true);
+      setReCommentValue("");
       setShowReCommentInput(false);
     },
     onError: () => {
@@ -124,19 +131,19 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     postReCommentMutation.mutate();
   };
 
+  const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
+
   const handleReCommentButtonClick = (nickname: string) => {
     setShowReCommentInput(true);
     setTaggedNicknames([nickname]);
     textAreaRef.current?.focus();
   };
 
-  const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
-
   const renderRecomments = () => {
     return (
       <div>
         {reComments.map((reComment) => (
-          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} petId={petId} />
+          <ReComment key={reComment.commentId} ancestorId={comment.commentId} reply={reComment} petId={petId} diaryId={diaryId} />
         ))}
       </div>
     );
