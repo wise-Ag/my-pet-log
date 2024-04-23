@@ -24,7 +24,7 @@ import { postPetSubscriptions } from "@/app/_api/subscription";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const lines = feed.content.split("\n");
+  const lines = feed.content.split("\n").map((line) => line.trim());
   const [isLiked, setIsLiked] = useState(feed.isCurrentUserLiked);
   const [likeCount, setLikeCount] = useState(feed.likeCount);
   const [IsSubscription, setIsSubscription] = useState(feed.pet.isSubscribed);
