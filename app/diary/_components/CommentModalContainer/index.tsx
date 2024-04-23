@@ -7,7 +7,7 @@ import { getComments, postComment } from "@/app/_api/diary";
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useInfiniteScroll } from "@/app/_hooks/useInfiniteScroll";
 import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/constant";
-import { Comment } from "@/app/diary/_components/Feed/Comment";
+import { Comment } from "@/app/diary/_components/CommentModalContainer/Comment";
 import SendIcon from "@/public/icons/send.svg?url";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import { showToast } from "@/app/_components/Toast";
