@@ -34,7 +34,7 @@ export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentI
 
   //댓글 삭제
   const deleteCommentMutation = useMutation({
-    mutationFn: (commentId: number) => deleteComment({ commentId }),
+    mutationFn: (commentId: number) => deleteComment({ petId, commentId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", { petId, diaryId }] });
 
@@ -54,7 +54,7 @@ export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentI
 
   //댓글 수정
   const putCommentMutation = useMutation({
-    mutationFn: () => putComment({ commentId: comment.commentId, content: newCommentValue }),
+    mutationFn: () => putComment({ petId, commentId: comment.commentId, content: newCommentValue }),
     onSuccess: () => {
       const newComments = { ...queryClient.getQueryData<InfiniteData<GetCommentsResponse>>(["comments", { petId, diaryId }]) };
       if (newComments.pages) {
