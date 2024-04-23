@@ -28,12 +28,6 @@ export const videoImage = style({
 
   backgroundSize: "cover",
   backgroundPosition: "center",
-
-  "@media": {
-    "(min-width: 744px)": {
-      height: "41.8rem",
-    },
-  },
 });
 
 const bounce = keyframes({
