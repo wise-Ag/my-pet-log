@@ -1,10 +1,16 @@
+"use server";
+
 import { getFeed } from "@/app/_api/diary";
-import FeedList from "@/app/diary/_components/FeedList";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { FEED_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 import { container, root } from "./style.css";
+import dynamic from "next/dynamic";
 
-const MyPetDiaryPage = async () => {
+const FeedList = dynamic(() => import("@/app/diary/_components/FeedList"), {
+  ssr: false,
+});
+
+const FeedPage = async () => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchInfiniteQuery({
@@ -26,4 +32,4 @@ const MyPetDiaryPage = async () => {
   );
 };
 
-export default MyPetDiaryPage;
+export default FeedPage;
