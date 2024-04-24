@@ -30,6 +30,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const [reCommentValue, setReCommentValue] = useState("");
   const [showReCommentInput, setShowReCommentInput] = useState(false);
   const [taggedNicknames, setTaggedNicknames] = useState<string[]>([]);
+  const [taggedUserId, setTaggedUserId] = useState<string | null>(null);
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
@@ -91,7 +92,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
         petId,
         commentId,
         content: reCommentValue,
-        taggedUserIds: [],
+        taggedUsers: [],
       }),
     onSuccess: (newReComment) => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId]) ?? [];
@@ -126,17 +127,18 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
     setNewCommentValue(comment.content.replaceAll("<br>", "\n"));
   };
 
+  const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
+
+  const handleReCommentButtonClick = () => {
+    setShowReCommentInput(true);
+    setTaggedNicknames([comment.writer.nickname]);
+    setTaggedUserId(comment.writer.id);
+    textAreaRef.current?.focus();
+  };
+
   const handlePostReComment = () => {
     if (!reCommentValue.trim()) return;
     postReCommentMutation.mutate();
-  };
-
-  const toggleReCommentInput = () => setShowReCommentInput((prev) => !prev);
-
-  const handleReCommentButtonClick = (nickname: string) => {
-    setShowReCommentInput(true);
-    setTaggedNicknames([nickname]);
-    textAreaRef.current?.focus();
   };
 
   const renderRecomments = () => {
@@ -213,7 +215,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
           )}
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick(comment.writer?.nickname)}>
+            <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick()}>
               답글
             </button>
             <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.likeIcon : ""}`} onClick={handleCommentLike}>

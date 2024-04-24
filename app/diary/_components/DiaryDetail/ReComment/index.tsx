@@ -55,7 +55,12 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
   });
 
   const putReCommentMutation = useMutation({
-    mutationFn: () => putComment({ commentId: reply.commentId, content: newCommentValue }),
+    mutationFn: () =>
+      putComment({
+        commentId: reply.commentId,
+        content: newCommentValue,
+        taggedUsers: [reply.writer.id],
+      }),
     onSuccess: () => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", diaryId, ancestorId]);
       const updatedReComments = currentReComments?.map((c) => {
