@@ -30,6 +30,12 @@ export const LikeList = ({ diaryId, onClose }: LikeListProps) => {
     }, 500);
   };
 
+  const handleBackgroundClick = (event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      handleClose();
+    }
+  };
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
@@ -39,26 +45,28 @@ export const LikeList = ({ diaryId, onClose }: LikeListProps) => {
   }, []);
 
   return (
-    <div className={styles.container} data-closing={isClosing ? "true" : "false"}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>좋아요</h1>
-        <div className={styles.backIcon} onClick={handleClose}>
-          <Image src={BackIcon} alt="backward icon" width={25} height={25} />
-        </div>
-      </header>
-      <ul style={{ marginTop: "5.6rem" }}>
-        {likelist?.map((user) => (
-          <li key={user.id} className={styles.likeEntry}>
-            <div className={styles.profileImageWrapper}>
-              <Image src={getImagePath(user.profilePath)} alt={`Profile of ${user.nickname}`} width={50} height={50} />
-            </div>
-            <div className={styles.userInfo}>
-              <div className={styles.userId}>{user.id}</div>
-              <div className={styles.userNickname}>{user.nickname}</div>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className={styles.overlay} onClick={handleBackgroundClick}>
+      <div className={styles.container} data-closing={isClosing ? "true" : "false"} onClick={(e) => e.stopPropagation()}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>좋아요</h1>
+          <div className={styles.backIcon} onClick={handleClose}>
+            <Image src={BackIcon} alt="backward icon" width={25} height={25} />
+          </div>
+        </header>
+        <ul style={{ marginTop: "5.6rem" }}>
+          {likelist?.map((user) => (
+            <li key={user.id} className={styles.likeEntry}>
+              <div className={styles.profileImageWrapper}>
+                <Image src={getImagePath(user.profilePath)} alt={`Profile of ${user.nickname}`} width={50} height={50} />
+              </div>
+              <div className={styles.userInfo}>
+                <div className={styles.userId}>{user.id}</div>
+                <div className={styles.userNickname}>{user.nickname}</div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

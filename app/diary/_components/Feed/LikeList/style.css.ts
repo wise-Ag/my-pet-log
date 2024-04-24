@@ -1,39 +1,52 @@
 import { Z_INDEX } from "@/styles/zindex.css";
 import { style, keyframes } from "@vanilla-extract/css";
 
-const slideInFromRight = keyframes({
+const slideInFromLeft = keyframes({
   from: {
-    transform: "translateX(100%)",
+    transform: "translateX(-100%)",
   },
   to: {
     transform: "translateX(0)",
   },
 });
 
-const slideOutToRight = keyframes({
+const slideOutToLeft = keyframes({
   from: {
     transform: "translateX(0)",
   },
   to: {
-    transform: "translateX(100%)",
+    transform: "translateX(-100%)",
   },
+});
+
+export const overlay = style({
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: Z_INDEX.LikeList_overlay,
 });
 
 export const container = style({
   position: "fixed",
-  right: 0,
+  left: 0,
   top: 0,
-  width: "300px",
+  width: "70%",
   height: "100%",
   background: "white",
   overflow: "auto",
   zIndex: Z_INDEX.LikeList_container,
   selectors: {
     '&[data-closing="true"]': {
-      animation: `${slideOutToRight} 0.5s forwards`,
+      animation: `${slideOutToLeft} 0.5s forwards`,
     },
     '&[data-closing="false"]': {
-      animation: `${slideInFromRight} 0.5s forwards`,
+      animation: `${slideInFromLeft} 0.5s forwards`,
     },
   },
 });
@@ -65,16 +78,15 @@ export const title = style({
 export const backIcon = style({
   position: "absolute",
   top: "50%",
-  left: "1.6rem",
-  transform: "translateY(-50%)",
-
+  right: "1.6rem",
+  transform: "translateY(-50%) scaleX(-1)",
   cursor: "pointer",
 });
 
 export const likeEntry = style({
   display: "flex",
   alignItems: "center",
-  padding: "0.5rem",
+  padding: "1rem",
   borderBottom: "1px solid var(--GrayCC)",
 });
 
@@ -93,9 +105,11 @@ export const userInfo = style({
 
 export const userId = style({
   fontWeight: "bold",
+  fontSize: "1.3rem",
   marginBottom: "0.25rem",
 });
 
 export const userNickname = style({
+  fontSize: "1rem",
   color: "var(--Gray55)",
 });
