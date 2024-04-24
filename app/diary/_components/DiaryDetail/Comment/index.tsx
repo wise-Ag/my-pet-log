@@ -30,7 +30,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   const [reCommentValue, setReCommentValue] = useState("");
   const [showReCommentInput, setShowReCommentInput] = useState(false);
   const [taggedNicknames, setTaggedNicknames] = useState<string[]>([]);
-  const [, setTaggedUserId] = useState<string | null>(null);
+  const [taggedUserId, setTaggedUserId] = useState<string | null>(null);
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
@@ -92,11 +92,12 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
         petId,
         commentId,
         content: reCommentValue,
-        taggedUsers: [],
+        taggedUsers: taggedUserId ? [taggedUserId] : [],
       }),
     onSuccess: (newReComment) => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId]) ?? [];
       queryClient.setQueryData(["reComments", diaryId, commentId], [newReComment, ...currentReComments]);
+      console.log(taggedUserId);
       showToast("답글이 생성되었습니다.", true);
       setReCommentValue("");
       setShowReCommentInput(false);
