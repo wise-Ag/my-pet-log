@@ -13,6 +13,8 @@ import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import * as styles from "./style.css";
+import { useAtom } from "jotai";
+import { commentCountAtom } from "@/app/_states/atom";
 
 interface CommentProps {
   comment: CommentType;
@@ -28,6 +30,7 @@ export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentI
   const [isEditing, setIsEditing] = useState(false);
   const [newCommentValue, setNewCommentValue] = useState("");
   const [reCommentValue, setReCommentValue] = useState("");
+  const [commentCounts, setCommentCounts] = useAtom(commentCountAtom);
   const [showReCommentInput, setShowReCommentInput] = useState(false);
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const queryClient = useQueryClient();
@@ -36,6 +39,10 @@ export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentI
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId: number) => deleteComment({ petId, commentId }),
     onSuccess: () => {
+      setCommentCounts((currentCounts) => ({
+        ...currentCounts,
+        [diaryId]: (currentCounts[diaryId] || 0) - 1,
+      }));
       queryClient.invalidateQueries({ queryKey: ["comments", { petId, diaryId }] });
 
       showToast("댓글을 삭제했습니다.", true);

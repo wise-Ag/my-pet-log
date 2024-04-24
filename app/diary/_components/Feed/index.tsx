@@ -21,18 +21,28 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NoMedia } from "./NoMedia";
 import { LikeList } from "./LikeList";
 import { postPetSubscriptions } from "@/app/_api/subscription";
+import { useAtom } from "jotai";
+import { commentCountAtom } from "@/app/_states/atom";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const lines = feed.content.split("\n").map((line) => line.trim());
   const [isLiked, setIsLiked] = useState(feed.isCurrentUserLiked);
   const [likeCount, setLikeCount] = useState(feed.likeCount);
+  const [commentCounts, setCommentCounts] = useAtom(commentCountAtom);
   const [IsSubscription, setIsSubscription] = useState(feed.pet.isSubscribed);
   const firstLine = lines[0];
   const additionalLines = lines.slice(1).join("\n");
   const { isModalOpen: isCommentModalOpen, openModalFunc: openCommentModal, closeModalFunc: closeCommentModal } = useModal();
   const { isModalOpen: isLikeModalOpen, openModalFunc: openLikeModal, closeModalFunc: closeLikeModal } = useModal();
   const queryClient = useQueryClient();
+
+  if (commentCounts[feed.diaryId] === undefined) {
+    setCommentCounts((prev) => ({
+      ...prev,
+      [feed.diaryId]: feed.commentCount,
+    }));
+  }
 
   const getImagePathWithPrefix = (path: string | null) => {
     return path ? `${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${path}` : NoPetProfileImage;
@@ -163,7 +173,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
           <button onClick={handleLikeClick}>
             {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
           </button>
-          <ChatIcon className={styles.icon} onClick={openCommentModal} />
+          <ChatIcon className={styles.icon} onClick={openCommentModal} style={{ cursor: "pointer" }} />
           <section className={styles.greatChat}>
             {likeCount > 0 && (
               <button onClick={openLikeModal} className={styles.greatText}>
@@ -188,9 +198,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
                 ))}
               </div>
             </section>
-            {feed.commentCount > 0 && (
+            {commentCounts[feed.diaryId] > 0 && (
               <button className={styles.comment} onClick={openCommentModal}>
-                댓글 {feed.commentCount}개 모두 보기
+                댓글 {commentCounts[feed.diaryId]}개 모두 보기
               </button>
             )}
             <div className={styles.date}>{feed.createdAt}</div>

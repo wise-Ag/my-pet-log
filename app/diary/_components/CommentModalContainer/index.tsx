@@ -15,6 +15,8 @@ import { CommentType, GetCommentsResponse } from "@/app/_types/diary/type";
 import { UserType } from "@/app/_types/user/types";
 import { getMe } from "@/app/_api/users";
 import { NoComments } from "@/app/diary/_components/CommentModalContainer/EmptyComment";
+import { useAtom } from "jotai";
+import { commentCountAtom } from "@/app/_states/atom";
 interface CommentModalContainerProps {
   petId: number;
   diaryId: number;
@@ -28,6 +30,7 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
   const [isScrolling, setIsScrolling] = useState(false);
   const [commentValue, setCommentValue] = useState("");
   const queryClient = useQueryClient();
+  const [commentCounts, setCommentCounts] = useAtom(commentCountAtom);
 
   //댓글 조회
   const {
@@ -48,6 +51,11 @@ const CommentModalContainer = ({ petId, onClose, diaryId }: CommentModalContaine
   const postCommentMutation = useMutation({
     mutationFn: () => postComment({ petId, diaryId, content: commentValue }),
     onSuccess: (data: CommentType) => {
+      setCommentCounts((currentCounts) => ({
+        ...currentCounts,
+        [diaryId]: (currentCounts[diaryId] || 0) + 1,
+      }));
+
       const newComments = queryClient.getQueryData<InfiniteData<GetCommentsResponse>>(["comments", { petId, diaryId }]);
       if (!newComments) return;
       newComments?.pages[0]?.content.unshift(data);
