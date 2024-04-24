@@ -108,6 +108,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
       queryClient.invalidateQueries({
         queryKey: ["feed", feed.diaryId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["likelist", feed.diaryId],
+      });
     },
   });
 

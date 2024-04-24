@@ -21,7 +21,6 @@ export const overlay = style({
   left: "0",
 
   backgroundColor: "rgba(0, 0, 0, 0.5)",
-  touchAction: "none",
   zIndex: Z_INDEX.Modal,
 });
 
