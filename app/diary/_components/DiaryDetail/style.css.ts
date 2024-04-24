@@ -172,7 +172,8 @@ export const commentInputContainer = style({
 
   "@media": {
     "(min-width: 744px)": {
-      bottom: 0,
+      width: "45rem",
+      bottom: "5.6rem",
     },
   },
 });
