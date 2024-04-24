@@ -4,8 +4,9 @@ import instance from "@/app/_api/axios";
 import { GetNotificationsRequest, GetNotificationsResponse } from "@/app/_types/notifications/types";
 
 export const getNotifications = async ({ page, size }: GetNotificationsRequest): Promise<GetNotificationsResponse | null> => {
+  if (page === undefined) return null;
   try {
-    const response = await instance.get(`/notifications?page=${page ?? "0"}&size=${size ?? "20"}`);
+    const response = await instance.get(`/notifications?page=${page}&size=${size ?? "5"}&sort=string`);
 
     if (response.status === 200) {
       return response.data;

@@ -7,8 +7,14 @@ export const notificationListBase = style({
 });
 
 export const notificationPageContainer = style({
+  minHeight: "calc(100vh - 5.6rem)",
+});
+
+export const notificationScrollArea = style({
   display: "grid",
   gap: "3.2rem",
+  alignContent: "start",
+  minHeight: "calc(100vh - 5.6rem)",
   padding: "2.4rem 1.6rem",
 });
 
@@ -25,12 +31,24 @@ export const noNewNotification = style({
   fontWeight: "400",
   color: "var(--Gray2E)",
   textAlign: "center",
+
+  "@media": {
+    "screen and (min-width: 744px)": {
+      fontSize: "1.6rem",
+    },
+  },
 });
 
 export const title = style({
   fontSize: "1.4rem",
-  fontWeight: "700",
+  fontWeight: "500",
   color: "var(--Gray81)",
+
+  "@media": {
+    "screen and (min-width: 744px)": {
+      fontSize: "1.6rem",
+    },
+  },
 });
 
 export const newNotificationTitleArea = style({
@@ -43,6 +61,12 @@ export const deleteButton = style({
   fontSize: "1.4rem",
   fontWeight: "500",
   color: "var(--Gray81)",
+
+  "@media": {
+    "screen and (min-width: 744px)": {
+      fontSize: "1.6rem",
+    },
+  },
 });
 
 export const pastNotificationList = style([
@@ -59,6 +83,12 @@ export const days = style({
   fontWeight: "400",
   color: "var(--Gray81)",
   textAlign: "center",
+
+  "@media": {
+    "screen and (min-width: 744px)": {
+      fontSize: "1.4rem",
+    },
+  },
 });
 
 export const scrollButton = style({
