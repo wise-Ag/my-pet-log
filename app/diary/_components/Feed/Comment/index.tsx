@@ -1,18 +1,18 @@
 "use client";
 
-import { deleteComment, postCommentLike, putComment, getReComments, postReComment } from "@/app/_api/diary";
+import { deleteComment, postCommentLike, postReComment, putComment } from "@/app/_api/diary";
 import Modal from "@/app/_components/Modal";
 import { showToast } from "@/app/_components/Toast";
 import { useModal } from "@/app/_hooks/useModal";
-import { CommentType, GetCommentsResponse, GetDiaryResponse } from "@/app/_types/diary/type";
+import { CommentType, GetCommentsResponse, GetDiaryResponse, GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
+import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
+import HeartIcon from "@/public/icons/small-heart.svg";
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import * as styles from "./style.css";
-import HeartIcon from "@/public/icons/small-heart.svg";
-import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
 
 interface CommentProps {
   comment: CommentType;
@@ -76,11 +76,18 @@ export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentI
 
   // 대댓글 생성 로직
   const postReCommentMutation = useMutation({
-    mutationFn: () => postReComment({ commentId, content: reCommentValue, taggedUserIds: [] }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reComments", commentId] });
-      setReCommentValue("");
+    mutationFn: async () =>
+      await postReComment({
+        petId,
+        commentId,
+        content: reCommentValue,
+        taggedUserIds: [],
+      }),
+    onSuccess: (newReComment) => {
+      const currentReComments = queryClient.getQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId]) ?? [];
+      queryClient.setQueryData(["reComments", diaryId, commentId], [newReComment, ...currentReComments]);
       showToast("답글이 생성되었습니다.", true);
+      setReCommentValue("");
       setShowReCommentInput(false);
     },
     onError: () => {
