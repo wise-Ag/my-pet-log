@@ -40,7 +40,7 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
   const queryClient = useQueryClient();
 
   const deleteReCommentMutation = useMutation({
-    mutationFn: () => deleteComment({ commentId: reply.commentId }),
+    mutationFn: () => deleteComment({ petId, commentId: reply.commentId }),
     onSuccess: () => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", diaryId, ancestorId]);
       const updatedReComments = currentReComments?.filter((c) => c.commentId !== reply.commentId);
@@ -57,6 +57,7 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
   const putReCommentMutation = useMutation({
     mutationFn: () =>
       putComment({
+        petId,
         commentId: reply.commentId,
         content: newCommentValue,
         taggedUsers: [reply.writer.id],

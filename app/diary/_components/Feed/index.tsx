@@ -20,17 +20,29 @@ import { postDiaryLike } from "@/app/_api/diary";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NoMedia } from "./NoMedia";
 import { LikeList } from "./LikeList";
+import { postPetSubscriptions } from "@/app/_api/subscription";
+import { useAtom } from "jotai";
+import { commentCountAtom } from "@/app/_states/atom";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const lines = feed.content.split("\n");
+  const lines = feed.content.split("\n").map((line) => line.trim());
   const [isLiked, setIsLiked] = useState(feed.isCurrentUserLiked);
   const [likeCount, setLikeCount] = useState(feed.likeCount);
+  const [commentCounts, setCommentCounts] = useAtom(commentCountAtom);
+  const [IsSubscription, setIsSubscription] = useState(feed.pet.isSubscribed);
   const firstLine = lines[0];
   const additionalLines = lines.slice(1).join("\n");
   const { isModalOpen: isCommentModalOpen, openModalFunc: openCommentModal, closeModalFunc: closeCommentModal } = useModal();
   const { isModalOpen: isLikeModalOpen, openModalFunc: openLikeModal, closeModalFunc: closeLikeModal } = useModal();
   const queryClient = useQueryClient();
+
+  if (commentCounts[feed.diaryId] === undefined) {
+    setCommentCounts((prev) => ({
+      ...prev,
+      [feed.diaryId]: feed.commentCount,
+    }));
+  }
 
   const getImagePathWithPrefix = (path: string | null) => {
     return path ? `${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${path}` : NoPetProfileImage;
@@ -41,6 +53,44 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
     postDiaryLikeMutation.mutate();
   };
+
+  const handleSubscriptionClick = () => {
+    setIsSubscription(!IsSubscription);
+    subscriptionMutation.mutate();
+  };
+
+  //구독하기
+  const subscriptionMutation = useMutation({
+    mutationFn: () => postPetSubscriptions(feed.pet.id),
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["feed", feed.diaryId],
+      });
+
+      const previousFeed = queryClient.getQueryData<getFeedResponse>(["feed", feed.diaryId]);
+      if (previousFeed) {
+        queryClient.setQueryData(["feed", feed.diaryId], {
+          ...previousFeed,
+          pet: {
+            ...previousFeed.pet,
+            isSubscribed: !previousFeed.pet.isSubscribed,
+          },
+        });
+      }
+      return { previousFeed };
+    },
+    onError: (err, newPet, context) => {
+      if (context?.previousFeed) {
+        queryClient.setQueryData(["feed", feed.diaryId], context.previousFeed);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["feed", feed.diaryId],
+      });
+    },
+  });
 
   const postDiaryLikeMutation = useMutation({
     mutationFn: () => postDiaryLike({ diaryId: feed.diaryId }),
@@ -68,6 +118,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
       queryClient.invalidateQueries({
         queryKey: ["feed", feed.diaryId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["likelist", feed.diaryId],
+      });
     },
   });
 
@@ -81,9 +134,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
     <>
       <section className={styles.profileInfo}>
         <Image className={styles.profileImage} src={getImagePath(feed.pet.profilePath)} alt="profile image" width={45} height={45} priority />
-        <div className={styles.text}>
-          {feed.pet.name} · {feed.isCurrentUserLiked ? "구독 중 🐾" : "구독하기"}
-        </div>
+        <button className={styles.text} onClick={handleSubscriptionClick}>
+          {feed.pet.name} · {IsSubscription ? "구독 중 🐾" : "구독하기"}
+        </button>
       </section>
       {feed.medias && feed.medias.length > 0 ? (
         <>
@@ -120,7 +173,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
           <button onClick={handleLikeClick}>
             {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
           </button>
-          <ChatIcon className={styles.icon} onClick={openCommentModal} />
+          <ChatIcon className={styles.icon} onClick={openCommentModal} style={{ cursor: "pointer" }} />
           <section className={styles.greatChat}>
             {likeCount > 0 && (
               <button onClick={openLikeModal} className={styles.greatText}>
@@ -145,9 +198,9 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
                 ))}
               </div>
             </section>
-            {feed.commentCount > 0 && (
+            {commentCounts[feed.diaryId] > 0 && (
               <button className={styles.comment} onClick={openCommentModal}>
-                댓글 {feed.commentCount}개 모두 보기
+                댓글 {commentCounts[feed.diaryId]}개 모두 보기
               </button>
             )}
             <div className={styles.date}>{feed.createdAt}</div>

@@ -48,6 +48,7 @@ const PetRegister = () => {
   const dropdownRef = useRef<HTMLUListElement>(null); //모달 외부 클릭시 닫히도록
   const [selectedType, setSelectedType] = useState(""); //타입 선택 반영
   const [selectedBreed, setSelectedBreed] = useState(""); //품종 선택 반영
+  const [searchTerm, setSearchTerm] = useState("");
   const [isPetNameConfirm, setIsPetNameConfirm] = useState(false); //펫 이름 중복확인
 
   const {
@@ -174,6 +175,10 @@ const PetRegister = () => {
     setBreedOpen((prev) => !prev);
   };
 
+  const handleSearchTermChange = (event: any) => {
+    setSearchTerm(event.target.value);
+  };
+
   const section1 = (
     <>
       {checkPetNameMutation.isPending && <Loading />}
@@ -238,23 +243,31 @@ const PetRegister = () => {
       {/* 품종 */}
       <label className={styles.label}>품종*</label>
       {selectedType !== "기타" && (
-        <button type="button" className={`${styles.selectBox} ${breedOpen ? styles.selectBoxOpen : ""}`} onClick={() => setBreedOpen(!breedOpen)}>
-          {selectedBreed || "품종을 선택하세요"}
+        <div className={styles.nameInputWrapper}>
+          <input
+            className={`${styles.selectBox} ${breedOpen ? styles.selectBoxOpen : ""}`}
+            type="text"
+            value={selectedBreed || searchTerm} // 선택된 품종 또는 검색어 표시
+            onChange={handleSearchTermChange}
+            placeholder="품종을 선택하세요"
+            onFocus={() => setBreedOpen(true)}
+          />
           <DropdownIcon className={`${styles.dropdownIcon} ${breedOpen ? styles.dropdownIconOpen : ""}`} />
-        </button>
+        </div>
       )}
       {breedOpen && selectedType !== "기타" && (
         <ul className={styles.optionsList} ref={dropdownRef}>
-          {petOptions[selectedType]?.map((breed: string, index: number) => (
-            <li key={index} value={breed}>
-              <button type="button" className={styles.optionButton} onClick={() => handleBreedClick(breed)} {...register("breed")}>
-                {breed}
-              </button>
-            </li>
-          ))}
+          {petOptions[selectedType]
+            ?.filter((breed) => breed.toLowerCase().includes(searchTerm.toLowerCase()))
+            .map((breed: string, index: number) => (
+              <li key={index} value={breed}>
+                <button type="button" className={styles.optionButton} onClick={() => handleBreedClick(breed)}>
+                  {breed}
+                </button>
+              </li>
+            ))}
         </ul>
       )}
-
       {selectedType === "기타" && (
         <>
           <input

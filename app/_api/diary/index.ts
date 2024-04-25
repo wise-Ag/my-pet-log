@@ -98,13 +98,11 @@ export const postReComment = async ({ commentId, content, taggedUsers }: PostReC
   return res.data;
 };
 
-export const deleteComment = async ({ commentId }: { commentId: number }) => {
-  const petId = cookies().get("petId")?.value;
+export const deleteComment = async ({ petId, commentId }: { petId: number; commentId: number }) => {
   await instance.delete(`pets/${petId}/diaries/comments/${commentId}`);
 };
 
-export const putComment = async ({ commentId, content }: PutCommentRequest) => {
-  const petId = cookies().get("petId")?.value;
+export const putComment = async ({ petId, commentId, content }: PutCommentRequest) => {
   await instance.put(`pets/${petId}/diaries/comments/${commentId}`, { content });
 };
 

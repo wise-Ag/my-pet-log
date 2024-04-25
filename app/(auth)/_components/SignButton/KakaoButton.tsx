@@ -5,9 +5,9 @@ import SignButton from ".";
 const KakaoButton = () => {
   const { data: session } = useSession();
 
-  const onClick = async () => {
+  const onClick = () => {
     if (!session) {
-      await signIn("kakao", { redirect: true, callbackUrl: "/loginflow" });
+      signIn("kakao", { redirect: true, callbackUrl: "/loginflow" });
     }
   };
 
