@@ -1,7 +1,7 @@
 "use client";
 
 import * as styles from "./style.css";
-import BackIcon from "@/public/icons/chevron-left.svg?url";
+import CloseIcon from "@/public/icons/close.svg?url";
 import Image from "next/image";
 import { getLikeList } from "@/app/_api/diary";
 import { useQuery } from "@tanstack/react-query";
@@ -49,8 +49,8 @@ export const LikeList = ({ diaryId, onClose }: LikeListProps) => {
       <div className={styles.container} data-closing={isClosing ? "true" : "false"} onClick={(e) => e.stopPropagation()}>
         <header className={styles.header}>
           <h1 className={styles.title}>좋아요</h1>
-          <div className={styles.backIcon} onClick={handleClose}>
-            <Image src={BackIcon} alt="backward icon" width={25} height={25} />
+          <div className={styles.closeIcon} onClick={handleClose}>
+            <Image src={CloseIcon} alt="close icon" width={24} height={24} />
           </div>
         </header>
         <ul style={{ marginTop: "5.6rem" }}>
