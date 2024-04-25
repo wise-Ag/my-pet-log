@@ -141,3 +141,19 @@ const bounce = keyframes({
 export const LikeIcon = style({
   animation: `${bounce} 0.4s linear 1`,
 });
+
+export const tag = style({
+  fontSize: "1.4rem",
+  fontWeight: "bold",
+  color: "var(--MainOrange)",
+});
+
+export const taggedNicknames = style({
+  marginBottom: "1rem",
+});
+
+export const deletedCommentText = style({
+  color: "var(--Gray81)",
+  fontSize: "1.3rem",
+  fontStyle: "italic",
+});
