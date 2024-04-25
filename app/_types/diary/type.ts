@@ -1,42 +1,9 @@
-export interface Diary {
-  diaryId: number;
-  title: string;
-  content: string;
-  thumbnailPath: null | string;
-  writer: {
-    id: string;
-    nickname: string;
-    isCurrentUser: boolean;
-  };
-  commentCount: number;
-  isPublic: boolean;
-}
-
-export interface postDiaryRequest {
-  title: string;
-  content: string;
-  date: string;
-  images?: File[];
-  video?: File;
-}
-
+// 공통 타입 정의
 export interface Writer {
   id: string;
   nickname: string;
   isCurrentUser: boolean;
   profilePath: string;
-}
-
-export interface CommentType {
-  commentId: number;
-  isDeleted: boolean;
-  recommentCount: number;
-  content: string;
-  createdAt: string;
-  isCurrentUserLiked: boolean;
-  likeCount: number;
-  writer: Writer;
-  taggedUsers: Tag[];
 }
 
 interface Tag {
@@ -45,9 +12,49 @@ interface Tag {
   isCurrentUser: boolean;
 }
 
-export interface PostDiaryVideoResponse {
-  videoId: string;
-  validUntil: string;
+export interface DiaryMediaType {
+  mediaId: number;
+  path: string;
+}
+
+// 일기(Diary) 관련 인터페이스
+export interface Diary {
+  diaryId: number;
+  title: string;
+  content: string;
+  thumbnailPath: null | string;
+  writer: Writer;
+  commentCount: number;
+  isPublic: boolean;
+}
+
+export interface GetDiaryListRequest {
+  page: number | unknown;
+  size: number;
+}
+
+export interface GetDiaryRequest {
+  petId: number;
+  diaryId: number;
+}
+
+export interface GetDiaryResponse {
+  diaryId: number;
+  title: string;
+  content: string;
+  date: string;
+  images: DiaryMediaType[];
+  videos: DiaryMediaType[];
+  isCurrentUserLiked: boolean;
+  writer: Writer;
+  commentCount: number;
+  likeCount: number;
+  isPublic: boolean;
+  pet: {
+    id: number;
+    breed: string;
+    age: string;
+  };
 }
 
 export interface GetDiaryListResponse {
@@ -57,7 +64,6 @@ export interface GetDiaryListResponse {
       diaries: Diary[];
     },
   ];
-
   pageable: {
     pageNumber: number;
     pageSize: number;
@@ -83,36 +89,33 @@ export interface GetDiaryListResponse {
   empty: boolean;
 }
 
-export interface getFeedResponse {
-  pet: {
-    name: string;
-    id: number;
-    profilePath: string | null;
-    isSubscribed: boolean;
+export interface PostDiaryRequest {
+  petId: number;
+  data: {
+    title: string;
+    content: string;
+    date: string;
+    image?: File[];
+    video?: File;
   };
-  diaryId: number;
-  title: string;
+}
+
+export interface PostDiaryVideoResponse {
+  videoId: string;
+  validUntil: string;
+}
+
+// 댓글(Comment) 관련 인터페이스
+export interface CommentType {
+  commentId: number;
+  isDeleted: boolean;
+  recommentCount: number;
   content: string;
   createdAt: string;
-  medias: {
-    mediaId: number;
-    path: string;
-  }[];
-  commentCount: number;
-  likeCount: number;
   isCurrentUserLiked: boolean;
-}
-
-export interface GetLikeListResponse {
-  id: string;
-  nickname: string;
-  profilePath: string;
-  isCurrentUser: boolean;
-}
-
-export interface GetDiaryListRequest {
-  page: number | unknown;
-  size: number;
+  likeCount: number;
+  writer: Writer;
+  taggedUsers: Tag[];
 }
 
 export interface GetCommentsRequest extends GetDiaryListRequest {
@@ -126,37 +129,8 @@ export interface GetReCommentsRequest {
   ancestorId: number;
 }
 
-export interface GetDiaryRequest {
-  petId: number;
-  diaryId: number;
-}
-export interface DiaryMediaType {
-  mediaId: number;
-  path: string;
-}
-
-export interface GetDiaryResponse {
-  diaryId: number;
-  title: string;
-  content: string;
-  date: string;
-  images: DiaryMediaType[];
-  videos: DiaryMediaType[];
-  isCurrentUserLiked: boolean;
-  writer: Writer;
-  commentCount: number;
-  likeCount: number;
-  isPublic: boolean;
-  pet: {
-    id: number;
-    breed: string;
-    age: string;
-  };
-}
-
 export interface GetCommentsResponse {
   content: CommentType[];
-
   pageable: {
     pageNumber: number;
     pageSize: number;
@@ -184,35 +158,51 @@ export interface GetCommentsResponse {
 
 export type GetReCommentsResponse = CommentType[];
 
-export interface PostDiaryRequest {
-  petId: number;
-  data: {
-    title: string;
-    content: string;
-    date: string;
-    image?: File[];
-    video?: File;
-  };
-}
-
 export interface PostCommentRequest {
   petId: number;
   diaryId: number;
   content: string;
-  taggedUserIds?: string[];
+  taggedUsers?: string[];
 }
 
 export interface PostReCommentRequest {
   petId: number;
   commentId: number;
   content: string;
-  taggedUserIds?: string[];
+  taggedUsers?: string[];
 }
 
 export interface PutCommentRequest {
   petId: number;
   commentId: number;
   content: string;
+  taggedUsers?: string[];
+}
+
+// 피드(Feed) 및 검색(Search) 관련 인터페이스
+export interface getFeedRequest {
+  page: number | unknown;
+  size: number | unknown;
+}
+
+export interface getFeedResponse {
+  pet: {
+    name: string;
+    id: number;
+    profilePath: string | null;
+    isSubscribed: boolean;
+  };
+  diaryId: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  medias: {
+    mediaId: number;
+    path: string;
+  }[];
+  commentCount: number;
+  likeCount: number;
+  isCurrentUserLiked: boolean;
 }
 
 export interface getSearchDiaryRequest {
@@ -221,7 +211,10 @@ export interface getSearchDiaryRequest {
   keyword: string | null;
 }
 
-export interface getFeedRequest {
-  page: number | unknown;
-  size: number | unknown;
+// 좋아요(Like) 관련 인터페이스
+export interface GetLikeListResponse {
+  id: string;
+  nickname: string;
+  profilePath: string;
+  isCurrentUser: boolean;
 }

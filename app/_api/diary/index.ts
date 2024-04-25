@@ -24,7 +24,6 @@ export const postDiary = async ({ formData }: { formData: FormData }) => {
   const petId = cookies().get("petId")?.value;
   try {
     const res = await instance.post(`/pets/${petId}/diaries`, formData, { headers: { "Content-Type": "multipart/form-data" } });
-
     return res.data;
   } catch (error: any) {
     throw Error("일기 생성 실패");
@@ -35,7 +34,6 @@ export const getDiaryList = async ({ page, size }: GetDiaryListRequest) => {
   const petId = cookies().get("petId")?.value;
   try {
     const res = await instance.get(`/pets/${petId}/diaries`, { params: { page, size } });
-
     return await res.data;
   } catch (error: any) {
     console.error(error.response);
@@ -47,7 +45,6 @@ export const getDiary = async ({ diaryId }: { diaryId: number }): Promise<GetDia
   const petId = cookies().get("petId")?.value;
   try {
     const res = await instance.get(`pets/${petId}/diaries/${diaryId}`);
-
     return res.data;
   } catch (error: any) {
     console.error(error.response);
@@ -55,10 +52,23 @@ export const getDiary = async ({ diaryId }: { diaryId: number }): Promise<GetDia
   }
 };
 
+export const deleteDiary = async ({ diaryId }: { diaryId: number }) => {
+  const petId = cookies().get("petId")?.value;
+  try {
+    await instance.delete(`pets/${petId}/diaries/${diaryId}`);
+  } catch (error: any) {
+    throw Error("일기 삭제 실패");
+  }
+};
+
+export const putDiary = async ({ diaryId, formData }: { diaryId: number; formData: FormData }) => {
+  const petId = cookies().get("petId")?.value;
+  await instance.put(`pets/${petId}/diaries/${diaryId}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+};
+
 export const getComments = async ({ petId, diaryId, page, size }: GetCommentsRequest): Promise<GetCommentsResponse | null> => {
   try {
     const res = await instance.get(`pets/${petId}/diaries/${diaryId}/comments`, { params: { page, size } });
-
     return res.data;
   } catch (error: any) {
     console.error(error.response);
@@ -77,6 +87,25 @@ export const getReComments = async ({ ancestorId, diaryId }: GetReCommentsReques
   }
 };
 
+export const postComment = async ({ petId, diaryId, content }: PostCommentRequest): Promise<CommentType> => {
+  const res = await instance.post(`pets/${petId}/diaries/${diaryId}/comments`, { content });
+  return res.data;
+};
+
+export const postReComment = async ({ commentId, content, taggedUsers }: PostReCommentRequest): Promise<GetReCommentsResponse> => {
+  const petId = cookies().get("petId")?.value;
+  const res = await instance.post(`pets/${petId}/diaries/comments/${commentId}/recomment`, { content, taggedUsers });
+  return res.data;
+};
+
+export const deleteComment = async ({ petId, commentId }: { petId: number; commentId: number }) => {
+  await instance.delete(`pets/${petId}/diaries/comments/${commentId}`);
+};
+
+export const putComment = async ({ petId, commentId, content }: PutCommentRequest) => {
+  await instance.put(`pets/${petId}/diaries/comments/${commentId}`, { content });
+};
+
 export const getFeed = async ({ page, size }: getFeedRequest) => {
   try {
     const res = await instance.get(`diaries/feed`, { params: { page, size } });
@@ -87,37 +116,20 @@ export const getFeed = async ({ page, size }: getFeedRequest) => {
   }
 };
 
-export const deleteDiary = async ({ diaryId }: { diaryId: number }) => {
+export const getSearchDiary = async ({ page, size, keyword }: getSearchDiaryRequest): Promise<GetDiaryListResponse | null> => {
   const petId = cookies().get("petId")?.value;
   try {
-    await instance.delete(`pets/${petId}/diaries/${diaryId}`);
+    const res = await instance.get(`pets/${petId}/diaries/search`, { params: { page, size, keyword } });
+    return res.data;
   } catch (error: any) {
-    throw Error("일기 샥제 실패");
+    console.error(error.response);
+    return null;
   }
 };
 
 export const postDiaryLike = async ({ diaryId }: { diaryId: number }) => {
   const petId = cookies().get("petId")?.value;
   await instance.post(`pets/${petId}/diaries/${diaryId}/like`);
-};
-
-export const postComment = async ({ petId, diaryId, content }: PostCommentRequest): Promise<CommentType> => {
-  const res = await instance.post(`pets/${petId}/diaries/${diaryId}/comments`, { content });
-  return res.data;
-};
-
-export const postReComment = async ({ commentId, content, taggedUserIds }: PostReCommentRequest): Promise<GetReCommentsResponse> => {
-  const petId = cookies().get("petId")?.value;
-  const res = await instance.post(`pets/${petId}/diaries/comments/${commentId}/recomment`, { content, taggedUserIds });
-  return res.data;
-};
-
-export const deleteComment = async ({ petId, commentId }: { petId: number; commentId: number }) => {
-  await instance.delete(`pets/${petId}/diaries/comments/${commentId}`);
-};
-
-export const putComment = async ({ petId, commentId, content }: PutCommentRequest) => {
-  await instance.put(`pets/${petId}/diaries/comments/${commentId}`, { content });
 };
 
 export const postCommentLike = async ({ petId, commentId }: { petId: number; commentId: number }) => {
@@ -134,34 +146,7 @@ export const getLikeList = async ({ diaryId }: { diaryId: number }): Promise<Get
   }
 };
 
-export const getSearchDiary = async ({ page, size, keyword }: getSearchDiaryRequest): Promise<GetDiaryListResponse | null> => {
-  const petId = cookies().get("petId")?.value;
-  try {
-    const res = await instance.get(`pets/${petId}/diaries/search`, { params: { page, size, keyword } });
-    return res.data;
-  } catch (error: any) {
-    console.error(error.response);
-    return null;
-  }
-};
-
-export const putDiary = async ({ diaryId, formData }: { diaryId: number; formData: FormData }) => {
-  const petId = cookies().get("petId")?.value;
-  await instance.put(`pets/${petId}/diaries/${diaryId}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
-};
-
 export const postDiaryVideo = async ({ formData }: { formData: FormData }): Promise<PostDiaryVideoResponse> => {
   const res = await instance.post(`/videos?domain=DIARY`, formData, { headers: { "Content-Type": "multipart/form-data" } });
   return res.data;
-};
-
-export const getSearchTerms = async () => {
-  try {
-    const petId = cookies().get("petId")?.value;
-    const res = await instance.get(`pets/${petId}/diaries/search/terms`);
-
-    return res.data;
-  } catch (error: any) {
-    console.error(error.response.data);
-  }
 };
