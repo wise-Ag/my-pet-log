@@ -33,6 +33,7 @@ export const overlay = style({
 });
 
 export const container = style({
+  marginTop: "5.6rem",
   position: "fixed",
   left: 0,
   top: 0,
