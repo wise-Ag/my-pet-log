@@ -11,5 +11,6 @@ export const Z_INDEX = createGlobalTheme(":root", {
   SubtypeDetail_optionsList: "1",
   Header: "10",
   LoadingPage: "15",
-  LikeList_container: "2",
+  LikeList_container: "3",
+  LikeList_overlay: "2",
 });

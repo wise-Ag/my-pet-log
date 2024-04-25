@@ -8,3 +8,8 @@ export const deletedVideoIdsAtom = atom<number[]>([]);
 export const userAccessTokenAtom = atom(null);
 export const userRefreshTokenAtom = atom(null);
 export const isLoggedInAtom = atom(false);
+interface CommentCounts {
+  [diaryId: number]: number;
+}
+
+export const commentCountAtom = atom<CommentCounts>({});

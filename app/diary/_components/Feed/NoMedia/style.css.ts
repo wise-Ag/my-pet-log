@@ -58,6 +58,7 @@ export const comment = style({
   color: "var(--Gray81)",
   fontSize: "1.4rem",
   fontWeight: "300",
+  cursor: "pointer",
 });
 
 export const date = style({

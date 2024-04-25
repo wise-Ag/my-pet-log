@@ -210,6 +210,7 @@ export interface PostReCommentRequest {
 }
 
 export interface PutCommentRequest {
+  petId: number;
   commentId: number;
   content: string;
 }

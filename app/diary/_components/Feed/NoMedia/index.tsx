@@ -10,6 +10,9 @@ import CommentModalContainer from "@/app/diary/_components/CommentModalContainer
 import { getFeedResponse } from "@/app/_types/diary/type";
 import { postDiaryLike } from "@/app/_api/diary";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { LikeList } from "../LikeList";
+import { useAtom } from "jotai";
+import { commentCountAtom } from "@/app/_states/atom";
 
 export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -17,9 +20,19 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
   const [isLiked, setIsLiked] = useState(feed.isCurrentUserLiked);
   const [likeCount, setLikeCount] = useState(feed.likeCount);
   const firstLine = lines[0];
+  const [commentCounts, setCommentCounts] = useAtom(commentCountAtom);
   const additionalLines = lines.slice(1).join("\n");
-  const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
+  const { isModalOpen: isCommentModalOpen, openModalFunc: openCommentModal, closeModalFunc: closeCommentModal } = useModal();
+  const { isModalOpen: isLikeModalOpen, openModalFunc: openLikeModal, closeModalFunc: closeLikeModal } = useModal();
   const queryClient = useQueryClient();
+
+  if (commentCounts[feed.diaryId] === undefined) {
+    // 처음 렌더링 시에만 실행
+    setCommentCounts((prev) => ({
+      ...prev,
+      [feed.diaryId]: feed.commentCount,
+    }));
+  }
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);
@@ -53,6 +66,9 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
       queryClient.invalidateQueries({
         queryKey: ["feed", feed.diaryId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["likelist", feed.diaryId],
+      });
     },
   });
 
@@ -81,17 +97,22 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
       <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
         {isLiked ? <HeartFillIcon className={`${styles.icon} ${styles.LikeIcon}`} /> : <HeartIcon className={styles.icon} style={{ fill: "var(--Gray33)" }} />}
       </span>
-      <ChatIcon className={styles.icon} onClick={openModalFunc} />
+      <ChatIcon className={styles.icon} onClick={openCommentModal} style={{ cursor: "pointer" }} />
       <div className={styles.likeComment}>
-        {likeCount > 0 && <div className={styles.greatText}>좋아요 {likeCount}개</div>}
-        {feed.commentCount > 0 && (
-          <div className={styles.comment} onClick={openModalFunc}>
-            댓글 {feed.commentCount}개 모두 보기
+        {likeCount > 0 && (
+          <button className={styles.greatText} onClick={openLikeModal}>
+            좋아요 {likeCount}개
+          </button>
+        )}
+        {commentCounts[feed.diaryId] > 0 && (
+          <div className={styles.comment} onClick={openCommentModal}>
+            댓글 {commentCounts[feed.diaryId]}개 모두 보기
           </div>
         )}
       </div>
       <div className={styles.date}>{feed.createdAt}</div>
-      {isModalOpen && <CommentModalContainer onClose={closeModalFunc} petId={feed.pet.id} diaryId={feed.diaryId} />}
+      {isCommentModalOpen && <CommentModalContainer onClose={closeCommentModal} petId={feed.pet.id} diaryId={feed.diaryId} />}
+      {isLikeModalOpen && <LikeList onClose={closeLikeModal} diaryId={feed.diaryId} />}
     </>
   );
 };

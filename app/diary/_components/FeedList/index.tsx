@@ -27,7 +27,7 @@ const FeedList = () => {
 
   return (
     <>
-      {feedsPages.map((feeds, pageIndex) => feeds.map((feed: getFeedResponse, feedIndex: number) => <Feed key={`${pageIndex}-${feedIndex}`} feed={feed} />))}
+      {feedsPages?.map((feeds, pageIndex) => feeds.map((feed: getFeedResponse, feedIndex: number) => <Feed key={`${pageIndex}-${feedIndex}`} feed={feed} />))}
       <div ref={targetRef} />
     </>
   );
