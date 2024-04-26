@@ -127,6 +127,17 @@ export const getSearchDiary = async ({ page, size, keyword }: getSearchDiaryRequ
   }
 };
 
+export const getSearchTerms = async () => {
+  try {
+    const petId = cookies().get("petId")?.value;
+    const res = await instance.get(`pets/${petId}/diaries/search/terms`);
+
+    return res.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+  }
+};
+
 export const postDiaryLike = async ({ diaryId }: { diaryId: number }) => {
   const petId = cookies().get("petId")?.value;
   await instance.post(`pets/${petId}/diaries/${diaryId}/like`);
