@@ -4,9 +4,9 @@ import SignButton from ".";
 const GoogleButton = () => {
   const { data: session } = useSession();
 
-  const onClick = async () => {
+  const onClick = () => {
     if (!session) {
-      await signIn("google", { redirect: true, callbackUrl: "/loginflow" });
+      signIn("google", { redirect: true, callbackUrl: "/loginflow" });
     }
   };
 
