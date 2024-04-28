@@ -12,13 +12,15 @@ import AddIcon from "@/public/icons/add.svg?url";
 import Link from "next/link";
 import { PetsType } from "@/app/_types/pets/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { editPetRep, getPets } from "@/app/_api/pets";
 import Skeleton from "./Skeleton";
 
 const MyPetCarousel = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const pathname = usePathname();
+  const isSettingsPage = pathname.startsWith("/settings");
 
   const {
     data: pets,
@@ -69,7 +71,7 @@ const MyPetCarousel = () => {
             {pets?.data.map((petInfo) => (
               <SwiperSlide className="mypet" key={petInfo.petId}>
                 <div className={styles.container}>
-                  <div className={styles.petInfoWrapper}>{petInfo && <MyPetInfo petInfo={petInfo} styles={myPetInfoStyles} />}</div>
+                  <div className={styles.petInfoWrapper}>{petInfo && <MyPetInfo petInfo={petInfo} styles={myPetInfoStyles} isSettingsPage={isSettingsPage} />}</div>
                   <button
                     className={styles.petMateButton}
                     onClick={() => {
@@ -78,8 +80,6 @@ const MyPetCarousel = () => {
                   >
                     펫메이트 관리
                   </button>
-
-                  {/* 구독자 관리의 onClick이벤트 수정 필요  */}
                   <button
                     onClick={() => {
                       editPetSubscriptionMutate(String(petInfo.petId));

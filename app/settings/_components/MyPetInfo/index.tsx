@@ -16,9 +16,10 @@ interface StyleProps {
 
 interface MyPetProps extends StyleProps {
   petInfo: PetType;
+  isSettingsPage: boolean;
 }
 
-const MyPetInfo = ({ petInfo, styles }: MyPetProps) => {
+const MyPetInfo = ({ petInfo, styles, isSettingsPage }: MyPetProps) => {
   // 프롭 안넘겨줄 시 기본값들
   const { profileBorderColor = "var(--MainOrange)", nameTextColor = "var(--Black)", breedTextColor = "var(--Gray81)" } = styles || {};
   const gender = petInfo.gender === "MALE" ? "남아" : "여아";
@@ -47,9 +48,11 @@ const MyPetInfo = ({ petInfo, styles }: MyPetProps) => {
           {age}
         </span>
       </div>
-      <Link href={`/settings/pet-info/${petInfo.petId}`} className={iconWrapper}>
-        <Image className={icon} src={EditIcon} alt="Edit icon" width={20} height={20} />
-      </Link>
+      {isSettingsPage && (
+        <Link href={`/settings/pet-info/${petInfo.petId}`} className={iconWrapper}>
+          <Image className={icon} src={EditIcon} alt="Edit icon" width={20} height={20} />
+        </Link>
+      )}
     </div>
   );
 };
