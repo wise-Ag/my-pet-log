@@ -6,7 +6,7 @@ import CloseIcon from "@/public/icons/close.svg?url";
 import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { container, text, title } from "./style.css";
+import { text, title } from "./style.css";
 
 const DiarySaveModal = ({ closeModalFunc }: { closeModalFunc: () => void }) => {
   const router = useRouter();
@@ -15,7 +15,7 @@ const DiarySaveModal = ({ closeModalFunc }: { closeModalFunc: () => void }) => {
   return (
     <>
       <ModalContainer>
-        <section className={`${styles.container} ${container}`}>
+        <section className={styles.container} style={{ height: "100%", gap: "2rem" }}>
           <div className={styles.iconWrapper}>
             <Image className={styles.closebutton} src={CloseIcon} alt="close icon" width={24} height={24} onClick={closeModalFunc} />
           </div>

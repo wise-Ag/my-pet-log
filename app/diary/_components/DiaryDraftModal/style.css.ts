@@ -1,10 +1,5 @@
 import { style } from "@vanilla-extract/css";
 
-export const container = style({
-  height: "100%",
-  gap: "2rem",
-});
-
 export const title = style({
   color: "var(--Black)",
   textAlign: "center",

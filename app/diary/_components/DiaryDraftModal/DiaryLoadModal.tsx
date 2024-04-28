@@ -1,13 +1,13 @@
 "use client";
-import ModalContainer from "@/app/_components/ModalContainer";
-import CloseIcon from "@/public/icons/close.svg?url";
-import Image from "next/image";
-import * as styles from "@/app/_components/Modal/style.css";
-import { text, container, title } from "./style.css";
-import { useState } from "react";
-import { useAtom } from "jotai";
-import { loadDiaryDraftAtom } from "@/app/_states/atom";
 import { deleteDiaryDraft } from "@/app/_api/diary";
+import * as styles from "@/app/_components/Modal/style.css";
+import ModalContainer from "@/app/_components/ModalContainer";
+import { loadDiaryDraftAtom } from "@/app/_states/atom";
+import CloseIcon from "@/public/icons/close.svg?url";
+import { useAtom } from "jotai";
+import Image from "next/image";
+import { useState } from "react";
+import { text, title } from "./style.css";
 
 const DiaryLoadModal = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -16,7 +16,7 @@ const DiaryLoadModal = () => {
     <>
       {isOpen && (
         <ModalContainer>
-          <section className={`${styles.container} ${container}`}>
+          <section className={styles.container} style={{ height: "100%", gap: "2rem" }}>
             <div className={styles.iconWrapper}>
               <Image className={styles.closebutton} src={CloseIcon} alt="close icon" width={24} height={24} onClick={() => setIsOpen(false)} />
             </div>
