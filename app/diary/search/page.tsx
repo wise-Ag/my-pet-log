@@ -58,6 +58,7 @@ const Search = () => {
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages, lastPageParam, allPageParams) => (lastPage?.last ? undefined : lastPageParam + 1),
     enabled: !!keyword,
+    staleTime: 0,
   });
   const { targetRef, setTargetActive } = useInfiniteScroll({ callbackFunc: fetchNextPage });
 

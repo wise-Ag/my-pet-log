@@ -262,7 +262,7 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
           placeholder={PET_PLACEHOLDER.name}
         />
         <button
-          disabled={!getValues("petName") || isPetNameConfirm === null}
+          disabled={!getValues("petName") || isPetNameConfirm === null || getValues("petName").length > 10}
           className={styles.checkPetNameButton}
           type="button"
           onClick={() => checkPetNameMutation.mutate(getValues("petName"))}

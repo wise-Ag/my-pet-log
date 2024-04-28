@@ -208,7 +208,12 @@ const PetRegister = () => {
           })}
           placeholder={PET_PLACEHOLDER.name}
         />
-        <button disabled={!getValues("petName")} className={styles.checkPetNameButton} type="button" onClick={() => checkPetNameMutation.mutate(getValues("petName"))}>
+        <button
+          disabled={!getValues("petName") || getValues("petName").length > 10}
+          className={styles.checkPetNameButton}
+          type="button"
+          onClick={() => checkPetNameMutation.mutate(getValues("petName"))}
+        >
           중복확인
         </button>
       </div>
