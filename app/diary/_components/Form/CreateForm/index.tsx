@@ -1,21 +1,23 @@
 "use client";
 
-import { postDiary } from "@/app/_api/diary";
+import { getDiaryDraft, postDiary } from "@/app/_api/diary";
 import Loading from "@/app/_components/Loading";
 import { showToast } from "@/app/_components/Toast";
-import { diaryImagesAtom } from "@/app/_states/atom";
+import { diaryImagesAtom, loadSavedDiaryAtom } from "@/app/_states/atom";
 import { getPrettyToday } from "@/app/_utils/getPrettyToday";
 import { FormInput } from "@/app/diary/_components/Form/EditForm";
 import DateInput from "@/app/diary/_components/Input/DateInput";
 import { ContentInput, TitleInput } from "@/app/diary/_components/Input/FormInput";
 import ImageInput from "@/app/diary/_components/Input/ImageInput";
 import VideoInput from "@/app/diary/_components/Input/VideoInput";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as styles from "./style.css";
 import PublicPrivateToggle from "@/app/diary/_components/Input/PublicPrivateToggle";
+import { useEffect, useState } from "react";
+import { DiaryDraftMediaType, DiaryMediaType, GetDiaryDraftResponse } from "@/app/_types/diary/type";
 
 interface Diary {
   title: string;
@@ -27,6 +29,27 @@ interface Diary {
 
 const CreateForm = ({ petId }: { petId: number }) => {
   const queryClient = useQueryClient();
+  const [oldImages, setOldImages] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
+  const [oldVideo, setOldVideo] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
+  const [loadSavedDiary, setLoadSavedDiary] = useAtom(loadSavedDiaryAtom);
+
+  useEffect(() => {
+    if (!loadSavedDiary) return;
+    const loadDiaryDarft = async () => {
+      const diary: GetDiaryDraftResponse = await getDiaryDraft();
+      console.log(diary);
+      if (diary) {
+        setValue("title", diary.title);
+        setValue("content", diary.content);
+        setValue("date", diary.date.replaceAll(".", "-"));
+        setOldImages([...diary.images]);
+        setOldVideo([...diary.videos]);
+        setValue("isPublic", diary.isPublic ? "PUBLIC" : null);
+      }
+      setLoadSavedDiary(false);
+    };
+    loadDiaryDarft();
+  }, [loadSavedDiary]);
 
   //일기 생성
   const {
@@ -92,8 +115,8 @@ const CreateForm = ({ petId }: { petId: number }) => {
         >
           <TitleInput register={register} watch={watch} errors={errors} />
           <DateInput register={register} setValue={setValue} getValue={getValues} />
-          <ImageInput register={register} setValue={setValue} />
-          <VideoInput register={register} setValue={setValue} />
+          <ImageInput register={register} setValue={setValue} oldMedia={oldImages} />
+          <VideoInput register={register} setValue={setValue} oldMedia={oldVideo} />
           <ContentInput register={register} watch={watch} errors={errors} />
           <PublicPrivateToggle register={register} watch={watch} setValue={setValue} />
 

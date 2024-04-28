@@ -127,6 +127,19 @@ export interface DiaryMediaType {
   path: string;
 }
 
+export interface DiaryDraftMediaType {
+  path: string;
+}
+
+export interface GetDiaryDraftResponse {
+  title: string;
+  content: string;
+  date: string;
+  isPublic: boolean;
+  images: DiaryDraftMediaType[];
+  videos: DiaryDraftMediaType[];
+}
+
 export interface GetDiaryResponse {
   diaryId: number;
   title: string;

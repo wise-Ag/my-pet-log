@@ -168,3 +168,24 @@ export const getDiaryDraftCheck = async () => {
     console.error(error.response.data);
   }
 };
+
+export const deleteDiaryDraft = async () => {
+  try {
+    const petId = cookies().get("petId")?.value;
+    await instance.delete(`pets/${petId}/diaries/drafts`);
+  } catch (error: any) {
+    console.error(error.response.data);
+  }
+};
+
+export const getDiaryDraft = async () => {
+  try {
+    const petId = cookies().get("petId")?.value;
+    const res = await instance.get(`pets/${petId}/diaries/drafts`);
+
+    if (res.status === 200) await deleteDiaryDraft(); //임시저장 성공적으로 불러왔다면 삭제
+    return res.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+  }
+};
