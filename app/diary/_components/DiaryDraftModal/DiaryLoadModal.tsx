@@ -6,11 +6,12 @@ import * as styles from "@/app/_components/Modal/style.css";
 import { text, container, title } from "./style.css";
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { loadSavedDiaryAtom } from "@/app/_states/atom";
+import { loadDiaryDraftAtom } from "@/app/_states/atom";
+import { deleteDiaryDraft } from "@/app/_api/diary";
 
 const DiaryLoadModal = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [, setLoadSavedDiary] = useAtom(loadSavedDiaryAtom);
+  const [, setLoadDiaryDraft] = useAtom(loadDiaryDraftAtom);
   return (
     <>
       {isOpen && (
@@ -24,13 +25,19 @@ const DiaryLoadModal = () => {
             <button
               className={styles.button}
               onClick={() => {
-                setLoadSavedDiary(true);
+                setLoadDiaryDraft(true);
                 setIsOpen(false);
               }}
             >
               이이서 작성
             </button>
-            <button className={styles.button} onClick={() => setIsOpen(false)}>
+            <button
+              className={styles.button}
+              onClick={() => {
+                setIsOpen(false);
+                deleteDiaryDraft();
+              }}
+            >
               새로 작성
             </button>
           </section>

@@ -11,4 +11,6 @@ export const userRefreshTokenAtom = atom(null);
 
 export const isLoggedInAtom = atom(false);
 
-export const loadSavedDiaryAtom = atom(false);
+export const loadDiaryDraftAtom = atom(false);
+
+export const saveDiaryDraftAtom = atom(false);

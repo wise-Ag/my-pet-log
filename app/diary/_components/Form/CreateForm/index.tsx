@@ -1,23 +1,23 @@
 "use client";
 
-import { getDiaryDraft, postDiary } from "@/app/_api/diary";
+import { getDiaryDraft, postDiary, postDiaryDraft } from "@/app/_api/diary";
 import Loading from "@/app/_components/Loading";
 import { showToast } from "@/app/_components/Toast";
-import { diaryImagesAtom, loadSavedDiaryAtom } from "@/app/_states/atom";
+import { diaryImagesAtom, loadDiaryDraftAtom, saveDiaryDraftAtom } from "@/app/_states/atom";
+import { DiaryDraftMediaType, DiaryMediaType, GetDiaryDraftResponse } from "@/app/_types/diary/type";
 import { getPrettyToday } from "@/app/_utils/getPrettyToday";
 import { FormInput } from "@/app/diary/_components/Form/EditForm";
 import DateInput from "@/app/diary/_components/Input/DateInput";
 import { ContentInput, TitleInput } from "@/app/diary/_components/Input/FormInput";
 import ImageInput from "@/app/diary/_components/Input/ImageInput";
+import PublicPrivateToggle from "@/app/diary/_components/Input/PublicPrivateToggle";
 import VideoInput from "@/app/diary/_components/Input/VideoInput";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAtom } from "jotai";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as styles from "./style.css";
-import PublicPrivateToggle from "@/app/diary/_components/Input/PublicPrivateToggle";
-import { useEffect, useState } from "react";
-import { DiaryDraftMediaType, DiaryMediaType, GetDiaryDraftResponse } from "@/app/_types/diary/type";
 
 interface Diary {
   title: string;
@@ -31,13 +31,59 @@ const CreateForm = ({ petId }: { petId: number }) => {
   const queryClient = useQueryClient();
   const [oldImages, setOldImages] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
   const [oldVideo, setOldVideo] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
-  const [loadSavedDiary, setLoadSavedDiary] = useAtom(loadSavedDiaryAtom);
+  const [loadDiaryDraft, setLoadDiaryDraft] = useAtom(loadDiaryDraftAtom);
+  const [saveDiaryDraft, setSaveDiaryDraft] = useAtom(saveDiaryDraftAtom);
+
+  //임시저장하기
+  const { mutate: postDiaryDraftMutation, isPending: isDiarydDraftPending } = useMutation({
+    mutationFn: (formData: FormData) => postDiaryDraft({ formData }),
+    onSuccess: () => {
+      setDiaryImages([]);
+      router.back();
+    },
+    onError: () => {
+      showToast("제목, 내용 입력시 임시저장이 가능합니다.", false);
+    },
+    onSettled: () => {
+      setSaveDiaryDraft(false);
+    },
+  });
 
   useEffect(() => {
-    if (!loadSavedDiary) return;
+    if (!saveDiaryDraft) return;
+    const saveDiaryDraftFunc = async () => {
+      const formData = new FormData();
+
+      const request: Diary = {
+        title: getValues("title"),
+        content: getValues("content"),
+        date: getValues("date"),
+        isPublic: getValues("isPublic") === "PUBLIC" ? true : false,
+      };
+
+      const videoData = getValues("video");
+      //video가 있다면 백엔드에 등록 후 응답id를 formData에 추가
+      if (videoData) {
+        request.uploadedVideoIds = [videoData];
+      }
+
+      const blob = new Blob([JSON.stringify(request)], { type: "application/json" });
+      formData.append("request", blob);
+
+      if (diaryImages) {
+        diaryImages.forEach((v) => formData.append("images", v.file));
+      }
+
+      postDiaryDraftMutation(formData);
+    };
+    saveDiaryDraftFunc();
+  }, [saveDiaryDraft]);
+
+  //임시저장 불러오기
+  useEffect(() => {
+    if (!loadDiaryDraft) return;
     const loadDiaryDarft = async () => {
       const diary: GetDiaryDraftResponse = await getDiaryDraft();
-      console.log(diary);
       if (diary) {
         setValue("title", diary.title);
         setValue("content", diary.content);
@@ -46,10 +92,10 @@ const CreateForm = ({ petId }: { petId: number }) => {
         setOldVideo([...diary.videos]);
         setValue("isPublic", diary.isPublic ? "PUBLIC" : null);
       }
-      setLoadSavedDiary(false);
+      setLoadDiaryDraft(false); //초기화
     };
     loadDiaryDarft();
-  }, [loadSavedDiary]);
+  }, [loadDiaryDraft]);
 
   //일기 생성
   const {
@@ -62,7 +108,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
       setDiaryImages([]);
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["diaries", petId] });
-        router.push("/diary/my-pet");
+        router.back();
       }, 1000); //썸네일 서버에서 완성되는 동안 기다려줌
     },
     onError: () => {
@@ -122,7 +168,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
 
           <button className={styles.button}>작성하기</button>
         </form>
-        {(isPending || isSuccess) && <Loading />}
+        {(isPending || isSuccess || isDiarydDraftPending) && <Loading />}
       </div>
     </>
   );

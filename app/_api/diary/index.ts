@@ -189,3 +189,14 @@ export const getDiaryDraft = async () => {
     console.error(error.response.data);
   }
 };
+
+export const postDiaryDraft = async ({ formData }: { formData: FormData }) => {
+  const petId = cookies().get("petId")?.value;
+  try {
+    const res = await instance.post(`/pets/${petId}/diaries/drafts`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+
+    return res.data;
+  } catch (error: any) {
+    throw Error("일기 임시저장 실패");
+  }
+};
