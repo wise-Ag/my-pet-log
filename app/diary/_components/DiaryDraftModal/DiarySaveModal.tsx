@@ -1,16 +1,17 @@
 "use client";
 import * as styles from "@/app/_components/Modal/style.css";
 import ModalContainer from "@/app/_components/ModalContainer";
+import { saveDiaryDraftAtom } from "@/app/_states/atom";
 import CloseIcon from "@/public/icons/close.svg?url";
+import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { container, text, title } from "./style.css";
-import { useAtom } from "jotai";
-import { saveDiaryDraftAtom } from "@/app/_states/atom";
 
 const DiarySaveModal = ({ closeModalFunc }: { closeModalFunc: () => void }) => {
   const router = useRouter();
   const [, setSaveDiaryDraft] = useAtom(saveDiaryDraftAtom);
+
   return (
     <>
       <ModalContainer>

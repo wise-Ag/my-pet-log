@@ -3,7 +3,7 @@
 import { getDiaryDraft, postDiary, postDiaryDraft } from "@/app/_api/diary";
 import Loading from "@/app/_components/Loading";
 import { showToast } from "@/app/_components/Toast";
-import { diaryImagesAtom, loadDiaryDraftAtom, saveDiaryDraftAtom } from "@/app/_states/atom";
+import { diaryDataAtom, diaryImagesAtom, loadDiaryDraftAtom, saveDiaryDraftAtom } from "@/app/_states/atom";
 import { DiaryDraftMediaType, DiaryMediaType, GetDiaryDraftResponse } from "@/app/_types/diary/type";
 import { getPrettyToday } from "@/app/_utils/getPrettyToday";
 import { FormInput } from "@/app/diary/_components/Form/EditForm";
@@ -33,6 +33,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
   const [oldVideo, setOldVideo] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
   const [loadDiaryDraft, setLoadDiaryDraft] = useAtom(loadDiaryDraftAtom);
   const [saveDiaryDraft, setSaveDiaryDraft] = useAtom(saveDiaryDraftAtom);
+  const [, setDiaryData] = useAtom(diaryDataAtom);
 
   //임시저장하기
   const { mutate: postDiaryDraftMutation, isPending: isDiarydDraftPending } = useMutation({
@@ -42,7 +43,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
       router.back();
     },
     onError: () => {
-      showToast("제목, 내용 입력시 임시저장이 가능합니다.", false);
+      showToast("임시저장에 실패했습니다. 잠시후에 시도해주세요.", false);
     },
     onSettled: () => {
       setSaveDiaryDraft(false);
@@ -124,6 +125,11 @@ const CreateForm = ({ petId }: { petId: number }) => {
     watch,
     handleSubmit,
   } = useForm<FormInput>({ mode: "onChange", defaultValues: { date: getPrettyToday(), isPublic: "PUBLIC" } });
+
+  //제목, 내용이 있을시에만 임시저장할 수 있도록 값을 watch
+  useEffect(() => {
+    setDiaryData({ title: watch("title"), content: watch("content") });
+  }, [watch("title"), watch("content")]);
 
   const [diaryImages, setDiaryImages] = useAtom(diaryImagesAtom);
 
