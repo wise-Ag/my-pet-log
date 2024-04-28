@@ -51,7 +51,7 @@ const InviteCode = ({ petId }: { petId: number }) => {
     <>
       <h3 className={styles.title}>마이펫 초대 코드</h3>
       <section className={styles.codeContainer}>
-        {petInfo && <MyPetInfo petInfo={petInfo} />}
+        {petInfo && <MyPetInfo petInfo={petInfo} isSettingsPage={false} />}
         <div className={styles.copyContainer}>
           <span className={styles.code}>{code}</span>
           <button className={styles.copyIcon} onClick={handleCopyClick}>
