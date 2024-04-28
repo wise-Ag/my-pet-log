@@ -13,3 +13,9 @@ interface CommentCounts {
 }
 
 export const commentCountAtom = atom<CommentCounts>({});
+
+interface SubscriptionState {
+  [petId: number]: boolean;
+}
+
+export const subscriptionAtom = atom<SubscriptionState>({});
