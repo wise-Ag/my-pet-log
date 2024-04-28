@@ -76,8 +76,7 @@ export const getComments = async ({ petId, diaryId, page, size }: GetCommentsReq
   }
 };
 
-export const getReComments = async ({ ancestorId, diaryId }: GetReCommentsRequest): Promise<GetReCommentsResponse | null> => {
-  const petId = cookies().get("petId")?.value;
+export const getReComments = async ({ petId, ancestorId, diaryId }: GetReCommentsRequest): Promise<GetReCommentsResponse | null> => {
   try {
     const res = await instance.get(`pets/${petId}/diaries/${diaryId}/comments/${ancestorId}/recomment`);
     return res.data;
@@ -92,8 +91,7 @@ export const postComment = async ({ petId, diaryId, content }: PostCommentReques
   return res.data;
 };
 
-export const postReComment = async ({ commentId, content, taggedUsers }: PostReCommentRequest): Promise<GetReCommentsResponse> => {
-  const petId = cookies().get("petId")?.value;
+export const postReComment = async ({ petId, commentId, content, taggedUsers }: PostReCommentRequest): Promise<GetReCommentsResponse> => {
   const res = await instance.post(`pets/${petId}/diaries/comments/${commentId}/recomment`, { content, taggedUsers });
   return res.data;
 };

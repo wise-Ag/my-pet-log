@@ -33,6 +33,7 @@ export const overlay = style({
 });
 
 export const container = style({
+  marginTop: "5.6rem",
   position: "fixed",
   left: 0,
   top: 0,
@@ -75,11 +76,11 @@ export const title = style({
   lineHeight: "2.4rem",
 });
 
-export const backIcon = style({
+export const closeIcon = style({
   position: "absolute",
   top: "50%",
   right: "1.6rem",
-  transform: "translateY(-50%) scaleX(-1)",
+  transform: "translateY(-50%)",
   cursor: "pointer",
 });
 
