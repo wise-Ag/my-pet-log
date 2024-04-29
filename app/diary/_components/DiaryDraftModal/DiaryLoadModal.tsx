@@ -18,7 +18,17 @@ const DiaryLoadModal = () => {
         <ModalContainer>
           <section className={styles.container} style={{ height: "100%", gap: "2rem" }}>
             <div className={styles.iconWrapper}>
-              <Image className={styles.closebutton} src={CloseIcon} alt="close icon" width={24} height={24} onClick={() => setIsOpen(false)} />
+              <Image
+                className={styles.closebutton}
+                src={CloseIcon}
+                alt="close icon"
+                width={24}
+                height={24}
+                onClick={() => {
+                  setIsOpen(false);
+                  deleteDiaryDraft();
+                }}
+              />
             </div>
             <div className={title}>임시저장 불러오기</div>
             <p className={text}>임시저장한 글이 있습니다.</p>

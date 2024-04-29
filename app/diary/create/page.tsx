@@ -5,16 +5,16 @@ import CreateForm from "@/app/diary/_components/Form/CreateForm";
 import BackHeader from "@/app/diary/create/BackHeader";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
+import Spinner from "@/app/_components/Spinner";
 
 const CreatePage = async () => {
   const petId = Number(cookies().get("petId")?.value);
   const { hasDiaryDraft } = await getDiaryDraftCheck();
-
   return (
     <div className={root}>
       <BackHeader />
       <div className={container}>
-        <Suspense fallback={<div>Loading</div>}>
+        <Suspense fallback={<Spinner />}>
           {hasDiaryDraft && <DiaryLoadModal />}
           <CreateForm petId={petId} />
         </Suspense>

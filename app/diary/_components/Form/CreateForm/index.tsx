@@ -131,6 +131,10 @@ const CreateForm = ({ petId }: { petId: number }) => {
     setDiaryData({ title: watch("title"), content: watch("content") });
   }, [watch("title"), watch("content")]);
 
+  useEffect(() => {
+    console.log("video ", getValues("video"));
+  }, [watch("video")]);
+
   const [diaryImages, setDiaryImages] = useAtom(diaryImagesAtom);
 
   const router = useRouter();

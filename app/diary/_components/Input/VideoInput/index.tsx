@@ -39,7 +39,7 @@ const VideoInput = ({ register, setValue, oldMedia }: InputProps) => {
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || !files[0]) return;
-
+    console.log("video", e);
     setPreviewVideo(URL.createObjectURL(files[0]));
 
     if (oldData && oldData.length > 0) {
