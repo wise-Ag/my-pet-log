@@ -15,3 +15,9 @@ interface CommentCounts {
 }
 
 export const commentCountAtom = atom<CommentCounts>({});
+
+export const loadDiaryDraftAtom = atom(false);
+
+export const saveDiaryDraftAtom = atom(false);
+
+export const diaryDataAtom = atom<{ title: string | null; content: string | null }>({ title: null, content: null });
