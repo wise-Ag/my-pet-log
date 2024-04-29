@@ -38,3 +38,5 @@ const DiarySaveModal = ({ closeModalFunc }: { closeModalFunc: () => void }) => {
     </>
   );
 };
+
+export default DiarySaveModal;
