@@ -11,7 +11,8 @@ import { UserType } from "@/app/_types/users/types";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import { COMMENT_PAGE_SIZE } from "@/app/diary/(diary)/constant";
 import KebabIcon from "@/public/icons/kebab.svg?url";
-import LikeIcon from "@/public/icons/like.svg";
+import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
+import HeartIcon from "@/public/icons/small-heart.svg";
 import SendIcon from "@/public/icons/send.svg?url";
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -206,8 +207,8 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
               <p style={{ fontSize: "1.4rem", fontWeight: "700" }}>{diary.writer.nickname}</p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <button onClick={handleDiaryLike} className={`${diary.isCurrentUserLiked ? styles.LikeIcon : ""}`}>
-                <LikeIcon color={diary.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} style={{ cursor: "pointer" }} />
+              <button className={styles.LikeIcon} onClick={handleDiaryLike}>
+                {diary.isCurrentUserLiked ? <HeartFillIcon className={`${styles.LikeIcon}`} /> : <HeartIcon style={{ fill: "var(--Gray33)" }} />}
               </button>
               <p style={{ fontSize: "1.4rem", color: "var(--Gray81)" }}>{diary.likeCount}</p>
             </div>

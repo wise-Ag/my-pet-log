@@ -5,7 +5,8 @@ import { useModal } from "@/app/_hooks/useModal";
 import { GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
-import LikeIcon from "@/public/icons/like.svg";
+import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
+import HeartIcon from "@/public/icons/small-heart.svg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
@@ -162,8 +163,8 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
         )}
 
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button className={`${styles.commentLikeButton} ${isLiked ? styles.LikeIcon : ""}`} onClick={handleLikeClick}>
-            <LikeIcon color={isLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
+          <button className={styles.commentLikeButton} onClick={handleLikeClick}>
+            {isLiked ? <HeartFillIcon className={`${styles.LikeIcon}`} /> : <HeartIcon style={{ fill: "var(--Gray33)" }} />}
             {likeCount}
           </button>
         </div>
