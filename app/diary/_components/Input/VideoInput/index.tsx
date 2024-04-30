@@ -1,5 +1,4 @@
 import { deletedVideoIdsAtom } from "@/app/_states/atom";
-import { InputProps } from "@/app/diary/_components/Input/ImageInput";
 import * as inputStyles from "@/app/diary/_components/Input/ImageInput/style.css";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
@@ -10,11 +9,30 @@ import { useMutation } from "@tanstack/react-query";
 import { postDiaryVideo } from "@/app/_api/diary";
 import { showToast } from "@/app/_components/Toast";
 import Loading from "@/app/_components/Loading";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import { FormInput } from "@/app/diary/_components/Form/EditForm";
+import { DiaryDraftMediaType, DiaryMediaType } from "@/app/_types/diary/type";
 
-const VideoInput = ({ register, setValue, oldMedia }: InputProps) => {
+export interface InputProps {
+  register: UseFormRegister<FormInput>;
+  setValue: UseFormSetValue<FormInput>;
+  oldMedia?: DiaryMediaType[];
+  draftMedia?: DiaryDraftMediaType[];
+}
+
+const convertURLtoFile = async (url: string) => {
+  const response = await fetch(url);
+  const data = await response.blob();
+  const filename = url.split("/").pop(); // url 구조에 맞게 수정할 것
+  const metadata = { type: `video/mp4` };
+  return new File([data], filename!, metadata);
+};
+
+const VideoInput = ({ register, setValue, oldMedia, draftMedia }: InputProps) => {
   const [previewVideo, setPreviewVideo] = useState("");
   const [, setDeletedVideo] = useAtom(deletedVideoIdsAtom);
   const [oldData, setOldData] = useState(oldMedia);
+  // const [draftData,setDraftData] = useState(draftMedia);
 
   const { mutate: postVideoMutation, isPending } = useMutation({
     mutationFn: (formData: FormData) => postDiaryVideo({ formData }),
@@ -36,10 +54,26 @@ const VideoInput = ({ register, setValue, oldMedia }: InputProps) => {
     setOldData(oldMedia);
   }, [oldMedia]);
 
+  useEffect(() => {
+    // setDraftData(draftMedia)
+    if (!draftMedia?.length) return;
+
+    const handleDraftVideo = async () => {
+      const videoFile = await convertURLtoFile(process.env.NEXT_PUBLIC_IMAGE_PREFIX + draftMedia[0].path);
+      setPreviewVideo(URL.createObjectURL(videoFile));
+
+      //video upload
+      const videoFormData = new FormData();
+      videoFormData.append("video", videoFile);
+      postVideoMutation(videoFormData);
+    };
+
+    handleDraftVideo();
+  }, [draftMedia]);
+
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || !files[0]) return;
-    console.log("video", e);
     setPreviewVideo(URL.createObjectURL(files[0]));
 
     if (oldData && oldData.length > 0) {

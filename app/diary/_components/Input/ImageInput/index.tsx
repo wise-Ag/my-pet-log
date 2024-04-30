@@ -18,7 +18,7 @@ export interface ImagesType {
 }
 const MAX_IMAGES = 10;
 
-export interface InputProps {
+interface InputProps {
   register: UseFormRegister<FormInput>;
   setValue: UseFormSetValue<FormInput>;
   oldMedia?: DiaryMediaType[] | DiaryDraftMediaType[];

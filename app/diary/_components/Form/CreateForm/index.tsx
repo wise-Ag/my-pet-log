@@ -30,7 +30,7 @@ interface Diary {
 const CreateForm = ({ petId }: { petId: number }) => {
   const queryClient = useQueryClient();
   const [oldImages, setOldImages] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
-  const [oldVideo, setOldVideo] = useState<DiaryMediaType[] | DiaryDraftMediaType[]>([]);
+  const [draftVideo, setDraftVideo] = useState<DiaryDraftMediaType[]>([]);
   const [loadDiaryDraft, setLoadDiaryDraft] = useAtom(loadDiaryDraftAtom);
   const [saveDiaryDraft, setSaveDiaryDraft] = useAtom(saveDiaryDraftAtom);
   const [, setDiaryData] = useAtom(diaryDataAtom);
@@ -90,9 +90,8 @@ const CreateForm = ({ petId }: { petId: number }) => {
         setValue("content", diary.content);
         setValue("date", diary.date.replaceAll(".", "-"));
         setOldImages([...diary.images]);
-        setOldVideo([...diary.videos]);
+        setDraftVideo([...diary.videos]);
         setValue("isPublic", diary.isPublic ? "PUBLIC" : null);
-        deleteDiaryDraft();
       }
       setLoadDiaryDraft(false); //초기화
     };
@@ -173,7 +172,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
           <TitleInput register={register} watch={watch} errors={errors} />
           <DateInput register={register} setValue={setValue} getValue={getValues} />
           <ImageInput register={register} setValue={setValue} oldMedia={oldImages} />
-          <VideoInput register={register} setValue={setValue} oldMedia={oldVideo} />
+          <VideoInput register={register} setValue={setValue} draftMedia={draftVideo} />
           <ContentInput register={register} watch={watch} errors={errors} />
           <PublicPrivateToggle register={register} watch={watch} setValue={setValue} />
 
