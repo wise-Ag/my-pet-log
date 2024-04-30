@@ -1,16 +1,17 @@
 "use client";
 
-import { deleteComment, postCommentLike, putComment, getReComments, postReComment } from "@/app/_api/diary";
+import { deleteComment, getReComments, postCommentLike, postReComment, putComment } from "@/app/_api/diary";
 import Modal from "@/app/_components/Modal";
 import { showToast } from "@/app/_components/Toast";
 import { useModal } from "@/app/_hooks/useModal";
 import { CommentType, GetCommentsResponse, GetDiaryResponse, GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
-import LikeIcon from "@/public/icons/like.svg";
+import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
+import HeartIcon from "@/public/icons/small-heart.svg";
 import { InfiniteData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useRef, ChangeEvent, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import ReComment from "../ReComment";
 import * as styles from "./style.css";
 
@@ -219,8 +220,8 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
             <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick()}>
               답글
             </button>
-            <button className={`${styles.commentLikeButton} ${comment.isCurrentUserLiked ? styles.likeIcon : ""}`} onClick={handleCommentLike}>
-              <LikeIcon color={comment.isCurrentUserLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
+            <button className={styles.commentLikeButton} onClick={handleCommentLike}>
+              {comment.isCurrentUserLiked ? <HeartFillIcon className={`${styles.likeIcon}`} /> : <HeartIcon style={{ fill: "var(--Gray33)" }} />}
               {comment.likeCount}
             </button>
           </div>

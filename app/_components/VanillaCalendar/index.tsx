@@ -12,14 +12,16 @@ function VanillaCalendar({ config, ...attributes }: VanillaCalendarProps) {
   const [calendar, setCalendar] = useState<VC | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-    setCalendar(new VC(ref.current, config));
-  }, [ref, config]);
-
-  useEffect(() => {
     if (!calendar) return;
     calendar.init();
   }, [calendar]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const vcInstance = new VC(ref.current, config);
+    setCalendar(vcInstance);
+    setTimeout(() => vcInstance.init(), 0);
+  }, [ref, config]);
 
   return <div {...attributes} ref={ref}></div>;
 }
