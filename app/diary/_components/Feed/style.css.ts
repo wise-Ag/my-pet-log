@@ -17,6 +17,10 @@ export const text = style({
   fontWeight: "600",
 });
 
+export const nonClickable = style({
+  cursor: "default",
+});
+
 export const image = style({
   position: "relative",
   height: "35rem",
