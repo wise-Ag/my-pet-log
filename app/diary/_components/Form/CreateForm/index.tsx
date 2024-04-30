@@ -1,6 +1,6 @@
 "use client";
 
-import { getDiaryDraft, postDiary, postDiaryDraft } from "@/app/_api/diary";
+import { deleteDiaryDraft, getDiaryDraft, postDiary, postDiaryDraft } from "@/app/_api/diary";
 import Loading from "@/app/_components/Loading";
 import { showToast } from "@/app/_components/Toast";
 import { diaryDataAtom, diaryImagesAtom, loadDiaryDraftAtom, saveDiaryDraftAtom } from "@/app/_states/atom";
@@ -92,6 +92,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
         setOldImages([...diary.images]);
         setOldVideo([...diary.videos]);
         setValue("isPublic", diary.isPublic ? "PUBLIC" : null);
+        deleteDiaryDraft();
       }
       setLoadDiaryDraft(false); //초기화
     };
