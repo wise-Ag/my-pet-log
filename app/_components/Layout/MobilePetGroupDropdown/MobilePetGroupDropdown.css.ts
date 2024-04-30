@@ -54,7 +54,7 @@ export const dropdownItemContainer = style({
   display: "inline-flex",
   alignItems: "center",
   gap: "1.4rem",
-  width: "15.1rem",
+  width: "21.2rem",
   padding: "0.9rem 1.4rem",
   cursor: "pointer",
 });
