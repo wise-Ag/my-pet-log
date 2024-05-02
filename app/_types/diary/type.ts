@@ -129,6 +129,12 @@ export interface CommentType {
   likeCount: number;
   writer: Writer;
   taggedUsers: Tag[];
+  receiver?: {
+    id: string;
+    nickname: string;
+    profilePath: string;
+    isCurrentUser: boolean;
+  };
 }
 
 export interface GetCommentsRequest extends GetDiaryListRequest {

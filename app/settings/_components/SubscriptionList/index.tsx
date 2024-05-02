@@ -28,6 +28,9 @@ const SubscriptionList = () => {
     onSuccess: () => {
       showToast("구독이 취소되었습니다", true);
       queryClient.invalidateQueries({ queryKey: ["subscribedPet"] });
+      queryClient.invalidateQueries({
+        queryKey: ["feed"],
+      });
     },
   });
 

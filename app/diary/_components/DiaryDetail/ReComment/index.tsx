@@ -5,7 +5,8 @@ import { useModal } from "@/app/_hooks/useModal";
 import { GetReCommentsResponse } from "@/app/_types/diary/type";
 import { getImagePath } from "@/app/_utils/getPersonImagePath";
 import KebabIcon from "@/public/icons/kebab.svg?url";
-import LikeIcon from "@/public/icons/like.svg";
+import HeartFillIcon from "@/public/icons/small-heart-fill.svg";
+import HeartIcon from "@/public/icons/small-heart.svg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
@@ -21,6 +22,12 @@ interface ReCommentProps {
     likeCount: number;
     isCurrentUserLiked: boolean;
     writer: {
+      id: string;
+      nickname: string;
+      profilePath: string;
+      isCurrentUser: boolean;
+    };
+    receiver?: {
       id: string;
       nickname: string;
       profilePath: string;
@@ -60,7 +67,6 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
         petId,
         commentId: reply.commentId,
         content: newCommentValue,
-        taggedUsers: [reply.writer.id],
       }),
     onSuccess: () => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", diaryId, ancestorId]);
@@ -92,7 +98,7 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["reComments", diaryId, reply.commentId],
+        queryKey: ["reComments", diaryId],
       });
     },
   });
@@ -158,12 +164,15 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
             </button>
           </form>
         ) : (
-          <pre className={styles.commentContent}>{reply.content}</pre>
+          <div>
+            <span className={styles.tag}>@{reply.receiver?.nickname}</span>
+            <span className={styles.commentContent}>{reply.content}</span>
+          </div>
         )}
 
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button className={`${styles.commentLikeButton} ${isLiked ? styles.LikeIcon : ""}`} onClick={handleLikeClick}>
-            <LikeIcon color={isLiked ? "var(--MainOrange)" : "var(--Gray81)"} />
+          <button className={styles.commentLikeButton} onClick={handleLikeClick}>
+            {isLiked ? <HeartFillIcon className={`${styles.LikeIcon}`} /> : <HeartIcon style={{ fill: "var(--Gray33)" }} />}
             {likeCount}
           </button>
         </div>

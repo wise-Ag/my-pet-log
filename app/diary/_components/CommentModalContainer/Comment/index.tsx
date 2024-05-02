@@ -105,7 +105,6 @@ export const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentI
     onSuccess: (newReComment) => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse[]>(["reComments", diaryId, commentId]) ?? [];
       queryClient.setQueryData(["reComments", diaryId, commentId], [newReComment, ...currentReComments]);
-      console.log(taggedUserId);
       showToast("답글이 생성되었습니다.", true);
       setReCommentValue("");
       setShowReCommentInput(false);

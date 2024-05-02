@@ -22,7 +22,7 @@ import { NoMedia } from "./NoMedia";
 import { LikeList } from "./LikeList";
 import { postPetSubscriptions } from "@/app/_api/subscription";
 import { useAtom } from "jotai";
-import { commentCountAtom } from "@/app/_states/atom";
+import { commentCountAtom, subscriptionAtom } from "@/app/_states/atom";
 
 export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -30,7 +30,8 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const [isLiked, setIsLiked] = useState(feed.isCurrentUserLiked);
   const [likeCount, setLikeCount] = useState(feed.likeCount);
   const [commentCounts, setCommentCounts] = useAtom(commentCountAtom);
-  const [IsSubscription, setIsSubscription] = useState(feed.pet.isSubscribed);
+  const [subscriptions, setSubscriptions] = useAtom(subscriptionAtom);
+  const IsSubscription = subscriptions[feed.pet.id] || feed.pet.isSubscribed;
   const firstLine = lines[0];
   const additionalLines = lines.slice(1).join("\n");
   const { isModalOpen: isCommentModalOpen, openModalFunc: openCommentModal, closeModalFunc: closeCommentModal } = useModal();
@@ -55,39 +56,28 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   };
 
   const handleSubscriptionClick = () => {
-    setIsSubscription(!IsSubscription);
-    subscriptionMutation.mutate();
+    if (!IsSubscription) {
+      subscribePet(feed.pet.id);
+    }
   };
 
   //구독하기
-  const subscriptionMutation = useMutation({
-    mutationFn: () => postPetSubscriptions(feed.pet.id),
+  const { mutate: subscribePet } = useMutation({
+    mutationFn: (petId: number) => postPetSubscriptions(petId),
 
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["feed", feed.diaryId],
-      });
-
-      const previousFeed = queryClient.getQueryData<getFeedResponse>(["feed", feed.diaryId]);
-      if (previousFeed) {
-        queryClient.setQueryData(["feed", feed.diaryId], {
-          ...previousFeed,
-          pet: {
-            ...previousFeed.pet,
-            isSubscribed: !previousFeed.pet.isSubscribed,
-          },
-        });
-      }
-      return { previousFeed };
+    onMutate: async (petId) => {
+      const previousValue = subscriptions[petId];
+      setSubscriptions((prev) => ({ ...prev, [petId]: true }));
+      return { previousValue };
     },
-    onError: (err, newPet, context) => {
-      if (context?.previousFeed) {
-        queryClient.setQueryData(["feed", feed.diaryId], context.previousFeed);
+    onError: (error, petId, context) => {
+      if (context?.previousValue !== undefined) {
+        setSubscriptions((prev) => ({ ...prev, [petId]: context.previousValue }));
       }
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["feed", feed.diaryId],
+        queryKey: ["subscribedPet", feed.pet.id],
       });
     },
   });
@@ -134,7 +124,7 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
     <>
       <section className={styles.profileInfo}>
         <Image className={styles.profileImage} src={getImagePath(feed.pet.profilePath)} alt="profile image" width={45} height={45} priority />
-        <button className={styles.text} onClick={handleSubscriptionClick}>
+        <button className={`${styles.text} ${IsSubscription ? styles.nonClickable : ""}`} onClick={handleSubscriptionClick}>
           {feed.pet.name} · {IsSubscription ? "구독 중 🐾" : "구독하기"}
         </button>
       </section>

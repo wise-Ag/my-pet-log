@@ -4,6 +4,8 @@ import { Z_INDEX } from "@/styles/zindex.css";
 
 export const container = style({
   position: "relative",
+
+  cursor: "pointer",
 });
 
 export const inputBox = style({
@@ -25,6 +27,8 @@ export const inputBox = style({
 
   fontSize: "1.6rem",
   fontWeight: "500",
+
+  cursor: "pointer",
 
   ":focus": {
     border: "1.5px solid var(--MainOrange)",

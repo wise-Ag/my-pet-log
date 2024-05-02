@@ -91,8 +91,8 @@ export const postComment = async ({ petId, diaryId, content }: PostCommentReques
   return res.data;
 };
 
-export const postReComment = async ({ petId, commentId, content, taggedUsers }: PostReCommentRequest): Promise<GetReCommentsResponse> => {
-  const res = await instance.post(`pets/${petId}/diaries/comments/${commentId}/recomment`, { content, taggedUsers });
+export const postReComment = async ({ petId, commentId, content }: PostReCommentRequest): Promise<GetReCommentsResponse> => {
+  const res = await instance.post(`pets/${petId}/diaries/comments/${commentId}/recomment`, { content });
   return res.data;
 };
 

@@ -93,6 +93,14 @@ export const commentLikeButton = style({
   fontSize: "1.4rem",
 });
 
+export const tag = style({
+  marginRight: "1rem",
+
+  fontSize: "1.4rem",
+  fontWeight: "bold",
+  color: "var(--MainOrange)",
+});
+
 export const kebabList = style({
   padding: "0.6rem 2.5rem",
 
