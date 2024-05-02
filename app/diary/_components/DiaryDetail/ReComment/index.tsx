@@ -27,6 +27,12 @@ interface ReCommentProps {
       profilePath: string;
       isCurrentUser: boolean;
     };
+    receiver?: {
+      id: string;
+      nickname: string;
+      profilePath: string;
+      isCurrentUser: boolean;
+    };
   };
   ancestorId: number;
 }
@@ -61,7 +67,6 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
         petId,
         commentId: reply.commentId,
         content: newCommentValue,
-        taggedUsers: [reply.writer.id],
       }),
     onSuccess: () => {
       const currentReComments = queryClient.getQueryData<GetReCommentsResponse>(["reComments", diaryId, ancestorId]);
@@ -93,7 +98,7 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["reComments", diaryId, reply.commentId],
+        queryKey: ["reComments", diaryId],
       });
     },
   });
@@ -159,7 +164,10 @@ const ReComment = ({ petId, diaryId, reply, ancestorId }: ReCommentProps) => {
             </button>
           </form>
         ) : (
-          <pre className={styles.commentContent}>{reply.content}</pre>
+          <div>
+            <span className={styles.tag}>@{reply.receiver?.nickname}</span>
+            <span className={styles.commentContent}>{reply.content}</span>
+          </div>
         )}
 
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
