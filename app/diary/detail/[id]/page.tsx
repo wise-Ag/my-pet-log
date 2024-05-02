@@ -25,7 +25,7 @@ const DiaryDetailPage = async ({ params: { id } }: { params: { id: string } }) =
   return (
     <div className={root}>
       <HydrationBoundary state={dehydratedState}>
-        <BackHeader title="육아일기" />
+        <BackHeader title="육아일기" styleTop="0" />
         <div className={container}>
           <DiaryDetail petId={petId} diaryId={diaryId} />
         </div>
