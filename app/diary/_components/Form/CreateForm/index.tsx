@@ -1,11 +1,12 @@
 "use client";
 
-import { deleteDiaryDraft, getDiaryDraft, postDiary, postDiaryDraft } from "@/app/_api/diary";
+import { deleteDiaryDraft, getDiaryDraft, getDiaryDraftCheck, postDiary, postDiaryDraft } from "@/app/_api/diary";
 import Loading from "@/app/_components/Loading";
 import { showToast } from "@/app/_components/Toast";
 import { diaryDataAtom, diaryImagesAtom, loadDiaryDraftAtom, saveDiaryDraftAtom } from "@/app/_states/atom";
 import { DiaryDraftMediaType, DiaryMediaType, GetDiaryDraftResponse } from "@/app/_types/diary/type";
 import { getPrettyToday } from "@/app/_utils/getPrettyToday";
+import DiaryLoadModal from "@/app/diary/_components/DiaryDraftModal/DiaryLoadModal";
 import { FormInput } from "@/app/diary/_components/Form/EditForm";
 import DateInput from "@/app/diary/_components/Input/DateInput";
 import { ContentInput, TitleInput } from "@/app/diary/_components/Input/FormInput";
@@ -34,6 +35,16 @@ const CreateForm = ({ petId }: { petId: number }) => {
   const [loadDiaryDraft, setLoadDiaryDraft] = useAtom(loadDiaryDraftAtom);
   const [saveDiaryDraft, setSaveDiaryDraft] = useAtom(saveDiaryDraftAtom);
   const [, setDiaryData] = useAtom(diaryDataAtom);
+  const [hasDiaryDraft, setHasDiaryDraft] = useState(false);
+
+  //임시저장 여부 불러오기
+  useEffect(() => {
+    const loadHasDiaryDraft = async () => {
+      const { hasDiaryDraft } = await getDiaryDraftCheck();
+      setHasDiaryDraft(hasDiaryDraft);
+    };
+    loadHasDiaryDraft();
+  }, []);
 
   //임시저장하기
   const { mutate: postDiaryDraftMutation, isPending: isDiarydDraftPending } = useMutation({
@@ -105,8 +116,10 @@ const CreateForm = ({ petId }: { petId: number }) => {
     isSuccess,
   } = useMutation({
     mutationFn: (formData: FormData) => postDiary({ formData }),
-    onSuccess: () => {
+    onSuccess: async () => {
       setDiaryImages([]);
+      const { hasDiaryDraft } = await getDiaryDraftCheck();
+      if (hasDiaryDraft) await deleteDiaryDraft();
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["diaries", petId] });
         router.back();
@@ -130,10 +143,6 @@ const CreateForm = ({ petId }: { petId: number }) => {
   useEffect(() => {
     setDiaryData({ title: watch("title"), content: watch("content") });
   }, [watch("title"), watch("content")]);
-
-  useEffect(() => {
-    console.log("video ", getValues("video"));
-  }, [watch("video")]);
 
   const [diaryImages, setDiaryImages] = useAtom(diaryImagesAtom);
 
@@ -179,6 +188,7 @@ const CreateForm = ({ petId }: { petId: number }) => {
           <button className={styles.button}>작성하기</button>
         </form>
         {(isPending || isSuccess || isDiarydDraftPending) && <Loading />}
+        {hasDiaryDraft && <DiaryLoadModal />}
       </div>
     </>
   );

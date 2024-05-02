@@ -16,7 +16,16 @@ const DiarySaveModal = ({ closeModalFunc }: { closeModalFunc: () => void }) => {
       <ModalContainer>
         <section className={styles.container} style={{ height: "100%", gap: "2rem" }}>
           <div className={styles.iconWrapper}>
-            <Image className={styles.closebutton} src={CloseIcon} alt="close icon" width={24} height={24} onClick={closeModalFunc} />
+            <Image
+              className={styles.closebutton}
+              src={CloseIcon}
+              alt="close icon"
+              width={24}
+              height={24}
+              onClick={async () => {
+                closeModalFunc();
+              }}
+            />
           </div>
           <div className={title}>작성하기를 나가시겠습니까?</div>
           <p className={text}>

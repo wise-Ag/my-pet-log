@@ -1,4 +1,5 @@
 "use client";
+import { deleteDiaryDraft, getDiaryDraftCheck } from "@/app/_api/diary";
 import * as styles from "@/app/_components/BackHeader/style.css";
 import { useModal } from "@/app/_hooks/useModal";
 import { diaryDataAtom } from "@/app/_states/atom";
@@ -7,11 +8,21 @@ import BackIcon from "@/public/icons/chevron-left.svg?url";
 import { useAtom } from "jotai";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const BackHeader = () => {
   const { isModalOpen, openModalFunc, closeModalFunc } = useModal();
   const [diaryData] = useAtom(diaryDataAtom);
   const router = useRouter();
+  const [hasDiaryDraft, setHasDiaryDraft] = useState(false);
+  useEffect(() => {
+    const loadHasDiaryDraft = async () => {
+      const { hasDiaryDraft } = await getDiaryDraftCheck();
+      setHasDiaryDraft(hasDiaryDraft);
+    };
+    loadHasDiaryDraft();
+  }, []);
+
   return (
     <>
       <header className={styles.header} style={{ top: "0" }}>
@@ -19,6 +30,7 @@ const BackHeader = () => {
         <div
           className={styles.backIcon}
           onClick={() => {
+            if (hasDiaryDraft) deleteDiaryDraft();
             diaryData.title && diaryData.content ? openModalFunc() : router.back();
           }}
         >

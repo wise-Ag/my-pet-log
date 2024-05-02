@@ -4,19 +4,19 @@ import instance from "@/app/_api/axios";
 import {
   CommentType,
   GetCommentsRequest,
-  GetReCommentsRequest,
-  GetReCommentsResponse,
   GetCommentsResponse,
   GetDiaryListRequest,
   GetDiaryListResponse,
   GetDiaryResponse,
-  PostCommentRequest,
-  PostReCommentRequest,
-  PostDiaryVideoResponse,
-  PutCommentRequest,
-  getSearchDiaryRequest,
-  getFeedRequest,
   GetLikeListResponse,
+  GetReCommentsRequest,
+  GetReCommentsResponse,
+  PostCommentRequest,
+  PostDiaryVideoResponse,
+  PostReCommentRequest,
+  PutCommentRequest,
+  getFeedRequest,
+  getSearchDiaryRequest,
 } from "@/app/_types/diary/type";
 import { cookies } from "next/headers";
 
@@ -129,7 +129,6 @@ export const getSearchTerms = async () => {
   try {
     const petId = cookies().get("petId")?.value;
     const res = await instance.get(`pets/${petId}/diaries/search/terms`);
-
     return res.data;
   } catch (error: any) {
     console.error(error.response.data);
@@ -164,7 +163,6 @@ export const getDiaryDraftCheck = async () => {
   try {
     const petId = cookies().get("petId")?.value;
     const res = await instance.get(`pets/${petId}/diaries/drafts/check`);
-
     return res.data;
   } catch (error: any) {
     console.error(error.response.data);
@@ -184,7 +182,6 @@ export const getDiaryDraft = async () => {
   try {
     const petId = cookies().get("petId")?.value;
     const res = await instance.get(`pets/${petId}/diaries/drafts`);
-
     return res.data;
   } catch (error: any) {
     console.error(error.response.data);
@@ -195,7 +192,6 @@ export const postDiaryDraft = async ({ formData }: { formData: FormData }) => {
   const petId = cookies().get("petId")?.value;
   try {
     const res = await instance.post(`/pets/${petId}/diaries/drafts`, formData, { headers: { "Content-Type": "multipart/form-data" } });
-
     return res.data;
   } catch (error: any) {
     throw Error("일기 임시저장 실패");

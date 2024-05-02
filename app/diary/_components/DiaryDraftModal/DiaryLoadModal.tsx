@@ -1,14 +1,19 @@
 "use client";
-import { deleteDiaryDraft } from "@/app/_api/diary";
 import * as styles from "@/app/_components/Modal/style.css";
-import ModalContainer from "@/app/_components/ModalContainer";
 import { loadDiaryDraftAtom } from "@/app/_states/atom";
 import CloseIcon from "@/public/icons/close.svg?url";
 import { useAtom } from "jotai";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
 import { text, title } from "./style.css";
 
+const ModalContainer = dynamic(
+  () => {
+    return import("@/app/_components/ModalContainer");
+  },
+  { ssr: false },
+);
 const DiaryLoadModal = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [, setLoadDiaryDraft] = useAtom(loadDiaryDraftAtom);
@@ -26,7 +31,6 @@ const DiaryLoadModal = () => {
                 height={24}
                 onClick={() => {
                   setIsOpen(false);
-                  deleteDiaryDraft();
                 }}
               />
             </div>
@@ -45,7 +49,6 @@ const DiaryLoadModal = () => {
               className={styles.button}
               onClick={() => {
                 setIsOpen(false);
-                deleteDiaryDraft();
               }}
             >
               새로 작성
