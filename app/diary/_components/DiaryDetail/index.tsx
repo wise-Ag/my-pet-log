@@ -16,7 +16,7 @@ import HeartIcon from "@/public/icons/small-heart.svg";
 import SendIcon from "@/public/icons/send.svg?url";
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -128,7 +128,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
     setTargetActive((prev) => !prev);
   }, [comments, setTargetActive]);
 
-  if (!diary) return;
+  if (!diary) return redirect("/diary/my-pet");
   if (!user) return;
 
   return (
