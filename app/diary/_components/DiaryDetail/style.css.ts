@@ -189,6 +189,7 @@ export const commentInput = style({
 
   backgroundColor: " var(--GrayF4)",
 
+  resize: "none",
   ":focus": {
     outline: "none",
   },
