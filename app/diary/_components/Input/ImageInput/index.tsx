@@ -1,7 +1,7 @@
 import Modal from "@/app/_components/Modal";
 import { useModal } from "@/app/_hooks/useModal";
 import { diaryImagesAtom } from "@/app/_states/atom";
-import { DiaryMediaType } from "@/app/_types/diary/type";
+import { DiaryDraftMediaType, DiaryMediaType } from "@/app/_types/diary/type";
 import { FormInput } from "@/app/diary/_components/Form/EditForm";
 import { DragDropContext, Draggable, DropResult, Droppable } from "@hello-pangea/dnd";
 import { useAtom } from "jotai";
@@ -18,10 +18,10 @@ export interface ImagesType {
 }
 const MAX_IMAGES = 10;
 
-export interface InputProps {
+interface InputProps {
   register: UseFormRegister<FormInput>;
   setValue: UseFormSetValue<FormInput>;
-  oldMedia?: DiaryMediaType[];
+  oldMedia?: DiaryMediaType[] | DiaryDraftMediaType[];
 }
 const convertURLtoFile = async (url: string) => {
   const response = await fetch(url);
@@ -34,7 +34,7 @@ const convertURLtoFile = async (url: string) => {
 const ImageInput = ({ register, setValue, oldMedia }: InputProps) => {
   const [images, setImages] = useAtom(diaryImagesAtom);
 
-  const handleOldMedia = async (oldMedia: DiaryMediaType[]) => {
+  const handleOldMedia = async (oldMedia: DiaryMediaType[] | DiaryDraftMediaType[]) => {
     for (const v of oldMedia) {
       const file = await convertURLtoFile(process.env.NEXT_PUBLIC_IMAGE_PREFIX + v.path);
       setImages((prev) => [...prev, { name: file.name, file: file, url: URL.createObjectURL(file) }]);

@@ -17,6 +17,19 @@ export interface DiaryMediaType {
   path: string;
 }
 
+export interface DiaryDraftMediaType {
+  path: string;
+}
+
+export interface GetDiaryDraftResponse {
+  title: string;
+  content: string;
+  date: string;
+  isPublic: boolean;
+  images: DiaryDraftMediaType[];
+  videos: DiaryDraftMediaType[];
+}
+
 // 일기(Diary) 관련 인터페이스
 export interface Diary {
   diaryId: number;

@@ -42,7 +42,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
     mutationFn: () => deleteDiary({ diaryId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["diaries", petId] });
-      router.push("/diary");
+      router.push("/diary/my-pet");
     },
     onError: () => {
       showToast("일기 삭제에 실패했습니다.", false);
