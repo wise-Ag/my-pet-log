@@ -17,9 +17,14 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async session({ session }) {
-      if (session) {
+    signIn({ account }) {
+      if (account?.provider === "kakao" || account?.provider === "google") {
+        return true;
       }
+
+      return false;
+    },
+    async session({ session }) {
       return session;
     },
   },
