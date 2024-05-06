@@ -7,13 +7,15 @@ export function middleware(request: NextRequest) {
 
   const withoutWWWPathname = path.replace(/^\/(www\.)?/, "/");
 
-  // 소셜로그인 URL에서 www를 제거하도록 설정
-  if (path.startsWith("/api/auth/callback/kakao") || path.startsWith("/api/auth/callback/google")) {
-    return NextResponse.redirect(new URL(withoutWWWPathname, request.url));
-  }
-
   // www를 제거한 경로로 리디렉션
   if (path !== withoutWWWPathname) return NextResponse.redirect(new URL(withoutWWWPathname, request.url));
+
+  // www가 있는 경우 www를 제거하여 리디렉션
+  if (request.nextUrl.host.startsWith("www.")) {
+    const withoutWWWHost = request.nextUrl.host.replace(/^www\./, "");
+    return NextResponse.redirect(new URL(withoutWWWHost + withoutWWWPathname, request.url));
+  }
+
   if (accessToken) {
     if (path === "/" || path.startsWith("/login") || path.startsWith("/signup")) return NextResponse.redirect(new URL("/home", request.url));
 
