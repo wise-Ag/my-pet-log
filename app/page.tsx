@@ -20,7 +20,7 @@ const Page = () => {
     <>
       <div className={styles.container}>
         <div className={styles.skipButtonWrapper}>
-          <Link href="/signup">
+          <Link href="/login">
             <button className={styles.skipButton}>건너뛰기</button>
           </Link>
         </div>

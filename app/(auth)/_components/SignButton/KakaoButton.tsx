@@ -1,15 +1,20 @@
 "use Client";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import SignButton from ".";
 
 const KakaoButton = () => {
   const { data: session } = useSession();
 
-  const onClick = () => {
+  console.log("카카오버튼안누름");
+
+  const onClick = async () => {
+    console.log("카카오버튼눌렀니?");
     if (!session) {
-      signIn("kakao", { redirect: true, callbackUrl: "/loginflow" });
+      await signIn("kakao", { redirect: true, callbackUrl: "/loginflow" });
     }
   };
+
+  console.log("카카오session:", session);
 
   return (
     <div>
