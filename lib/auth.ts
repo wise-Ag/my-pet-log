@@ -5,12 +5,12 @@ import KakaoProvider from "next-auth/providers/kakao";
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_OAUTH_ID || "",
-      clientSecret: process.env.GOOGLE_OAUTH_SECRET || "",
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ID || "",
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_SECRET || "",
     }),
     KakaoProvider({
-      clientId: process.env.KAKAO_CLIENT_ID || "",
-      clientSecret: process.env.KAKAO_CLIENT_SECRET || "",
+      clientId: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID || "",
+      clientSecret: process.env.NEXT_PUBLIC_KAKAO_CLIENT_SECRET || "",
     }),
   ],
   pages: {
@@ -28,5 +28,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
 };
