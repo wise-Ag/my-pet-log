@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
     if (path === "/healthlog/select" && petId) return NextResponse.redirect(new URL("/healthlog", request.url));
     if (path.startsWith("/healthlog") && !petId) return NextResponse.redirect(new URL("/healthlog/select", request.url));
   } else {
-    if (path === "/" || path.startsWith("/login") || path.startsWith("/signup")) {
+        if (path === "/" || path.startsWith("/login") || path.startsWith("/signup") || path.startsWith("/auth")) {
     } else return NextResponse.redirect(new URL("/login", request.url));
   }
 }
