@@ -1,21 +1,16 @@
 "use Client";
-import { signIn, useSession } from "next-auth/react";
 import SignButton from ".";
+import { useRouter } from "next/navigation";
+import { Oauth } from "@/app/_constants/oauth";
 
 const KakaoButton = () => {
-  const { data: session } = useSession();
-
-  console.log("카카오버튼안누름");
+  const router = useRouter();
 
   const onClick = async () => {
-    console.log("카카오버튼눌렀니?");
-    if (!session) {
-      await signIn("kakao", { redirect: true, callbackUrl: "/loginflow" });
-    }
+    console.log(Oauth.kakao);
+    router.push(Oauth.kakao);
   };
-
-  console.log("카카오session:", session);
-
+  console.log(Oauth.kakao);
   return (
     <div>
       <SignButton type="kakao" action="시작하기" onClick={onClick} />
