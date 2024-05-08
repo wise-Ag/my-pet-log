@@ -7,10 +7,8 @@ const KakaoButton = () => {
   const router = useRouter();
 
   const onClick = async () => {
-    console.log(Oauth.kakao);
     router.push(Oauth.kakao);
   };
-  console.log(Oauth.kakao);
   return (
     <div>
       <SignButton type="kakao" action="시작하기" onClick={onClick} />
