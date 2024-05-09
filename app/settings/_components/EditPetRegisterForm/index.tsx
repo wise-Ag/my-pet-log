@@ -89,6 +89,7 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
+      router.push("/settings");
     },
     onError: () => {
       showToast("다른 멤버가 있을 때 반려동물을 삭제할 수 없습니다.", false);
@@ -225,7 +226,6 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
     if (isLeader && isOnlyMember) {
       deletePetMutation(String(petId));
     }
-    router.push("/settings");
   };
 
   const section1 = (
