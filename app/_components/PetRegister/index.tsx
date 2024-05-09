@@ -77,6 +77,12 @@ const PetRegister = () => {
     }
   };
 
+  //postPet 실행 후 handlePath 실행하도록 순서 설정
+  const handleModalButtonClick = () => {
+    closeModalFunc();
+    handlePath();
+  };
+
   //전체 폼 제출
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const request = {
@@ -328,7 +334,7 @@ const PetRegister = () => {
       <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
         {section === 1 ? section1 : section2}
       </form>
-      {isModalOpen && <ImageModal type={"register"} onClick={handlePath} onClose={handlePath} />}
+      {isModalOpen && <ImageModal type={"register"} onClick={handleModalButtonClick} onClose={handleModalButtonClick} />}
     </>
   );
 };
