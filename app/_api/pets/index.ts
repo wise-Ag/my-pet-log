@@ -73,9 +73,11 @@ export const editPetRep = async (petId: string) => {
 };
 
 export const deletePet = async ({ petId }: { petId: string }) => {
+  const currentPetId = cookies().get("petId")?.value;
   try {
     const response = await instance.delete(`my/pets/${petId}`);
     if (response.status === 200) {
+      if (currentPetId === petId) cookies().delete("petId");
       return response.data;
     }
   } catch (error) {
