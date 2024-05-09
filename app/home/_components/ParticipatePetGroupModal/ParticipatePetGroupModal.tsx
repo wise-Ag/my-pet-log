@@ -30,7 +30,7 @@ const ParticipatePetGroupModal = ({ onClickClose }: ParticipatePetGroupModalProp
     register,
     handleSubmit,
     setError,
-    getValues,
+    watch,
     formState: { errors },
   } = useForm<TInvitationCodeFormValues>({ mode: "onTouched" });
 
@@ -79,7 +79,7 @@ const ParticipatePetGroupModal = ({ onClickClose }: ParticipatePetGroupModalProp
             register={register}
           />
           <InvitationInputError errorMessage={errors?.inputValue?.message} />
-          <InvitationSubmitButton isDisable={!!errors?.inputValue || isRegisterPending || !getValues("inputValue") || getValues("inputValue") === ""} />
+          <InvitationSubmitButton isDisable={!!errors?.inputValue || isRegisterPending || !watch("inputValue") || watch("inputValue") === ""} />
         </form>
       </div>
       <ReceivedInvitationList />
