@@ -5,7 +5,7 @@ import { Oauth } from "@/app/_constants/oauth";
 
 const GoogleButton = () => {
   const router = useRouter();
-  const onClick = async () => {
+  const onClick = () => {
     router.push(Oauth.google);
   };
   return (
