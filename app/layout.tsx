@@ -9,7 +9,7 @@ import { fontPretendardVariable } from "@/styles/fonts";
 
 export const metadata: Metadata = {
   title: METADATA.title,
-  referrer: "no-referrer-when-downgrade",
+  referrer: "no-referrer",
   description: METADATA.description,
   metadataBase: new URL(METADATA.url),
   openGraph: {
