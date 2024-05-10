@@ -36,6 +36,30 @@ export default function OAuth() {
         });
         email = emailRes.data.kakao_account.email;
       }
+      if (provider === "google") {
+        const googleToken = await axios.post(
+          "https://oauth2.googleapis.com/token",
+          {
+            grant_type: "authorization_code",
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ID,
+            client_secret: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_SECRET,
+            redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI_GOOGLE,
+            code: code,
+          },
+          { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+        );
+        console.log(googleToken);
+        const accessToken = googleToken?.data.access_token;
+        console.log(accessToken);
+        const emailRes = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        email = emailRes.data.email;
+        console.log(email);
+      }
+
       const res = (await postSocial({ email })) as any;
       if (res) {
         router.push("/home");

@@ -6,7 +6,7 @@ import { Oauth } from "@/app/_constants/oauth";
 const KakaoButton = () => {
   const router = useRouter();
 
-  const onClick = async () => {
+  const onClick = () => {
     router.push(Oauth.kakao);
   };
   return (

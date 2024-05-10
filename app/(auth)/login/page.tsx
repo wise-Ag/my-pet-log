@@ -24,9 +24,9 @@ const Page = () => {
         <div className={styles.buttonWrapper}>
           <KakaoButton />
         </div>
-        {/* <div className={styles.buttonWrapper}>
+        <div className={styles.buttonWrapper}>
           <GoogleButton />
-        </div> */}
+        </div>
         <div className={styles.lineWrapper}>
           <Line alt="로고" width={300} height={1} />
         </div>
