@@ -44,7 +44,11 @@ const MobilePetGroupDropdown = () => {
   };
 
   const onClickDropdownMenu = (id: string) => {
-    id === SETTING_BUTTON.id ? router.push(id) : handleEditPet(id);
+    if (id === SETTING_BUTTON.id) {
+      router.push("/settings");
+    } else {
+      handleEditPet(id);
+    }
   };
 
   const { data: pets } = useQuery<PetsType>({
