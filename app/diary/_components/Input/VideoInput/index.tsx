@@ -74,6 +74,8 @@ const VideoInput = ({ register, setValue, oldMedia, draftMedia }: InputProps) =>
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || !files[0]) return;
+    if (files[0].size > 100 * 1024 * 1024) return showToast("업로드 가능한 동영상 최대 용량은 100MB입니다.", false);
+
     setPreviewVideo(URL.createObjectURL(files[0]));
 
     if (oldData && oldData.length > 0) {
@@ -119,7 +121,7 @@ const VideoInput = ({ register, setValue, oldMedia, draftMedia }: InputProps) =>
           </div>
         )}
       </div>
-      <p className={inputStyles.p}>동영상 최대 1개 (5MB 제한) </p>
+      <p className={inputStyles.p}>동영상 최대 1개 (100MB 제한) </p>
       {isPending && <Loading />}
     </div>
   );
