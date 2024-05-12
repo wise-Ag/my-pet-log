@@ -1,5 +1,4 @@
 import { getRefreshToken } from "@/app/_api/auth";
-import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
