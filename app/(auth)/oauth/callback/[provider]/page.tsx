@@ -48,16 +48,13 @@ export default function OAuth() {
           },
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
         );
-        console.log(googleToken);
         const accessToken = googleToken?.data.access_token;
-        console.log(accessToken);
         const emailRes = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         email = emailRes.data.email;
-        console.log(email);
       }
 
       const res = (await postSocial({ email })) as any;

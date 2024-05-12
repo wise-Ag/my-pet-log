@@ -4,7 +4,7 @@ import * as styles from "./style.css";
 import HeartIcon from "@/public/icons/heart-icon.svg";
 import HeartFillIcon from "@/public/icons/heart-fill.svg";
 import ChatIcon from "@/public/icons/chat-icon.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "@/app/_hooks/useModal";
 import CommentModalContainer from "@/app/diary/_components/CommentModalContainer";
 import { getFeedResponse } from "@/app/_types/diary/type";
@@ -26,13 +26,14 @@ export const NoMedia = ({ feed }: { feed: getFeedResponse }) => {
   const { isModalOpen: isLikeModalOpen, openModalFunc: openLikeModal, closeModalFunc: closeLikeModal } = useModal();
   const queryClient = useQueryClient();
 
-  if (commentCounts[feed.diaryId] === undefined) {
-    // 처음 렌더링 시에만 실행
-    setCommentCounts((prev) => ({
-      ...prev,
-      [feed.diaryId]: feed.commentCount,
-    }));
-  }
+  useEffect(() => {
+    if (commentCounts[feed.diaryId] === undefined) {
+      setCommentCounts((prev) => ({
+        ...prev,
+        [feed.diaryId]: feed.commentCount,
+      }));
+    }
+  }, [feed.diaryId, feed.commentCount, commentCounts, setCommentCounts]);
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);

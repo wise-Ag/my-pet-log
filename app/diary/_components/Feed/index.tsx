@@ -38,12 +38,14 @@ export const Feed = ({ feed }: { feed: getFeedResponse }) => {
   const { isModalOpen: isLikeModalOpen, openModalFunc: openLikeModal, closeModalFunc: closeLikeModal } = useModal();
   const queryClient = useQueryClient();
 
-  if (commentCounts[feed.diaryId] === undefined) {
-    setCommentCounts((prev) => ({
-      ...prev,
-      [feed.diaryId]: feed.commentCount,
-    }));
-  }
+  useEffect(() => {
+    if (commentCounts[feed.diaryId] === undefined) {
+      setCommentCounts((prev) => ({
+        ...prev,
+        [feed.diaryId]: feed.commentCount,
+      }));
+    }
+  }, [feed.diaryId, feed.commentCount, commentCounts, setCommentCounts]);
 
   const getImagePathWithPrefix = (path: string | null) => {
     return path ? `${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${path}` : NoPetProfileImage;
