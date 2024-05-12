@@ -2,6 +2,7 @@ import { getRefreshToken } from "@/app/_api/auth";
 import axios from "axios";
 import ExpiryMap from "expiry-map";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import pMemoize from "p-memoize";
 
 const BASE_URL = "http://13.124.44.0:8001/api/v1";
@@ -33,17 +34,24 @@ instance.interceptors.response.use(
   (config) => config,
   async (error) => {
     //토큰 만료 에러
-
     if (error.response.status === 401) {
       const newAccessToken = await getNewAccessToken();
-
       if (newAccessToken) {
         error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+        try {
+          const expiresAt = new Date(Date.now() + (23 * 60 + 59) * 60 * 1000);
+          cookies().set("expire", "expire", { expires: expiresAt });
+          cookies().set("accessToken", newAccessToken);
+        } catch {
+          console.error("쿠키 설정 시도");
+        }
         return axios(error.config); //재요청
+      } else {
+        redirect("/access-expired");
       }
     }
 
-    return Promise.reject(error);
+    return `${error}`;
   },
 );
 export default instance;
