@@ -191,6 +191,7 @@ const SignUpForm = () => {
               placeholder={PLACEHOLDER.signUpPassword}
               hasError={Boolean(fieldState.error)}
               errorText={fieldState.error?.message}
+              autoComplete="new-password"
             />
           )}
         />
@@ -215,6 +216,7 @@ const SignUpForm = () => {
               placeholder={PLACEHOLDER.signUpPassword}
               hasError={Boolean(fieldState.error)}
               errorText={fieldState.error?.message}
+              autoComplete="new-password"
             />
           )}
         />
