@@ -2,6 +2,7 @@
 
 import instance from "@/app/_api/axios";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const postPet = async ({ formData }: { formData: FormData }) => {
   try {
@@ -12,7 +13,7 @@ export const postPet = async ({ formData }: { formData: FormData }) => {
     // 응답 데이터 반환
     return res.data;
   } catch (error: any) {
-    console.error(error.response.data);
+    console.error(error.response);
     return null;
   }
 };
@@ -23,7 +24,7 @@ export const getPet = async (petId: number) => {
     const response = await instance.get(`/my/pets/${petId}`);
     return response.data;
   } catch (error: any) {
-    console.error(error.response.data);
+    console.error(error.response);
   }
 };
 
@@ -35,7 +36,7 @@ export const getPets = async () => {
       return response.data;
     }
   } catch (error: any) {
-    console.error(error);
+    console.error(error.response);
     return null;
   }
 };
@@ -48,7 +49,7 @@ export const getCode = async () => {
       return response.data;
     }
   } catch (error: any) {
-    console.error(error.response.data);
+    console.error(error.response);
     return null;
   }
 };
@@ -80,18 +81,13 @@ export const deletePet = async ({ petId }: { petId: string }) => {
       if (currentPetId === petId) cookies().delete("petId");
       return response.data;
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error(error.response);
     return null;
   }
 };
 
 export const checkPetName = async ({ name }: { name: string }) => {
-  try {
-    await instance.post(`my/pets/check/name`, { name });
-    return true;
-  } catch (error: any) {
-    console.error(error.response.data);
-    return false;
-  }
+  const res = await instance.post(`my/pets/check/name`, { name });
+  if (res.status === 200) return true;
 };
