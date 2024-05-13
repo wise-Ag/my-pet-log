@@ -25,10 +25,10 @@ const InvitationForm = ({ petId }: { petId: number }) => {
       showToast("초대 완료!", true);
       queryClient.invalidateQueries({ queryKey: ["my-invitations", petId] });
     },
-    onError: () => {
+    onError: (error) => {
       setError("inputValue", {
         type: "manual",
-        message: "초대한 사용자를 찾을 수 없습니다.",
+        message: error.message || "초대 과정에서 오류가 발생했습니다.",
       });
     },
   });
