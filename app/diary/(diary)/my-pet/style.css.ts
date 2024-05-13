@@ -12,6 +12,7 @@ export const root = style({
 export const container = style({
   width: "100%",
 
+  paddingBottom: "6.6rem",
   "@media": {
     "(min-width: 744px)": {
       maxWidth: "45rem",
