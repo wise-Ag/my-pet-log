@@ -15,40 +15,44 @@ export interface InputProps {
   disabled?: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
+  autoComplete?: "current-password" | "new-password" | "username";
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({ label, type = "text", value, hasError = false, errorText, onChange, onBlur, placeholder, disabled }, ref) => {
-  const [inputType, setInputType] = useState(type);
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, type = "text", value, hasError = false, errorText, onChange, onBlur, placeholder, disabled, autoComplete }, ref) => {
+    const [inputType, setInputType] = useState(type);
 
-  return (
-    <div className={styles.inputBox}>
-      <label className={styles.label}>{label}</label>
-      <div className={styles.inputContainer}>
-        <input
-          ref={ref}
-          type={inputType}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={`${styles.styledInput} ${hasError && styles.error}`}
-        />
-        {(label === "비밀번호*" || label === "비밀번호 확인*") && (
-          <Image
-            src={inputType === "password" ? PasswordEyeOff : PasswordEyeOn}
-            alt="비밀번호 아이콘"
-            width={24}
-            height={24}
-            className={styles.passwordEyeIcon}
-            onClick={() => setInputType((prev) => (prev === "password" ? "text" : "password"))}
+    return (
+      <div className={styles.inputBox}>
+        <label className={styles.label}>{label}</label>
+        <div className={styles.inputContainer}>
+          <input
+            ref={ref}
+            type={inputType}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={`${styles.styledInput} ${hasError && styles.error}`}
+            autoComplete={autoComplete}
           />
-        )}
+          {(label === "비밀번호*" || label === "비밀번호 확인*") && (
+            <Image
+              src={inputType === "password" ? PasswordEyeOff : PasswordEyeOn}
+              alt="비밀번호 아이콘"
+              width={24}
+              height={24}
+              className={styles.passwordEyeIcon}
+              onClick={() => setInputType((prev) => (prev === "password" ? "text" : "password"))}
+            />
+          )}
+        </div>
+        {hasError && <ErrorMessage message={errorText} />}
       </div>
-      {hasError && <ErrorMessage message={errorText} />}
-    </div>
-  );
-});
+    );
+  },
+);
 
 Input.displayName = "Input";
 
