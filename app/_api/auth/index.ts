@@ -9,6 +9,7 @@ interface FormData {
 
 interface SocialData {
   email?: string | null;
+  loginType?: "KAKAO" | "GOOGLE";
 }
 
 export const postLogin = async ({ email, password }: FormData) => {
@@ -31,10 +32,11 @@ export const postLogin = async ({ email, password }: FormData) => {
   }
 };
 
-export const postSocial = async ({ email }: SocialData) => {
+export const postSocial = async ({ email, loginType }: SocialData) => {
   try {
     const res = await instance.post("/auth/login/social", {
       email,
+      loginType,
     });
 
     if (res.status === 200) {
