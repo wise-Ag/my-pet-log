@@ -8,19 +8,23 @@ import calculateAge from "@/app/_utils/calculateAge";
 import { getImagePath } from "@/app/_utils/getPetImagePath";
 import ParticipatePetGroupModal from "@/app/home/_components/ParticipatePetGroupModal/ParticipatePetGroupModal";
 import AddIcon from "@/public/icons/add.svg?url";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Pet = ({ pet, path }: { pet: PetType; path: string }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   return (
     <div
       className={styles.container}
       onClick={async () => {
         try {
           await editPetRep(pet.petId);
+          queryClient.invalidateQueries({
+            queryKey: ["pets"],
+          });
           router.push(path);
         } catch {
           console.error("대표 반려동물 등록 실패");
