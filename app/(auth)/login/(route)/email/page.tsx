@@ -9,7 +9,7 @@ const page = () => {
     <div className={styles.container}>
       <p className={styles.title}>이메일로 로그인</p>
       <div className={styles.imgWrapper}>
-        <Image src={Logo} alt="로고" width={171} height={171} />
+        <Image src={Logo} alt="로고" width={171} height={171} priority={true} />
       </div>
       <SignInForm />
     </div>

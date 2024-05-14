@@ -164,7 +164,7 @@ export const commentInputContainer = style({
   width: "100%",
 
   position: "fixed",
-  bottom: "5.6rem",
+  bottom: "6.3rem",
 
   padding: "1rem 1.6rem",
 

@@ -212,7 +212,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
             <pre className={styles.commentContent}>{comment.content}</pre>
           )}
 
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: 4 }}>
             <button className={styles.recommentButton} onClick={() => handleReCommentButtonClick()}>
               답글
             </button>
