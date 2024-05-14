@@ -1,29 +1,25 @@
 import { style } from "@vanilla-extract/css";
 
 export const container = style({
-  paddingTop: "11.6rem",
-  paddingLeft: "1.6rem",
-  paddingRight: "1.6rem",
+  height: "100vh",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
   textAlign: "center",
-  "@media": {
-    "screen and (min-width: 744px)": {
-      margin: "0 auto",
-      paddingTop: "14.6rem",
-      paddingLeft: "0",
-      paddingRight: "0",
-      maxWidth: "45rem",
-    },
-  },
 });
 
 export const title = style({
   marginBottom: "3rem",
-  fontSize: "2.4rem",
+  fontSize: "2.7rem",
   fontWeight: "700",
   color: "var(--Black)",
   "@media": {
     "screen and (min-width: 744px)": {
-      fontSize: "3.6rem",
+      fontSize: "3rem",
+    },
+    " (min-width:1024px)": {
+      fontSize: "2.4rem",
     },
   },
 });
@@ -37,18 +33,27 @@ export const subTitle = style({
     "screen and (min-width: 744px)": {
       fontSize: "2rem",
     },
+    " (min-width:1024px)": {
+      fontSize: "1.6rem",
+      marginBottom: "2.5rem",
+    },
   },
 });
 
 export const mockUpImage = style({
-  width: "20.3rem",
-  height: "25.4rem",
+  width: "18rem",
+  height: "22rem",
   marginBottom: "4.4rem",
   "@media": {
     "screen and (min-width: 744px)": {
-      width: "23.9rem",
-      height: "30rem",
-      marginBottom: "6rem",
+      width: "20rem",
+      height: "25rem",
+      marginBottom: "3rem",
+    },
+    " (min-width:1024px)": {
+      width: "18rem",
+      height: "22rem",
+      marginBottom: "2rem",
     },
   },
 });
@@ -56,6 +61,7 @@ export const mockUpImage = style({
 export const linkBase = style({
   display: "inline-block",
   width: "100%",
+  maxWidth: "40rem",
   padding: "0.9rem 0",
   borderRadius: "30px",
   fontSize: "1.6rem",
@@ -64,6 +70,10 @@ export const linkBase = style({
     "screen and (min-width: 744px)": {
       fontSize: "2rem",
       padding: "1.1rem 0 1rem 0",
+    },
+    " (min-width:1024px)": {
+      fontSize: "1.6rem",
+      padding: "0.9rem 0",
     },
   },
 });
