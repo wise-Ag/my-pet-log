@@ -9,7 +9,7 @@ import cameraIconSrc from "@/public/icons/camera.svg?url";
 import { ERROR_MESSAGE, NICKNAME_RULES, PLACEHOLDER } from "@/app/_constants/inputConstant";
 import removeSpaces from "@/app/_utils/removeSpaces";
 import { getNicknameHintState } from "@/app/_components/getNicknameHintState/getNicknameHintState";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, postCheckNickname, postUserProfile } from "@/app/_api/users";
 import { UserType } from "@/app/_types/users/types";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ interface IForm {
 
 const CreateUserProfilePage: NextPage = () => {
   const router = useRouter();
+  const queryClient = new QueryClient();
 
   const {
     register,
@@ -62,6 +63,9 @@ const CreateUserProfilePage: NextPage = () => {
     },
     onSuccess: (data) => {
       if (data) {
+        queryClient.invalidateQueries({
+          queryKey: ["me"],
+        });
         showToast("등록되었습니다!", true);
         router.push("/no-pet-group");
       } else {
