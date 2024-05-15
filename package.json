@@ -33,7 +33,7 @@
     "react-lottie": "^1.2.10",
     "react-notion-x": "^6.16.0",
     "react-toastify": "^10.0.4",
-    "sharp": "^0.33.2",
+    "sharp": "^0.33.3",
     "swiper": "^11.0.5",
     "vanilla-calendar-pro": "^2.9.2"
   },
