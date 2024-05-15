@@ -8,6 +8,7 @@ import { useCallback, useEffect } from "react";
 export default function OAuth() {
   const pathname = usePathname();
   const provider = pathname.split("/").at(-1);
+  const loginType = provider!.toUpperCase() as "KAKAO" | "GOOGLE";
   const searchParam = useSearchParams();
   const code = searchParam.get("code");
 
@@ -57,7 +58,7 @@ export default function OAuth() {
         email = emailRes.data.email;
       }
 
-      const res = (await postSocial({ email })) as any;
+      const res = await postSocial({ email, loginType });
       if (res) {
         router.push("/home");
       }

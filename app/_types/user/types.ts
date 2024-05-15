@@ -3,4 +3,5 @@ export interface UserType {
   email: string;
   nickname: string;
   profilePath: string | null;
+  loginType: "EMAIL" | "KAKAO" | "GOOGLE";
 }

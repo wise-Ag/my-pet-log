@@ -2,6 +2,7 @@ import { globalStyle, style } from "@vanilla-extract/css";
 
 export const container = style({
   display: "flex",
+  justifyContent: "center",
   alignItems: "center",
   gap: "1rem",
 
@@ -11,7 +12,7 @@ export const container = style({
 });
 
 globalStyle(".Toastify__toast-container ", {
-  width: "30rem",
+  width: "35rem",
 
   bottom: "10rem",
   left: "50%",
