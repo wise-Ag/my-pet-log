@@ -22,7 +22,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "mypetlog.s3.ap-northeast-2.amazonaws.com",
+        hostname: "**",
         port: "",
         pathname: "**",
       },
