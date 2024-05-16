@@ -5,10 +5,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import pMemoize from "p-memoize";
 
-const BASE_URL = "http://13.124.44.0:8001/api/v1";
-
 const instance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

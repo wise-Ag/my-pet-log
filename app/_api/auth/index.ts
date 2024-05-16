@@ -95,7 +95,7 @@ export const postSignup = async ({ email, password }: FormData) => {
 };
 
 export const getRefreshToken = async () => {
-  const res = await fetch(`http://13.124.44.0:8001/api/v1/auth/refresh-token`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
