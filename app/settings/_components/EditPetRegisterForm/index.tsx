@@ -90,10 +90,11 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
       router.push("/settings");
+      showToast("반려동물이 삭제되었습니다.", true);
     },
-    onError: () => {
-      showToast("다른 멤버가 있을 때 반려동물을 삭제할 수 없습니다.", false);
-    },
+    // onError: () => {
+    //   showToast("일시적인 오류가 발생했습니다.", false);
+    // },
   });
 
   //리액트훅폼
@@ -225,6 +226,9 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
   const handleLeaderDelete = () => {
     if (isLeader && isOnlyMember) {
       deletePetMutation(String(petId));
+    }
+    if (isLeader && !isOnlyMember) {
+      showToast("다른 공동집사가 존재하면 삭제할 수 없습니다. ", false);
     }
   };
 
@@ -391,7 +395,7 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
             <Image src={BackIcon} alt="backward icon" width={25} height={25} />
           </div>
         )}
-        마이펫 정보 입력
+        마이펫 정보 수정
         <div className={styles.closeIcon} onClick={() => router.back()}>
           <Image src={CloseIcon} alt="close icon" width={25} height={25} />
         </div>
