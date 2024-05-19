@@ -92,9 +92,9 @@ const EditPetRegisterForm = ({ petId }: { petId: number }) => {
       router.push("/settings");
       showToast("반려동물이 삭제되었습니다.", true);
     },
-    // onError: () => {
-    //   showToast("일시적인 오류가 발생했습니다.", false);
-    // },
+    onError: () => {
+      showToast("일시적인 오류가 발생했습니다.", false);
+    },
   });
 
   //리액트훅폼
