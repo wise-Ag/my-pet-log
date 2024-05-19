@@ -63,25 +63,26 @@ const PetRegister = () => {
 
   const queryClient = useQueryClient();
   const router = useRouter();
-
   const pathname = usePathname();
 
-  const handlePath = () => {
-    if (pathname === "/settings/pet-register") {
-      closeModalFunc();
-      router.push("/settings");
-    }
-    if (pathname === "/pet-register") {
-      closeModalFunc();
-      router.push("/home");
-    }
-  };
-
-  //postPet 실행 후 handlePath 실행하도록 순서 설정
-  const handleModalButtonClick = () => {
-    closeModalFunc();
-    handlePath();
-  };
+  // postPet을 useMutation으로 설정
+  const postPetMutation = useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await postPet({ formData: data });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pets"] });
+      if (pathname === "/settings/pet-register") {
+        closeModalFunc();
+        router.push("/settings");
+      }
+      if (pathname === "/pet-register") {
+        closeModalFunc();
+        router.push("/home");
+      }
+    },
+  });
 
   //전체 폼 제출
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -103,12 +104,8 @@ const PetRegister = () => {
     formData.append("petRequest", blob);
     formData.append("petImage", data.image);
 
-    // FormData에 데이터가 올바르게 추가되었는지 확인
-    const res = await postPet({ formData });
-    if (res !== null) {
-      queryClient.invalidateQueries({ queryKey: ["pets"] });
-      openModalFunc();
-    }
+    // postPetMutation 실행
+    postPetMutation.mutate(formData);
   };
 
   const isSectionValid = watch("petName") && watch("type") && watch("breed") !== "" && isPetNameConfirm;
@@ -334,7 +331,7 @@ const PetRegister = () => {
       <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
         {section === 1 ? section1 : section2}
       </form>
-      {isModalOpen && <ImageModal type={"register"} onClick={handleModalButtonClick} onClose={handleModalButtonClick} />}
+      {isModalOpen && <ImageModal type={"register"} onClick={closeModalFunc} onClose={closeModalFunc} />}
     </>
   );
 };
