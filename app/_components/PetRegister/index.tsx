@@ -73,17 +73,18 @@ const PetRegister = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pets"] });
-      if (pathname === "/settings/pet-register") {
-        closeModalFunc();
-        router.push("/settings");
-      }
-      if (pathname === "/pet-register") {
-        closeModalFunc();
-        router.push("/home");
-      }
+      openModalFunc();
     },
   });
 
+  const handleCloseModal = () => {
+    closeModalFunc();
+    if (pathname === "/settings/pet-register") {
+      router.push("/settings");
+    } else if (pathname === "/pet-register") {
+      router.push("/home");
+    }
+  };
   //전체 폼 제출
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const request = {
@@ -331,7 +332,7 @@ const PetRegister = () => {
       <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
         {section === 1 ? section1 : section2}
       </form>
-      {isModalOpen && <ImageModal type={"register"} onClick={closeModalFunc} onClose={closeModalFunc} />}
+      {isModalOpen && <ImageModal type={"register"} onClick={handleCloseModal} onClose={handleCloseModal} />}
     </>
   );
 };
