@@ -3,6 +3,6 @@
 export interface UserType {
   id: string;
   email: string;
-  nickname: string;
+  nickname: string | null;
   profilePath: string | null;
 }
