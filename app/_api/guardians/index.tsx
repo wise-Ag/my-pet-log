@@ -48,7 +48,7 @@ export const postInviteGuardian = async (email: string) => {
     if (error.response.status === 404) {
       throw new Error("초대한 사용자를 찾을 수 없습니다.");
     } else {
-      throw new Error(error.response.data.message);
+      throw new Error("초대한 사용자를 찾을 수 없습니다.");
     }
   }
 };
