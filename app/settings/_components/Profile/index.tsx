@@ -162,7 +162,7 @@ const Profile = () => {
           ${errors.nickname ? (errors.nickname.type === "success" ? styles.inputSuccess : styles.inputError) : ""}
         `}
           placeholder={PLACEHOLDER.nickname}
-          defaultValue={user?.nickname}
+          defaultValue={user?.nickname ?? ""}
           {...register("nickname", {
             ...NICKNAME_RULES,
             onChange: () => {
