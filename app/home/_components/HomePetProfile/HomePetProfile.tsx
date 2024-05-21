@@ -16,7 +16,7 @@ const HomePetProfile = () => {
 
   const petList = pets?.data ?? [];
 
-  const currentPetGroup = petList.find((petGroup) => petGroup.repStatus === "REPRESENTATIVE") ?? petList[0];
+  const currentPetGroup = petList.find((petGroup) => petGroup.repStatus === "REPRESENTATIVE") ?? null;
 
   if (!currentPetGroup) return <></>;
   return (
