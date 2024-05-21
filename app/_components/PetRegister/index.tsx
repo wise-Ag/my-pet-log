@@ -72,19 +72,21 @@ const PetRegister = () => {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pets"] });
       openModalFunc();
     },
   });
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["pets"] });
     closeModalFunc();
     if (pathname === "/settings/pet-register") {
       router.push("/settings");
-    } else if (pathname === "/pet-register") {
+    }
+    if (pathname === "/pet-register") {
       router.push("/home");
     }
   };
+
   //전체 폼 제출
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const request = {
@@ -325,7 +327,13 @@ const PetRegister = () => {
           </div>
         )}
         마이펫 정보 입력
-        <div className={styles.closeIcon} onClick={() => router.back()}>
+        <div
+          className={styles.closeIcon}
+          onClick={() => {
+            console.log("설마 이거냐?");
+            router.back();
+          }}
+        >
           <Image src={CloseIcon} alt="close icon" width={25} height={25} />
         </div>
       </header>
