@@ -9,7 +9,7 @@ import cameraIconSrc from "@/public/icons/camera.svg?url";
 import { ERROR_MESSAGE, NICKNAME_RULES, PLACEHOLDER } from "@/app/_constants/inputConstant";
 import removeSpaces from "@/app/_utils/removeSpaces";
 import { getNicknameHintState } from "@/app/_components/getNicknameHintState/getNicknameHintState";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, postCheckNickname, postUserProfile } from "@/app/_api/users";
 import { UserType } from "@/app/_types/users/types";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ interface IForm {
 
 const CreateUserProfilePage: NextPage = () => {
   const router = useRouter();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -61,9 +61,9 @@ const CreateUserProfilePage: NextPage = () => {
     onError: () => {
       showToast("등록 실패했습니다. 잠시 후 다시 시도해주세요.", false);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (data) {
-        queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: ["me"],
         });
         showToast("등록되었습니다!", true);
@@ -164,7 +164,6 @@ const CreateUserProfilePage: NextPage = () => {
 
         <fieldset className={styles.idFieldset}>
           <label className={styles.label}>이메일</label>
-          <input className={styles.idInput} type="text" placeholder={user?.email} readOnly />
         </fieldset>
 
         <fieldset className={styles.nicknameFieldset}>
