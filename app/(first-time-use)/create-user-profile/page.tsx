@@ -10,10 +10,10 @@ import { ERROR_MESSAGE, NICKNAME_RULES, PLACEHOLDER } from "@/app/_constants/inp
 import removeSpaces from "@/app/_utils/removeSpaces";
 import { getNicknameHintState } from "@/app/_components/getNicknameHintState/getNicknameHintState";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { getMe, postCheckNickname, postUserProfile } from "@/app/_api/users";
-import { UserType } from "@/app/_types/users/types";
+import { postCheckNickname, postUserProfile } from "@/app/_api/users";
 import { useRouter } from "next/navigation";
 import { showToast } from "@/app/_components/Toast";
+import { UserEmailInput } from "./_components/userEmailInput/UserEmailImput";
 
 interface IForm {
   nickname: string;
@@ -34,11 +34,6 @@ const CreateUserProfilePage: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm<IForm>({ mode: "onTouched" });
-
-  const { data: user } = useQuery<UserType>({
-    queryKey: ["me"],
-    queryFn: () => getMe(),
-  });
 
   const { mutate: postCheckNicknameMutation } = useMutation({
     mutationKey: ["postCheckNicknameKey"],
@@ -164,6 +159,7 @@ const CreateUserProfilePage: NextPage = () => {
 
         <fieldset className={styles.idFieldset}>
           <label className={styles.label}>이메일</label>
+          <UserEmailInput />
         </fieldset>
 
         <fieldset className={styles.nicknameFieldset}>
