@@ -1,3 +1,5 @@
+"use client";
+
 import * as styles from "./style.css";
 import WarningIcon from "@/public/icons/circle-warning.svg?url";
 import Image from "next/image";
