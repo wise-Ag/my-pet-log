@@ -21,12 +21,13 @@ const InvitationForm = ({ petId }: { petId: number }) => {
 
   const inviteMutation = useMutation({
     mutationFn: (email: string) => postInviteGuardian(email),
-    onSuccess: () => {
-      showToast("초대 완료!", true);
-      queryClient.invalidateQueries({ queryKey: ["my-invitations", petId] });
-    },
-    onError: (error) => {
-      showToast("초대 과정에서 오류가 발생했습니다.", false);
+    onSuccess: (res) => {
+      if (res == "true") {
+        showToast("초대 완료!", true);
+        queryClient.invalidateQueries({ queryKey: ["my-invitations", petId] });
+      }
+      if (res === 404) return setError("inputValue", { message: "초대한 사용자를 찾을 수 없습니다." });
+      if (res === 400) return setError("inputValue", { message: "공동집사이거나 이미 초대 되었습니다." });
     },
   });
 

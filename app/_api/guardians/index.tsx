@@ -38,18 +38,12 @@ export const getGuardiansForLogs = async (petId: number): Promise<GuardianForLog
 export const postInviteGuardian = async (email: string) => {
   const petId = cookies().get("petId")?.value;
   try {
-    const response = await instance.post(`/my/guardians/${petId}/invite`, {
+    await instance.post(`/my/guardians/${petId}/invite`, {
       email,
     });
-    if (response.status === 200) {
-      return true;
-    }
+    return "true";
   } catch (error: any) {
-    if (error.response.status === 404) {
-      throw new Error("초대한 사용자를 찾을 수 없습니다.");
-    } else {
-      throw new Error("초대한 사용자를 찾을 수 없습니다.");
-    }
+    return error.response.data.status;
   }
 };
 
