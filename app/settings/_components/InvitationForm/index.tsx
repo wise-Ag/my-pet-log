@@ -26,10 +26,7 @@ const InvitationForm = ({ petId }: { petId: number }) => {
       queryClient.invalidateQueries({ queryKey: ["my-invitations", petId] });
     },
     onError: (error) => {
-      setError("inputValue", {
-        type: "manual",
-        message: error.message || "초대 과정에서 오류가 발생했습니다.",
-      });
+      showToast("초대 과정에서 오류가 발생했습니다.", false);
     },
   });
 
