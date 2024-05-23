@@ -71,19 +71,18 @@ const PetRegister = () => {
       const response = await postPet({ formData: data });
       return response;
     },
-    onSuccess: () => {
-      openModalFunc();
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pets"] });
+      handleCloseModal();
     },
   });
 
   const handleCloseModal = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["pets"] });
     closeModalFunc();
     if (pathname === "/settings/pet-register") {
-      router.push("/settings");
-    }
-    if (pathname === "/pet-register") {
-      router.push("/home");
+      router.replace("/settings"); // replace 사용하여 페이지 새로고침 없이 이동
+    } else if (pathname === "/pet-register") {
+      router.replace("/home"); // replace 사용하여 페이지 새로고침 없이 이동
     }
   };
 
