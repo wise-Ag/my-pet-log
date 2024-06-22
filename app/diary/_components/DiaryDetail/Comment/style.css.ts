@@ -66,8 +66,8 @@ export const commentEditButton = style({
 });
 
 export const profileImage = style({
-  minWidth: "3rem",
-  minHeight: "3rem",
+  width: "3rem",
+  height: "3rem",
 
   border: "1px solid var(--MainOrange)",
   borderRadius: "50%",

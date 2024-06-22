@@ -163,7 +163,7 @@ const Comment = ({ comment, diaryId, pageNum, contentNum, petId, commentId }: Co
   return (
     <>
       <div className={styles.commentContainer}>
-        <Image className={styles.profileImage} src={getImagePath(comment.writer?.profilePath)} alt="유저 프로필 사진" width={30} height={30} />
+        <div className={styles.profileImage} style={{ backgroundImage: `url(${getImagePath(comment.writer?.profilePath)})` }} />
         <div className={styles.commentMain}>
           <div className={styles.commentHeader}>
             <p style={{ fontSize: "1.4rem", fontWeight: "700" }}>

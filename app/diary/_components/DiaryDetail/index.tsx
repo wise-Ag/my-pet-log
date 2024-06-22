@@ -185,7 +185,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
                   </div>
                   {diary.images.map((image, idx) => (
                     <SwiperSlide key={idx}>
-                      <div className={styles.image} style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${image.path})` }}></div>
+                      <div className={styles.image} style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${image.path})` }} />
                     </SwiperSlide>
                   ))}
                   {diary.videos.length > 0 && (
@@ -203,7 +203,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
 
           <div className={styles.profile}>
             <div style={{ display: "flex", gap: "0.9rem", alignItems: "center" }}>
-              <Image className={styles.profileImage} src={getImagePath(diary.writer.profilePath)} alt="유저 프로필 사진" width={30} height={30} />
+              <div className={styles.profileImage} style={{ backgroundImage: `url(${getImagePath(diary.writer.profilePath)})` }} />
               <p style={{ fontSize: "1.4rem", fontWeight: "700" }}>{diary.writer.nickname}</p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -229,7 +229,7 @@ const DiaryDetail = ({ petId, diaryId }: { petId: number; diaryId: number }) => 
           </div>
 
           <div className={styles.commentInputContainer}>
-            <Image className={styles.profileImage} src={getImagePath(user.profilePath)} alt="유저 프로필 사진" width={30} height={30} />
+            <div className={styles.profileImage} style={{ backgroundImage: `url(${getImagePath(diary.writer.profilePath)})` }} />
             <div style={{ width: "100%", position: "relative" }}>
               <textarea placeholder="댓글을 남겨주세요" className={styles.commentInput} onChange={handleCommentChange} value={commentValue} onKeyDown={onCommentEnterPress} />
               <Image src={SendIcon} alt="send icon" width={20} height={20} className={styles.sendIcon} onClick={handlePostComment} />

@@ -24,7 +24,7 @@ export const Diary = ({ diary }: { diary: DiaryType }) => {
           </div>
         </div>
         {diary.thumbnailPath ? (
-          <Image className={styles.diaryImage} src={getImagePath(diary.thumbnailPath)} referrerPolicy="no-referrer" alt="일기 썸네일" width={90} height={90} />
+          <div className={styles.diaryImage} style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_IMAGE_PREFIX}${diary.thumbnailPath})` }} />
         ) : (
           <div className={styles.loadingThumbnail} />
         )}

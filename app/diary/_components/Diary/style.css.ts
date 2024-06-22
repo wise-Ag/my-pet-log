@@ -101,7 +101,9 @@ export const writer = style({
 
 export const diaryImage = style({
   borderRadius: "6px",
-  objectFit: "cover",
+  backgroundSize: "cover",
+  width: "9rem",
+  height: "9rem",
 
   "@media": {
     "(min-width: 744px)": {
